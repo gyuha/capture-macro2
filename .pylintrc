@@ -1,2 +1,7 @@
 [MASTER]  
 extension-pkg-allow-list=PySide6  
+
+[MESSAGES CONTROL]
+disable=
+    missing-class-docstring,
+    missing-module-docstring
