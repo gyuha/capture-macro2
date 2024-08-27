@@ -38,33 +38,121 @@ class Ui_MainWindow(object):
         self.actionExit_Q.setObjectName(u"actionExit_Q")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.verticalLayout_5 = QVBoxLayout()
+        self.groupBox_3 = QGroupBox(self.centralwidget)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.groupBox_3.setGeometry(QRect(397, 0, 352, 105))
+        self.verticalLayout_4 = QVBoxLayout(self.groupBox_3)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.lbPreview = QLabel(self.groupBox_3)
+        self.lbPreview.setObjectName(u"lbPreview")
+        self.lbPreview.setSizeIncrement(QSize(0, 0))
+        font = QFont()
+        font.setBold(False)
+        self.lbPreview.setFont(font)
+        self.lbPreview.setAutoFillBackground(True)
+
+        self.verticalLayout_4.addWidget(self.lbPreview)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.btnCapture = QPushButton(self.groupBox_3)
+        self.btnCapture.setObjectName(u"btnCapture")
+        self.btnCapture.setFont(font)
+
+        self.horizontalLayout.addWidget(self.btnCapture)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_3)
+
+        self.btnStop = QPushButton(self.groupBox_3)
+        self.btnStop.setObjectName(u"btnStop")
+        self.btnStop.setFont(font)
+
+        self.horizontalLayout.addWidget(self.btnStop)
+
+        self.btnStart = QPushButton(self.groupBox_3)
+        self.btnStart.setObjectName(u"btnStart")
+        self.btnStart.setFont(font)
+
+        self.horizontalLayout.addWidget(self.btnStart)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout)
+
+        self.verticalLayout_4.setStretch(0, 1)
+        self.groupBox_4 = QGroupBox(self.centralwidget)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.groupBox_4.setGeometry(QRect(470, 310, 367, 194))
+        self.verticalLayout_3 = QVBoxLayout(self.groupBox_4)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.macroTable_2 = QTableWidget(self.groupBox_4)
+        if (self.macroTable_2.columnCount() < 4):
+            self.macroTable_2.setColumnCount(4)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.macroTable_2.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.macroTable_2.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.macroTable_2.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.macroTable_2.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        self.macroTable_2.setObjectName(u"macroTable_2")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.macroTable_2.sizePolicy().hasHeightForWidth())
+        self.macroTable_2.setSizePolicy(sizePolicy)
+        self.macroTable_2.setFont(font)
+        self.macroTable_2.setRowCount(0)
+        self.macroTable_2.verticalHeader().setVisible(True)
+        self.macroTable_2.verticalHeader().setHighlightSections(True)
+
+        self.verticalLayout_3.addWidget(self.macroTable_2)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.btnPreConfigInsert = QPushButton(self.groupBox_4)
+        self.btnPreConfigInsert.setObjectName(u"btnPreConfigInsert")
+
+        self.horizontalLayout_6.addWidget(self.btnPreConfigInsert)
+
+        self.btnPreConfigAdd = QPushButton(self.groupBox_4)
+        self.btnPreConfigAdd.setObjectName(u"btnPreConfigAdd")
+
+        self.horizontalLayout_6.addWidget(self.btnPreConfigAdd)
+
+        self.btnPreConfigRemove = QPushButton(self.groupBox_4)
+        self.btnPreConfigRemove.setObjectName(u"btnPreConfigRemove")
+
+        self.horizontalLayout_6.addWidget(self.btnPreConfigRemove)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
+
+        self.widget = QWidget(self.centralwidget)
+        self.widget.setObjectName(u"widget")
+        self.verticalLayout_5 = QVBoxLayout(self.widget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.groupBox = QGroupBox(self.centralwidget)
+        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.groupBox = QGroupBox(self.widget)
         self.groupBox.setObjectName(u"groupBox")
         self.verticalLayout = QVBoxLayout(self.groupBox)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.macroTable = QTableWidget(self.groupBox)
         if (self.macroTable.columnCount() < 4):
             self.macroTable.setColumnCount(4)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.macroTable.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.macroTable.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.macroTable.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.macroTable.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.macroTable.setHorizontalHeaderItem(0, __qtablewidgetitem4)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.macroTable.setHorizontalHeaderItem(1, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.macroTable.setHorizontalHeaderItem(2, __qtablewidgetitem6)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.macroTable.setHorizontalHeaderItem(3, __qtablewidgetitem7)
         self.macroTable.setObjectName(u"macroTable")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.macroTable.sizePolicy().hasHeightForWidth())
         self.macroTable.setSizePolicy(sizePolicy)
-        font = QFont()
-        font.setBold(False)
         self.macroTable.setFont(font)
         self.macroTable.setRowCount(0)
         self.macroTable.verticalHeader().setVisible(True)
@@ -95,7 +183,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.groupBox)
 
-        self.groupBox_2 = QGroupBox(self.centralwidget)
+        self.groupBox_2 = QGroupBox(self.widget)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.verticalLayout_2 = QVBoxLayout(self.groupBox_2)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -140,53 +228,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.setStretch(0, 1)
         self.verticalLayout_5.setStretch(1, 2)
-
-        self.horizontalLayout_2.addLayout(self.verticalLayout_5)
-
-        self.groupBox_3 = QGroupBox(self.centralwidget)
-        self.groupBox_3.setObjectName(u"groupBox_3")
-        self.verticalLayout_4 = QVBoxLayout(self.groupBox_3)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.lbPreview = QLabel(self.groupBox_3)
-        self.lbPreview.setObjectName(u"lbPreview")
-        self.lbPreview.setSizeIncrement(QSize(0, 0))
-        self.lbPreview.setFont(font)
-        self.lbPreview.setAutoFillBackground(True)
-
-        self.verticalLayout_4.addWidget(self.lbPreview)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.btnCapture = QPushButton(self.groupBox_3)
-        self.btnCapture.setObjectName(u"btnCapture")
-        self.btnCapture.setFont(font)
-
-        self.horizontalLayout.addWidget(self.btnCapture)
-
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer_3)
-
-        self.btnStop = QPushButton(self.groupBox_3)
-        self.btnStop.setObjectName(u"btnStop")
-        self.btnStop.setFont(font)
-
-        self.horizontalLayout.addWidget(self.btnStop)
-
-        self.btnStart = QPushButton(self.groupBox_3)
-        self.btnStart.setObjectName(u"btnStart")
-        self.btnStart.setFont(font)
-
-        self.horizontalLayout.addWidget(self.btnStart)
-
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout)
-
-        self.verticalLayout_4.setStretch(0, 1)
-
-        self.horizontalLayout_2.addWidget(self.groupBox_3)
-
-        self.horizontalLayout_2.setStretch(1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -216,15 +257,32 @@ class Ui_MainWindow(object):
         self.actionSave_S.setText(QCoreApplication.translate("MainWindow", u"Save(&S)", None))
         self.actionSave_as_A.setText(QCoreApplication.translate("MainWindow", u"Save as... (&A)", None))
         self.actionExit_Q.setText(QCoreApplication.translate("MainWindow", u"Exit(&Q)", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\uc218\ud589", None))
-        ___qtablewidgetitem = self.macroTable.horizontalHeaderItem(0)
+        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\uc774\ubbf8\uc9c0", None))
+        self.lbPreview.setText("")
+        self.btnCapture.setText(QCoreApplication.translate("MainWindow", u" \ucea1\uccd0", None))
+        self.btnStop.setText(QCoreApplication.translate("MainWindow", u"\uc815\uc9c0 (F2)", None))
+        self.btnStart.setText(QCoreApplication.translate("MainWindow", u"\uc2dc\uc791 (F1)", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"\uc218\ud589", None))
+        ___qtablewidgetitem = self.macroTable_2.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4", None));
-        ___qtablewidgetitem1 = self.macroTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem1 = self.macroTable_2.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"\uac12", None));
-        ___qtablewidgetitem2 = self.macroTable.horizontalHeaderItem(2)
+        ___qtablewidgetitem2 = self.macroTable_2.horizontalHeaderItem(2)
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"\ub3d9\uc791", None));
-        ___qtablewidgetitem3 = self.macroTable.horizontalHeaderItem(3)
+        ___qtablewidgetitem3 = self.macroTable_2.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\ub3d9\uc7912", None));
+        self.btnPreConfigInsert.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \uc0bd\uc785", None))
+        self.btnPreConfigAdd.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \ucd94\uac00", None))
+        self.btnPreConfigRemove.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \uc0ad\uc81c", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\uc218\ud589", None))
+        ___qtablewidgetitem4 = self.macroTable.horizontalHeaderItem(0)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4", None));
+        ___qtablewidgetitem5 = self.macroTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"\uac12", None));
+        ___qtablewidgetitem6 = self.macroTable.horizontalHeaderItem(2)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"\ub3d9\uc791", None));
+        ___qtablewidgetitem7 = self.macroTable.horizontalHeaderItem(3)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"\ub3d9\uc7912", None));
         self.btnConfigInsert.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \uc0bd\uc785", None))
         self.btnConfigAdd.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \ucd94\uac00", None))
         self.btnConfigRemove.setText(QCoreApplication.translate("MainWindow", u"\uba85\ub839\uc5b4 \uc0ad\uc81c", None))
@@ -232,11 +290,6 @@ class Ui_MainWindow(object):
         self.btnDeleteFile_2.setText(QCoreApplication.translate("MainWindow", u"\uc0ad\uc81c", None))
         self.btnDeleteAllFiles_2.setText(QCoreApplication.translate("MainWindow", u"\uc804\uccb4 \uc0ad\uc81c", None))
         self.btnToPdf_2.setText(QCoreApplication.translate("MainWindow", u"PDF\ub85c \uc800\uc7a5", None))
-        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\uc774\ubbf8\uc9c0", None))
-        self.lbPreview.setText("")
-        self.btnCapture.setText(QCoreApplication.translate("MainWindow", u" \ucea1\uccd0", None))
-        self.btnStop.setText(QCoreApplication.translate("MainWindow", u"\uc815\uc9c0 (F2)", None))
-        self.btnStart.setText(QCoreApplication.translate("MainWindow", u"\uc2dc\uc791", None))
         self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c", None))
     # retranslateUi
 
