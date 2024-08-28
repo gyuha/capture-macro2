@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
         self.ui.btnCapture.clicked.connect(self.on_capture)
         self.ui.btnStop.clicked.connect(self.on_stop)
         self.ui.btnStart.clicked.connect(self.on_start)
+        # self.ui.btnStart.setStyleSheet('background-color: #1BA1E2;color: white;')
 
         # Menu actions
         self.ui.actionOpen_O.triggered.connect(self.on_open)
