@@ -99,9 +99,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.groupBox_2)
 
-        self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 1)
-        self.verticalLayout.setStretch(2, 3)
+        self.verticalLayout.setStretch(0, 2)
+        self.verticalLayout.setStretch(1, 3)
+        self.verticalLayout.setStretch(2, 5)
 
         self.horizontalLayout_2.addLayout(self.verticalLayout)
 
@@ -157,7 +157,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1143, 24))
+        self.menubar.setGeometry(QRect(0, 0, 1143, 18))
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)
