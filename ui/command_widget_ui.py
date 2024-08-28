@@ -26,6 +26,7 @@ class Ui_CommandWidget(object):
         CommandWidget.resize(442, 250)
         self.verticalLayout_2 = QVBoxLayout(CommandWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.groupBox = QGroupBox(CommandWidget)
         self.groupBox.setObjectName(u"groupBox")
         self.verticalLayout = QVBoxLayout(self.groupBox)

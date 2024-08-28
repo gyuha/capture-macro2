@@ -22,6 +22,8 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QGroupBo
     QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
     QVBoxLayout, QWidget)
 
+from app.widgets.command_widget import CommandWidget
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -41,13 +43,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.pre_command_widget = QWidget(self.centralwidget)
+        self.pre_command_widget = CommandWidget(self.centralwidget)
         self.pre_command_widget.setObjectName(u"pre_command_widget")
         self.pre_command_widget.setMinimumSize(QSize(0, 111))
 
         self.verticalLayout.addWidget(self.pre_command_widget)
 
-        self.command_widget = QWidget(self.centralwidget)
+        self.command_widget = CommandWidget(self.centralwidget)
         self.command_widget.setObjectName(u"command_widget")
         self.command_widget.setMinimumSize(QSize(0, 111))
 
@@ -97,6 +99,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.groupBox_2)
 
+        self.verticalLayout.setStretch(0, 1)
+        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(2, 3)
 
         self.horizontalLayout_2.addLayout(self.verticalLayout)
 

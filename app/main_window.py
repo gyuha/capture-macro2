@@ -1,21 +1,31 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout
+
+from app.widgets.command_widget import CommandWidget
 from ui.main_window_ui import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.pre_command_widget = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         # Connect signals to slots
         self.connect_signals_slots()
+        print("MainWindow")
 
     def connect_signals_slots(self):
+        self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
+        self.ui.command_widget.ui.groupBox.setTitle("수행")
+
         # Config buttons
-        self.ui.btnConfigInsert.clicked.connect(self.on_config_insert)
-        self.ui.btnConfigAdd.clicked.connect(self.on_config_add)
-        self.ui.btnConfigRemove.clicked.connect(self.on_config_remove)
+        # self.ui.btnConfigInsert.clicked.connect(self.on_config_insert)
+        # self.ui.btnConfigAdd.clicked.connect(self.on_config_add)
+        # self.ui.btnConfigRemove.clicked.connect(self.on_config_remove)
+
+        # self.ui.command_widget = CommandWidget("사전 수행")
+        # self.ui.pre_command_widget = CommandWidget("사후 수행")
 
         # File buttons
         self.ui.btnDeleteFile_2.clicked.connect(self.on_delete_file)
@@ -34,18 +44,18 @@ class MainWindow(QMainWindow):
         self.ui.actionSave_as_A.triggered.connect(self.on_save_as)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
-        # Slot methods
-    def on_config_insert(self):
-        # TODO: Implement config insert logic
-        pass
-
-    def on_config_add(self):
-        # TODO: Implement config add logic
-        pass
-
-    def on_config_remove(self):
-        # TODO: Implement config remove logic
-        pass
+    #     # Slot methods
+    # def on_config_insert(self):
+    #     # TODO: Implement config insert logic
+    #     pass
+    #
+    # def on_config_add(self):
+    #     # TODO: Implement config add logic
+    #     pass
+    #
+    # def on_config_remove(self):
+    #     # TODO: Implement config remove logic
+    #     pass
 
     def on_delete_file(self):
         # TODO: Implement delete file logic
