@@ -1,4 +1,4 @@
 {
     "qtForPython.designer.path": "${workspaceFolder}/venv/Scripts/pyside6-designer.exe",
-    "qtForPython.uic.path": "${workspaceFolder}/venv/Scripts/pyside6-uic.exe",
+    "qtForPython.uic.path": "${workspaceFolder}/venv/Scripts/pyside6-uic.exe"
 }

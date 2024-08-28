@@ -16,19 +16,19 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QGroupBox,
-    QHBoxLayout, QLabel, QListView, QListWidget,
-    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QVBoxLayout,
+    QWidget)
 
 from app.widgets.command_widget import CommandWidget
+from app.widgets.image_list_widget import ImageListWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1143, 942)
+        MainWindow.resize(694, 790)
         self.actionOpen_O = QAction(MainWindow)
         self.actionOpen_O.setObjectName(u"actionOpen_O")
         self.actionSave_S = QAction(MainWindow)
@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.pre_command_widget = CommandWidget(self.centralwidget)
         self.pre_command_widget.setObjectName(u"pre_command_widget")
-        self.pre_command_widget.setMinimumSize(QSize(0, 111))
+        self.pre_command_widget.setMinimumSize(QSize(150, 111))
 
         self.verticalLayout.addWidget(self.pre_command_widget)
 
@@ -55,53 +55,14 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.command_widget)
 
-        self.groupBox_2 = QGroupBox(self.centralwidget)
-        self.groupBox_2.setObjectName(u"groupBox_2")
-        self.verticalLayout_2 = QVBoxLayout(self.groupBox_2)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.lsFiles = QListWidget(self.groupBox_2)
-        self.lsFiles.setObjectName(u"lsFiles")
-        self.lsFiles.setFrameShape(QFrame.Box)
-        self.lsFiles.setFrameShadow(QFrame.Sunken)
-        self.lsFiles.setIconSize(QSize(80, 120))
-        self.lsFiles.setTextElideMode(Qt.ElideLeft)
-        self.lsFiles.setVerticalScrollMode(QAbstractItemView.ScrollPerItem)
-        self.lsFiles.setGridSize(QSize(0, 120))
-        self.lsFiles.setViewMode(QListView.ListMode)
+        self.image_list_widget = ImageListWidget(self.centralwidget)
+        self.image_list_widget.setObjectName(u"image_list_widget")
+        self.image_list_widget.setMinimumSize(QSize(150, 300))
 
-        self.verticalLayout_2.addWidget(self.lsFiles)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.btnDeleteFile_2 = QPushButton(self.groupBox_2)
-        self.btnDeleteFile_2.setObjectName(u"btnDeleteFile_2")
-        self.btnDeleteFile_2.setMinimumSize(QSize(60, 0))
-
-        self.horizontalLayout_5.addWidget(self.btnDeleteFile_2)
-
-        self.btnDeleteAllFiles_2 = QPushButton(self.groupBox_2)
-        self.btnDeleteAllFiles_2.setObjectName(u"btnDeleteAllFiles_2")
-
-        self.horizontalLayout_5.addWidget(self.btnDeleteAllFiles_2)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
-
-        self.btnToPdf_2 = QPushButton(self.groupBox_2)
-        self.btnToPdf_2.setObjectName(u"btnToPdf_2")
-
-        self.horizontalLayout_5.addWidget(self.btnToPdf_2)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
-
-
-        self.verticalLayout.addWidget(self.groupBox_2)
+        self.verticalLayout.addWidget(self.image_list_widget)
 
         self.verticalLayout.setStretch(0, 2)
         self.verticalLayout.setStretch(1, 3)
-        self.verticalLayout.setStretch(2, 7)
 
         self.horizontalLayout_2.addLayout(self.verticalLayout)
 
@@ -157,7 +118,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1143, 18))
+        self.menubar.setGeometry(QRect(0, 0, 694, 18))
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)
@@ -183,10 +144,6 @@ class Ui_MainWindow(object):
         self.actionSave_S.setText(QCoreApplication.translate("MainWindow", u"Save(&S)", None))
         self.actionSave_as_A.setText(QCoreApplication.translate("MainWindow", u"Save as... (&A)", None))
         self.actionExit_Q.setText(QCoreApplication.translate("MainWindow", u"Exit(&Q)", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"\uc774\ubbf8\uc9c0 \ubaa9\ub85d", None))
-        self.btnDeleteFile_2.setText(QCoreApplication.translate("MainWindow", u"\uc0ad\uc81c", None))
-        self.btnDeleteAllFiles_2.setText(QCoreApplication.translate("MainWindow", u"\uc804\uccb4 \uc0ad\uc81c", None))
-        self.btnToPdf_2.setText(QCoreApplication.translate("MainWindow", u"PDF\ub85c \uc800\uc7a5", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\uc774\ubbf8\uc9c0", None))
         self.lbPreview.setText("")
         self.btnCapture.setText(QCoreApplication.translate("MainWindow", u"\ucea1\uccd0", None))
