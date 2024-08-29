@@ -1,11 +1,15 @@
 from PySide6.QtWidgets import QMainWindow
 
+from app.config.config import Config
+from app.dialogs.setting_dialog import SettingDialog
 from ui.main_window_ui import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.config = Config()
+
         self.pre_command_widget = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -23,9 +27,7 @@ class MainWindow(QMainWindow):
         self.ui.btnStart.clicked.connect(self.on_start)
 
         # Menu actions
-        self.ui.actionOpen_O.triggered.connect(self.on_open)
-        self.ui.actionSave_S.triggered.connect(self.on_save)
-        self.ui.actionSave_as_A.triggered.connect(self.on_save_as)
+        self.ui.actionSettingDialog.triggered.connect(self.on_setting_dialog)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
     def on_capture(self):
@@ -51,3 +53,7 @@ class MainWindow(QMainWindow):
     def on_save_as(self):
         # TODO: Implement save as logic
         pass
+
+    def on_setting_dialog(self):
+        dialog = SettingDialog(self.config)
+        dialog.exec()

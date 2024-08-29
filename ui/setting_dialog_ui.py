@@ -20,20 +20,20 @@ from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QFrame,
     QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
     QWidget)
 
-class Ui_dlgSetting(object):
-    def setupUi(self, dlgSetting):
-        if not dlgSetting.objectName():
-            dlgSetting.setObjectName(u"dlgSetting")
-        dlgSetting.resize(463, 258)
-        dlgSetting.setMaximumSize(QSize(463, 258))
-        dlgSetting.setSizeGripEnabled(False)
-        dlgSetting.setModal(True)
-        self.verticalLayout_2 = QVBoxLayout(dlgSetting)
+class Ui_SettingDialog(object):
+    def setupUi(self, SettingDialog):
+        if not SettingDialog.objectName():
+            SettingDialog.setObjectName(u"SettingDialog")
+        SettingDialog.resize(463, 258)
+        SettingDialog.setMaximumSize(QSize(463, 258))
+        SettingDialog.setSizeGripEnabled(False)
+        SettingDialog.setModal(True)
+        self.verticalLayout_2 = QVBoxLayout(SettingDialog)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.frame = QFrame(dlgSetting)
+        self.frame = QFrame(SettingDialog)
         self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -86,7 +86,7 @@ class Ui_dlgSetting(object):
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.leImagePath = QLineEdit(self.frame)
         self.leImagePath.setObjectName(u"leImagePath")
         self.leImagePath.setMinimumSize(QSize(0, 22))
@@ -113,12 +113,12 @@ class Ui_dlgSetting(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.btnCancel = QPushButton(dlgSetting)
+        self.btnCancel = QPushButton(SettingDialog)
         self.btnCancel.setObjectName(u"btnCancel")
 
         self.horizontalLayout.addWidget(self.btnCancel)
 
-        self.btnOk = QPushButton(dlgSetting)
+        self.btnOk = QPushButton(SettingDialog)
         self.btnOk.setObjectName(u"btnOk")
 
         self.horizontalLayout.addWidget(self.btnOk)
@@ -127,24 +127,24 @@ class Ui_dlgSetting(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
 
-        self.retranslateUi(dlgSetting)
+        self.retranslateUi(SettingDialog)
 
-        QMetaObject.connectSlotsByName(dlgSetting)
+        QMetaObject.connectSlotsByName(SettingDialog)
     # setupUi
 
-    def retranslateUi(self, dlgSetting):
-        dlgSetting.setWindowTitle(QCoreApplication.translate("dlgSetting", u"\uc124\uc815", None))
-        self.label.setText(QCoreApplication.translate("dlgSetting", u"\ubaa8\ub2c8\ud130 \ubc88\ud638", None))
-        self.leMonitorNum.setText(QCoreApplication.translate("dlgSetting", u"0", None))
-        self.label_2.setText(QCoreApplication.translate("dlgSetting", u"\uc911\ubcf5 \uc774\ubbf8\uc9c0 \uc911\ub2e8", None))
-        self.leSameCount.setText(QCoreApplication.translate("dlgSetting", u"3", None))
-        self.label_3.setText(QCoreApplication.translate("dlgSetting", u"\uc774\ubbf8\uc9c0 \uc555\ucd95\uc728", None))
-        self.label_4.setText(QCoreApplication.translate("dlgSetting", u"\ucd5c\ub300 \ud398\uc774\uc9c0", None))
-        self.leMaxPage.setText(QCoreApplication.translate("dlgSetting", u"1500", None))
-        self.leImageCompress.setText(QCoreApplication.translate("dlgSetting", u"80", None))
-        self.label_5.setText(QCoreApplication.translate("dlgSetting", u"\uc774\ubbf8\uc9c0 \uc800\uc7a5 \uacbd\ub85c", None))
-        self.btnImagePath.setText(QCoreApplication.translate("dlgSetting", u"\uc120\ud0dd", None))
-        self.btnCancel.setText(QCoreApplication.translate("dlgSetting", u"\ucde8\uc18c", None))
-        self.btnOk.setText(QCoreApplication.translate("dlgSetting", u"\ud655\uc778", None))
+    def retranslateUi(self, SettingDialog):
+        SettingDialog.setWindowTitle(QCoreApplication.translate("SettingDialog", u"\uc124\uc815", None))
+        self.label.setText(QCoreApplication.translate("SettingDialog", u"\ubaa8\ub2c8\ud130 \ubc88\ud638", None))
+        self.leMonitorNum.setText(QCoreApplication.translate("SettingDialog", u"0", None))
+        self.label_2.setText(QCoreApplication.translate("SettingDialog", u"\uc911\ubcf5 \uc774\ubbf8\uc9c0 \uc911\ub2e8", None))
+        self.leSameCount.setText(QCoreApplication.translate("SettingDialog", u"3", None))
+        self.label_3.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc555\ucd95\uc728", None))
+        self.label_4.setText(QCoreApplication.translate("SettingDialog", u"\ucd5c\ub300 \ud398\uc774\uc9c0", None))
+        self.leMaxPage.setText(QCoreApplication.translate("SettingDialog", u"1500", None))
+        self.leImageCompress.setText(QCoreApplication.translate("SettingDialog", u"80", None))
+        self.label_5.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc800\uc7a5 \uacbd\ub85c", None))
+        self.btnImagePath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))
+        self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
+        self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi
 
