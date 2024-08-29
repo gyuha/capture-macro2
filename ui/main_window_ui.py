@@ -88,7 +88,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.btnCapture)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.horizontalLayout.addItem(self.horizontalSpacer_3)
 
@@ -113,11 +113,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.groupBox_3)
 
-        self.horizontalLayout_2.setStretch(1, 1)
+        self.horizontalLayout_2.setStretch(0, 2)
+        self.horizontalLayout_2.setStretch(1, 4)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 694, 18))
+        self.menubar.setGeometry(QRect(0, 0, 694, 33))
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)

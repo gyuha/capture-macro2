@@ -16,10 +16,9 @@ class MainWindow(QMainWindow):
 
         # Connect signals to slots
         self.connect_signals_slots()
+        self.set_macro()
 
     def connect_signals_slots(self):
-        self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
-        self.ui.command_widget.ui.groupBox.setTitle("수행")
 
         # Capture and control buttons
         self.ui.btnCapture.clicked.connect(self.on_capture)
@@ -30,6 +29,14 @@ class MainWindow(QMainWindow):
         self.ui.actionSettingDialog.triggered.connect(self.on_setting_dialog)
         self.ui.actionSave.triggered.connect(self.on_save)
         self.ui.actionExit_Q.triggered.connect(self.close)
+
+    def set_macro(self):
+        # 매크로 설정
+        self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
+        self.ui.command_widget.ui.groupBox.setTitle("수행")
+
+        self.ui.pre_command_widget.set_macro(self.config.pre_macro)
+        self.ui.command_widget.set_macro(self.config.macro)
 
     def on_capture(self):
         # TODO: Implement capture logic
