@@ -75,7 +75,6 @@ class CommandWidget(QWidget):
         index = actionCombo.findText(action)
         if index > -1:
             actionCombo.setCurrentIndex(index)
-        #
         self.ui.macroTable.setCellWidget(row, 0, actionCombo)
 
         item = QTableWidgetItem(value)
