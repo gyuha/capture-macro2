@@ -1,9 +1,19 @@
 {
-    "qtForPython.designer.path": "${workspaceFolder}/venv/Scripts/pyside6-designer.exe",
-    "qtForPython.uic.path": "${workspaceFolder}/venv/Scripts/pyside6-uic.exe",
-    "qtForPython.qmlformat.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlformat.exe",
-    "qtForPython.qml.path": "${workspaceFolder}/venv/Scripts/pyside6-qml.exe",
-    "qtForPython.qmlls.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlls.exe",
-    "qtForPython.rcc.liveExecution.enabled": false,
-    "qtForPython.qmlls.enabled": false
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.vscode/mac": true,
+      "**/.vscode/windows": true
+    }
+  },
+  "settings": {
+    "$mergeConfigs": [
+      ".vscode/common/settings.json",
+      ".vscode/${env:VSCODE_PLATFORM}/settings.json"
+    ]
+  }
 }
