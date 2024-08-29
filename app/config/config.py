@@ -48,8 +48,9 @@ class Config:
             "monitor": self.monitor,
             "same_count": self.same_count,
             "image_quality": self.image_quality,
-            "pre_macro": self.pre_macro,
-            "macro": self.macro,
+            "max_page": self.max_page,
+            "pre_macro": [macro.to_dict() for macro in self.pre_macro],
+            "macro": [macro.to_dict() for macro in self.macro],
         }
 
     def save_to_file(self, filepath: str = "config.yml") -> None:
