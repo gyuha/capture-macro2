@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QDialog, QMainWindow
 
 from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
@@ -56,4 +56,10 @@ class MainWindow(QMainWindow):
 
     def on_setting_dialog(self):
         dialog = SettingDialog(self.config)
-        dialog.exec()
+        result = dialog.exec_()  # 다이얼로그 실행
+
+        if result == QDialog.Accepted:
+            self.config.save_to_file()
+            print("Settings applied:", self.config)
+        else:
+            print("Settings dialog canceled")

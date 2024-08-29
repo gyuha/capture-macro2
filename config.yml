@@ -1,19 +1,19 @@
-capture_path: "./capture"  
-monitor: 1  
-same_count: 3  
-image_quality: 88  
-max_page: 100  
-pre_macro:  
-  - action: "click"  
-    value: "820,1220"  
-  - action: "delay"  
-    value: "500"  
-macro:  
-  - action: "capture"  
-    value: "281,365,1233,1610"  
-  - action: "click"  
-    value: "820,1220"  
-  - action: "key"  
-    value: "right"  
-  - action: "delay"  
-    value: "300"  
+capture_path: ./capture
+monitor: 1
+same_count: 3
+image_quality: 88
+max_page: 1500
+pre_macro:
+  - action: click
+    value: 820,1220
+macro:
+  - action: capture
+    value: 281,365,1233,1610
+  - action: key
+    value: right
+  - action: delay
+    value: '300'
+  - action: click
+    value: 820,1220
+  - action: delay
+    value: '500'
