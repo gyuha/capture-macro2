@@ -1,6 +1,7 @@
 from functools import partial
 from typing import List
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox, QPushButton, QTableWidgetItem, QWidget
 
 from app.config.config import Macro
@@ -19,10 +20,11 @@ class CommandWidget(QWidget):
 
     def set_macro(self, macro: List[Macro]):
         self.macro = macro
-        print("📢[command_widget.py:21]: ", macro)
         self.ui.macroTable.setRowCount(len(macro))
+        self.ui.macroTable.setAlternatingRowColors(True)
         for row, macro in enumerate(self.macro):
             self.setMacroTableRow(row, macro.action, macro.value)
+        self.updateMacroActions()
 
     def connect_signals_slots(self):
         # Config buttons
@@ -30,17 +32,21 @@ class CommandWidget(QWidget):
         self.ui.btnConfigAdd.clicked.connect(self.on_config_add)
         self.ui.btnConfigRemove.clicked.connect(self.on_config_remove)
 
+    def add_row(self, row, action="capture", value=""):
+        self.ui.macroTable.insertRow(row)
+        self.setMacroTableRow(row, action, value)
+        self.updateMacroActions()
+
     def on_config_insert(self):
-        print("Config insert")
-        self.insert_macro("delay", "1000")  # Example action and value
+        self.add_row(self.ui.macroTable.currentRow())
 
     def on_config_add(self):
-        print("Config add")
-        self.add_macro("click", "x=100,y=200")  # Example action and value
+        self.add_row(self.ui.macroTable.currentRow() + 1)
 
     def on_config_remove(self):
-        print("Config remove")
-        self.remove_macro()  # Remove the last macro for demonstration
+        row = self.ui.macroTable.currentRow()
+        self.ui.macroTable.removeRow(row)
+        self.updateMacroActions()
 
     def insert_macro(self, action, value):
         new_row = 0
@@ -65,11 +71,11 @@ class CommandWidget(QWidget):
     def setMacroTableRow(self, row, action, value):
         actionCombo = QComboBox()
         actionCombo.addItems(macroActions)
+        actionCombo.currentTextChanged.connect(self.updateMacroActions)
         index = actionCombo.findText(action)
         if index > -1:
             actionCombo.setCurrentIndex(index)
-        # actionCombo.currentTextChanged.connect(self.updateMacroActions)
-
+        #
         self.ui.macroTable.setCellWidget(row, 0, actionCombo)
 
         item = QTableWidgetItem(value)
@@ -97,7 +103,7 @@ class CommandWidget(QWidget):
                     self.ui.macroTable.setCellWidget(row, 2, button)
                 else:
                     item = QTableWidgetItem()
-                    # item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+                    item.setFlags(item.flags() ^ Qt.ItemIsEditable)
                     self.ui.macroTable.setItem(row, 2, item)
                     self.ui.macroTable.setItem(row, 3, item)
         except Exception:

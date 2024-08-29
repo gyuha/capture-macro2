@@ -23,7 +23,8 @@ class Ui_CommandWidget(object):
     def setupUi(self, CommandWidget):
         if not CommandWidget.objectName():
             CommandWidget.setObjectName(u"CommandWidget")
-        CommandWidget.resize(442, 250)
+        CommandWidget.resize(600, 341)
+        CommandWidget.setMinimumSize(QSize(600, 0))
         self.verticalLayout_2 = QVBoxLayout(CommandWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
