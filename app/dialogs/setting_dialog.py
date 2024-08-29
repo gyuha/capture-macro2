@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QFileDialog
 
 from app.config.config import Config
 from ui.setting_dialog_ui import Ui_SettingDialog
@@ -28,6 +28,7 @@ class SettingDialog(QDialog):
     def connect_signals_slots(self):
         self.ui.btnCancel.clicked.connect(self.cancel)
         self.ui.btnOk.clicked.connect(self.ok)
+        self.ui.btnImagePath.clicked.connect(self.select_path)
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기
@@ -43,3 +44,8 @@ class SettingDialog(QDialog):
 
         # 다이얼로그 닫기
         self.accept()
+
+    def select_path(self):
+        # 파일 선택 다이얼로그 열기
+        path = QFileDialog.getExistingDirectory(self, "Select Directory")
+        self.ui.leImagePath.setText(path)
