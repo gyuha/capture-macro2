@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="2,3,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="2,3,5">
       <item>
        <widget class="CommandWidget" name="pre_command_widget" native="true">
         <property name="minimumSize">
