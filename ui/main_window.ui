@@ -65,6 +65,7 @@
          </property>
          <property name="font">
           <font>
+           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -88,6 +89,7 @@
            </property>
            <property name="font">
             <font>
+             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -98,9 +100,6 @@
          </item>
          <item>
           <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
@@ -119,6 +118,7 @@
            </property>
            <property name="font">
             <font>
+             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -137,6 +137,7 @@
            </property>
            <property name="font">
             <font>
+             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -158,7 +159,7 @@
      <x>0</x>
      <y>0</y>
      <width>694</width>
-     <height>33</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -166,6 +167,7 @@
      <string>파일</string>
     </property>
     <addaction name="actionSettingDialog"/>
+    <addaction name="actionSave"/>
     <addaction name="separator"/>
     <addaction name="actionExit_Q"/>
    </widget>
@@ -189,6 +191,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save(&amp;S)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

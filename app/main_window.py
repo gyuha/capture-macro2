@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
 
         # Menu actions
         self.ui.actionSettingDialog.triggered.connect(self.on_setting_dialog)
+        self.ui.actionSave.triggered.connect(self.on_save)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
     def on_capture(self):
@@ -47,14 +48,11 @@ class MainWindow(QMainWindow):
         pass
 
     def on_save(self):
-        # TODO: Implement save logic
-        pass
-
-    def on_save_as(self):
-        # TODO: Implement save as logic
-        pass
+        self.config.save_to_file()
+        self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
     def on_setting_dialog(self):
+        # 설정 다이얼로그
         dialog = SettingDialog(self.config)
         result = dialog.exec_()  # 다이얼로그 실행
 
