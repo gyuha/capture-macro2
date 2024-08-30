@@ -56,7 +56,6 @@ class MainWindow(QMainWindow):
 
     def on_save(self):
         self.config.save_to_file()
-        print("📢[main_window.py:59]: ", self.config)
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
     def on_setting_dialog(self):
