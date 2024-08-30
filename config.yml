@@ -8,14 +8,14 @@ macro:
 - action: delay
   value: '3000'
 - action: click
-  value: 820,1220
+  value: 1279,366,441,712
 - action: delay
   value: '500'
 max_page: 1500
 monitor: 0
 pre_macro:
 - action: capture
-  value: 329,560,666,948
+  value: 92,84,584,833
 - action: click
-  value: 820,1220
+  value: 1403,380,276,524
 same_count: 3
