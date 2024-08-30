@@ -34,6 +34,8 @@ class CommandWidget(QWidget):
             self.setMacroTableRow(row, macro.action, macro.value)
         self.updateMacroActions()
 
+        self.ui.macroTable.itemChanged.connect(self.updateMacroActions)
+
     def connect_signals_slots(self):
         # Config buttons
         self.ui.btnConfigInsert.clicked.connect(self.on_config_insert)
@@ -43,7 +45,6 @@ class CommandWidget(QWidget):
     def add_row(self, row, action="capture", value=""):
         self.ui.macroTable.insertRow(row)
         self.setMacroTableRow(row, action, value)
-        self.updateMacroActions()
 
     def on_config_insert(self):
         self.add_row(self.ui.macroTable.currentRow())
@@ -54,27 +55,6 @@ class CommandWidget(QWidget):
     def on_config_remove(self):
         row = self.ui.macroTable.currentRow()
         self.ui.macroTable.removeRow(row)
-        self.updateMacroActions()
-
-    def insert_macro(self, action, value):
-        new_row = 0
-        self.ui.macroTable.insertRow(new_row)  # Insert row at the top
-        self.setMacroTableRow(new_row, action, value)
-        self.macro.insert(new_row, Macro(action=action, value=value))
-        self.updateMacroActions()
-
-    def add_macro(self, action, value):
-        new_row = self.ui.macroTable.rowCount()
-        self.ui.macroTable.insertRow(new_row)  # Append row at the end
-        self.setMacroTableRow(new_row, action, value)
-        self.macro.append(Macro(action=action, value=value))
-        self.updateMacroActions()
-
-    def remove_macro(self):
-        last_row = self.ui.macroTable.rowCount() - 1
-        if last_row >= 0:
-            self.ui.macroTable.removeRow(last_row)
-            self.macro.pop()
 
     def setMacroTableRow(self, row, action, value):
         actionCombo = QComboBox()
@@ -86,9 +66,11 @@ class CommandWidget(QWidget):
         self.ui.macroTable.setCellWidget(row, 0, actionCombo)
 
         item = QTableWidgetItem(value)
+        # item.currentTextChanged.connect(self.updateMacroActions)
         self.ui.macroTable.setItem(row, 1, item)
 
     def updateMacroActions(self):
+        self.ui.macroTable.blockSignals(True)
         macro: List[Macro] = []
         try:
             for row in range(self.ui.macroTable.rowCount()):
@@ -109,11 +91,17 @@ class CommandWidget(QWidget):
                     button.setText("포인트")
                     button.clicked.connect(partial(self.clickPointClick, row))
                     self.ui.macroTable.setCellWidget(row, 2, button)
+                    placeholder_item = QTableWidgetItem()
+                    placeholder_item.setFlags(Qt.ItemIsEnabled)
+                    self.ui.macroTable.setItem(row, 3, placeholder_item)
                 else:
-                    item = QTableWidgetItem()
-                    item.setFlags(item.flags() ^ Qt.ItemIsEditable)
-                    self.ui.macroTable.setItem(row, 2, item)
-                    self.ui.macroTable.setItem(row, 3, item)
+                    placeholder_item = QTableWidgetItem()
+                    placeholder_item.setFlags(Qt.ItemIsEnabled)
+                    self.ui.macroTable.setItem(row, 2, placeholder_item)
+
+                    placeholder_item2 = QTableWidgetItem()
+                    placeholder_item2.setFlags(Qt.ItemIsEnabled)
+                    self.ui.macroTable.setItem(row, 3, placeholder_item2)
                 macro.append(
                     Macro(action=action, value=self.ui.macroTable.item(row, 1).text())
                 )
@@ -124,6 +112,8 @@ class CommandWidget(QWidget):
 
         except Exception as e:
             print(e)
+        finally:
+            self.ui.macroTable.blockSignals(False)
 
     def clickScreenRect(self, row):
         pass

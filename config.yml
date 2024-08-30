@@ -3,10 +3,10 @@ image_quality: 88
 macro:
 - action: capture
   value: 281,365,1233,1610
-- action: key
+- action: delay
   value: right
 - action: delay
-  value: '300'
+  value: '3000'
 - action: click
   value: 820,1220
 - action: delay
@@ -15,7 +15,7 @@ max_page: 1500
 monitor: 1
 pre_macro:
 - action: capture
-  value: asdf
+  value: up
 - action: click
   value: 820,1220
 same_count: 3
