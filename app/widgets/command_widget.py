@@ -16,7 +16,39 @@ from app.utils.rect.rect_overlay import RectOverlay
 from app.utils.rect_value_utils import is_valid_rect_string_value, string_to_rect_value
 from ui.command_widget_ui import Ui_CommandWidget
 
-macroActions = ["capture", "delay", "click", "key", "scroll"]
+MACRO_ACTIONS = ["capture", "delay", "click", "key", "scroll"]
+# TODO : 키 목록을 콤보박스에서 가져오도록 수가
+KEY_ACTIONS = [
+    "up",
+    "down",
+    "left",
+    "right",
+    "enter",
+    "tab",
+    "space",
+    "backspace",
+    "delete",
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11",
+    "f12",
+    "ctrl",
+    "alt",
+    "shift",
+    "win",
+    "pageup",
+    "pagedown",
+    "home",
+    "end",
+]
 
 
 class CommandWidget(QWidget):
@@ -73,7 +105,7 @@ class CommandWidget(QWidget):
 
     def set_macro_table_row(self, row, action, value):
         actionCombo = QComboBox()
-        actionCombo.addItems(macroActions)
+        actionCombo.addItems(MACRO_ACTIONS)
         actionCombo.currentTextChanged.connect(self.update_macro_actions)
         index = actionCombo.findText(action)
         if index > -1:
