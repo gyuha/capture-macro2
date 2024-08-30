@@ -1,7 +1,7 @@
 from functools import partial
 from typing import List
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -161,9 +161,10 @@ class CommandWidget(QWidget):
         if monitor_idx < len(screens):
             screen_geometry = screens[monitor_idx].geometry()
             self.overlay = RectOverlay(screen_geometry)
-            self.overlay.rectSelected.connect(self.handle_rect_selected)
+            self.overlay.rect_selected.connect(self.handle_rect_selected)
             self.overlay.show()
 
+    @Slot(int, int, int, int)
     def handle_rect_selected(self, x, y, width, height):
         self.ui.macroTable.item(self.action_row, 1).setText(f"{x},{y},{width},{height}")
         self.update_macro_actions()

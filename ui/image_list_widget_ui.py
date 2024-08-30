@@ -24,7 +24,7 @@ class Ui_ImageListWidget(object):
     def setupUi(self, ImageListWidget):
         if not ImageListWidget.objectName():
             ImageListWidget.setObjectName(u"ImageListWidget")
-        ImageListWidget.resize(456, 415)
+        ImageListWidget.resize(404, 406)
         self.verticalLayout = QVBoxLayout(ImageListWidget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -33,39 +33,39 @@ class Ui_ImageListWidget(object):
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.verticalLayout_2 = QVBoxLayout(self.groupBox_2)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.lsFiles = QListWidget(self.groupBox_2)
-        self.lsFiles.setObjectName(u"lsFiles")
-        self.lsFiles.setFrameShape(QFrame.Box)
-        self.lsFiles.setFrameShadow(QFrame.Sunken)
-        self.lsFiles.setIconSize(QSize(80, 120))
-        self.lsFiles.setTextElideMode(Qt.ElideLeft)
-        self.lsFiles.setVerticalScrollMode(QAbstractItemView.ScrollPerItem)
-        self.lsFiles.setGridSize(QSize(0, 120))
-        self.lsFiles.setViewMode(QListView.ListMode)
+        self.imageFiles = QListWidget(self.groupBox_2)
+        self.imageFiles.setObjectName(u"imageFiles")
+        self.imageFiles.setFrameShape(QFrame.Box)
+        self.imageFiles.setFrameShadow(QFrame.Sunken)
+        self.imageFiles.setIconSize(QSize(80, 120))
+        self.imageFiles.setTextElideMode(Qt.ElideLeft)
+        self.imageFiles.setVerticalScrollMode(QAbstractItemView.ScrollPerItem)
+        self.imageFiles.setGridSize(QSize(0, 120))
+        self.imageFiles.setViewMode(QListView.ListMode)
 
-        self.verticalLayout_2.addWidget(self.lsFiles)
+        self.verticalLayout_2.addWidget(self.imageFiles)
 
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.btnDeleteFile_2 = QPushButton(self.groupBox_2)
-        self.btnDeleteFile_2.setObjectName(u"btnDeleteFile_2")
-        self.btnDeleteFile_2.setMinimumSize(QSize(60, 0))
+        self.btnDeleteFile = QPushButton(self.groupBox_2)
+        self.btnDeleteFile.setObjectName(u"btnDeleteFile")
+        self.btnDeleteFile.setMinimumSize(QSize(60, 0))
 
-        self.horizontalLayout_5.addWidget(self.btnDeleteFile_2)
+        self.horizontalLayout_5.addWidget(self.btnDeleteFile)
 
-        self.btnDeleteAllFiles_2 = QPushButton(self.groupBox_2)
-        self.btnDeleteAllFiles_2.setObjectName(u"btnDeleteAllFiles_2")
+        self.btnDeleteAllFiles = QPushButton(self.groupBox_2)
+        self.btnDeleteAllFiles.setObjectName(u"btnDeleteAllFiles")
 
-        self.horizontalLayout_5.addWidget(self.btnDeleteAllFiles_2)
+        self.horizontalLayout_5.addWidget(self.btnDeleteAllFiles)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
 
-        self.btnToPdf_2 = QPushButton(self.groupBox_2)
-        self.btnToPdf_2.setObjectName(u"btnToPdf_2")
+        self.btnToPdf = QPushButton(self.groupBox_2)
+        self.btnToPdf.setObjectName(u"btnToPdf")
 
-        self.horizontalLayout_5.addWidget(self.btnToPdf_2)
+        self.horizontalLayout_5.addWidget(self.btnToPdf)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
@@ -82,8 +82,8 @@ class Ui_ImageListWidget(object):
     def retranslateUi(self, ImageListWidget):
         ImageListWidget.setWindowTitle(QCoreApplication.translate("ImageListWidget", u"Form", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("ImageListWidget", u"\uc774\ubbf8\uc9c0 \ubaa9\ub85d", None))
-        self.btnDeleteFile_2.setText(QCoreApplication.translate("ImageListWidget", u"\uc0ad\uc81c", None))
-        self.btnDeleteAllFiles_2.setText(QCoreApplication.translate("ImageListWidget", u"\uc804\uccb4 \uc0ad\uc81c", None))
-        self.btnToPdf_2.setText(QCoreApplication.translate("ImageListWidget", u"PDF\ub85c \uc800\uc7a5", None))
+        self.btnDeleteFile.setText(QCoreApplication.translate("ImageListWidget", u"\uc0ad\uc81c", None))
+        self.btnDeleteAllFiles.setText(QCoreApplication.translate("ImageListWidget", u"\uc804\uccb4 \uc0ad\uc81c", None))
+        self.btnToPdf.setText(QCoreApplication.translate("ImageListWidget", u"PDF\ub85c \uc800\uc7a5", None))
     # retranslateUi
 

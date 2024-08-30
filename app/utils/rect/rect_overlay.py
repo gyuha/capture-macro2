@@ -1,13 +1,13 @@
 import sys
 
-from PySide6.QtCore import QPoint, QRect, Qt, QTimer, Signal
+from PySide6.QtCore import QPoint, QRect, Qt, QTimer, Signal, Slot
 from PySide6.QtGui import QColor, QCursor, QPainter, QPen
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget
 
 
 class RectOverlay(QWidget):
     # Define a custom signal to send the rectangle data
-    rectSelected = Signal(int, int, int, int)
+    rect_selected = Signal(int, int, int, int)
 
     def __init__(self, screen_geometry):
         super().__init__()
@@ -74,7 +74,7 @@ class RectOverlay(QWidget):
             self.update()
             rect = QRect(self.start_point, self.end_point).normalized()
             # Emit the signal with the rectangle's data
-            self.rectSelected.emit(rect.x(), rect.y(), rect.width(), rect.height())
+            self.rect_selected.emit(rect.x(), rect.y(), rect.width(), rect.height())
             self.close()
 
 
@@ -98,11 +98,12 @@ class MainWindow(QMainWindow):
             screen_geometry = screens[monitor_index].geometry()
             self.overlay = RectOverlay(screen_geometry)
             # Connect the signal to a slot in MainWindow
-            self.overlay.rectSelected.connect(self.handle_rect_selected)
+            self.overlay.rect_selected.connect(self.handle_rect_selected)
             self.overlay.show()
         else:
             print(f"Monitor {monitor_index + 1} is not available.")
 
+    @Slot(int, int, int, int)
     def handle_rect_selected(self, x, y, width, height):
         print(f"Rectangle selected: x={x}, y={y}, width={width}, height={height}")
 
