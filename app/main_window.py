@@ -35,8 +35,8 @@ class MainWindow(QMainWindow):
         self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
         self.ui.command_widget.ui.groupBox.setTitle("수행")
 
-        self.ui.pre_command_widget.set_macro(self.config.pre_macro)
-        self.ui.command_widget.set_macro(self.config.macro)
+        self.ui.pre_command_widget.set_macro(self, "pre_macro", self.config.pre_macro)
+        self.ui.command_widget.set_macro(self, "macro", self.config.macro)
 
     def on_capture(self):
         # TODO: Implement capture logic
@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
 
     def on_save(self):
         self.config.save_to_file()
+        print("📢[main_window.py:59]: ", self.config)
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
     def on_setting_dialog(self):

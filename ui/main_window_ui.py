@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1050, 958)
+        MainWindow.resize(924, 905)
         self.actionSettingDialog = QAction(MainWindow)
         self.actionSettingDialog.setObjectName(u"actionSettingDialog")
         self.actionExit_Q = QAction(MainWindow)
@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.actionSave.setObjectName(u"actionSave")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setMinimumSize(QSize(1050, 0))
+        self.centralwidget.setMinimumSize(QSize(900, 0))
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.verticalLayout = QVBoxLayout()
@@ -114,12 +114,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.groupBox_3)
 
-        self.horizontalLayout_2.setStretch(0, 3)
-        self.horizontalLayout_2.setStretch(1, 4)
+        self.horizontalLayout_2.setStretch(0, 4)
+        self.horizontalLayout_2.setStretch(1, 6)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1050, 33))
+        self.menubar.setGeometry(QRect(0, 0, 924, 33))
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)

@@ -14,6 +14,8 @@ macro:
 max_page: 1500
 monitor: 1
 pre_macro:
+- action: capture
+  value: asdf
 - action: click
   value: 820,1220
 same_count: 3

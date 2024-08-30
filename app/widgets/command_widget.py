@@ -16,10 +16,18 @@ class CommandWidget(QWidget):
         self.ui = Ui_CommandWidget()
         self.ui.setupUi(self)
         self.connect_signals_slots()
+        self.macro_type = ""
+        self.main = None
         self.macro: List[Macro] = []
+        self.ui.macroTable.setColumnWidth(0, 80)
+        self.ui.macroTable.setColumnWidth(1, 110)
+        self.ui.macroTable.setColumnWidth(2, 60)
+        self.ui.macroTable.setColumnWidth(3, 60)
 
-    def set_macro(self, macro: List[Macro]):
+    def set_macro(self, main, macro_type: str = "macro", macro: List[Macro] = None):
         self.macro = macro
+        self.main = main
+        self.macro_type = macro_type
         self.ui.macroTable.setRowCount(len(macro))
         self.ui.macroTable.setAlternatingRowColors(True)
         for row, macro in enumerate(self.macro):
@@ -81,6 +89,7 @@ class CommandWidget(QWidget):
         self.ui.macroTable.setItem(row, 1, item)
 
     def updateMacroActions(self):
+        macro: List[Macro] = []
         try:
             for row in range(self.ui.macroTable.rowCount()):
                 action = self.ui.macroTable.cellWidget(row, 0).currentText()
@@ -105,5 +114,22 @@ class CommandWidget(QWidget):
                     item.setFlags(item.flags() ^ Qt.ItemIsEditable)
                     self.ui.macroTable.setItem(row, 2, item)
                     self.ui.macroTable.setItem(row, 3, item)
-        except Exception:
-            pass
+                macro.append(
+                    Macro(action=action, value=self.ui.macroTable.item(row, 1).text())
+                )
+            if self.macro_type == "pre_macro":
+                self.main.config.pre_macro = macro
+            else:
+                self.main.config.macro = macro
+
+        except Exception as e:
+            print(e)
+
+    def clickScreenRect(self, row):
+        pass
+
+    def clickScreenRectCheck(self, row):
+        pass
+
+    def clickPointClick(self, row):
+        pass
