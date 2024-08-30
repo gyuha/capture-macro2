@@ -2,9 +2,18 @@ from functools import partial
 from typing import List
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QComboBox, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QPushButton,
+    QTableWidgetItem,
+    QWidget,
+)
 
 from app.config.config import Macro
+from app.utils.rect.rect_check_overlay import RectCheckOverlay
+from app.utils.rect.rect_overlay import RectOverlay
+from app.utils.rect_value_utils import is_valid_rect_string_value, string_to_rect_value
 from ui.command_widget_ui import Ui_CommandWidget
 
 macroActions = ["capture", "delay", "click", "key", "scroll"]
@@ -19,10 +28,16 @@ class CommandWidget(QWidget):
         self.macro_type = ""
         self.main = None
         self.macro: List[Macro] = []
+
         self.ui.macroTable.setColumnWidth(0, 80)
         self.ui.macroTable.setColumnWidth(1, 110)
         self.ui.macroTable.setColumnWidth(2, 60)
         self.ui.macroTable.setColumnWidth(3, 60)
+
+        self.overlay = None
+
+        # 액션을 실행 한 행
+        self.action_row = -1
 
     def set_macro(self, main, macro_type: str = "macro", macro: List[Macro] = None):
         self.macro = macro
@@ -31,10 +46,10 @@ class CommandWidget(QWidget):
         self.ui.macroTable.setRowCount(len(macro))
         self.ui.macroTable.setAlternatingRowColors(True)
         for row, macro in enumerate(self.macro):
-            self.setMacroTableRow(row, macro.action, macro.value)
-        self.updateMacroActions()
+            self.set_macro_table_row(row, macro.action, macro.value)
+        self.update_macro_actions()
 
-        self.ui.macroTable.itemChanged.connect(self.updateMacroActions)
+        self.ui.macroTable.itemChanged.connect(self.update_macro_actions)
 
     def connect_signals_slots(self):
         # Config buttons
@@ -44,7 +59,7 @@ class CommandWidget(QWidget):
 
     def add_row(self, row, action="capture", value=""):
         self.ui.macroTable.insertRow(row)
-        self.setMacroTableRow(row, action, value)
+        self.set_macro_table_row(row, action, value)
 
     def on_config_insert(self):
         self.add_row(self.ui.macroTable.currentRow())
@@ -56,10 +71,10 @@ class CommandWidget(QWidget):
         row = self.ui.macroTable.currentRow()
         self.ui.macroTable.removeRow(row)
 
-    def setMacroTableRow(self, row, action, value):
+    def set_macro_table_row(self, row, action, value):
         actionCombo = QComboBox()
         actionCombo.addItems(macroActions)
-        actionCombo.currentTextChanged.connect(self.updateMacroActions)
+        actionCombo.currentTextChanged.connect(self.update_macro_actions)
         index = actionCombo.findText(action)
         if index > -1:
             actionCombo.setCurrentIndex(index)
@@ -69,7 +84,7 @@ class CommandWidget(QWidget):
         # item.currentTextChanged.connect(self.updateMacroActions)
         self.ui.macroTable.setItem(row, 1, item)
 
-    def updateMacroActions(self):
+    def update_macro_actions(self):
         self.ui.macroTable.blockSignals(True)
         macro: List[Macro] = []
         try:
@@ -77,23 +92,16 @@ class CommandWidget(QWidget):
                 action = self.ui.macroTable.cellWidget(row, 0).currentText()
                 self.ui.macroTable.removeCellWidget(row, 2)
                 self.ui.macroTable.removeCellWidget(row, 3)
-                if action == "capture":
+                if action == "capture" or action == "click" or action == "scroll":
                     button = QPushButton()
                     button.setText("영역선택")
-                    button.clicked.connect(partial(self.clickScreenRect, row))
+                    button.clicked.connect(partial(self.handle_screen_rect, row))
                     button2 = QPushButton()
                     button2.setText("확인")
-                    button2.clicked.connect(partial(self.clickScreenRectCheck, row))
+                    button2.pressed.connect(partial(self.handle_rect_check_show, row))
+                    button2.released.connect(self.handle_rect_check_hide)
                     self.ui.macroTable.setCellWidget(row, 2, button)
                     self.ui.macroTable.setCellWidget(row, 3, button2)
-                elif action == "click" or action == "scroll":
-                    button = QPushButton()
-                    button.setText("포인트")
-                    button.clicked.connect(partial(self.clickPointClick, row))
-                    self.ui.macroTable.setCellWidget(row, 2, button)
-                    placeholder_item = QTableWidgetItem()
-                    placeholder_item.setFlags(Qt.ItemIsEnabled)
-                    self.ui.macroTable.setItem(row, 3, placeholder_item)
                 else:
                     placeholder_item = QTableWidgetItem()
                     placeholder_item.setFlags(Qt.ItemIsEnabled)
@@ -109,17 +117,42 @@ class CommandWidget(QWidget):
                 self.main.config.pre_macro = macro
             else:
                 self.main.config.macro = macro
-
-        except Exception as e:
-            print(e)
+        except (AttributeError, KeyError, TypeError) as e:
+            print(f"An error occurred: {e}")
         finally:
             self.ui.macroTable.blockSignals(False)
 
-    def clickScreenRect(self, row):
-        pass
+    def handle_screen_rect(self, row):
+        self.action_row = row
+        screens = QApplication.screens()
+        monitor_idx = int(self.main.config.monitor)
+        if monitor_idx < len(screens):
+            screen_geometry = screens[monitor_idx].geometry()
+            self.overlay = RectOverlay(screen_geometry)
+            self.overlay.rectSelected.connect(self.handle_rect_selected)
+            self.overlay.show()
 
-    def clickScreenRectCheck(self, row):
-        pass
+    def handle_rect_selected(self, x, y, width, height):
+        self.ui.macroTable.item(self.action_row, 1).setText(f"{x},{y},{width},{height}")
+        self.update_macro_actions()
+        self.overlay.close()
+
+    def handle_rect_check_show(self, row):
+        self.action_row = row
+        screens = QApplication.screens()
+        monitor_idx = int(self.main.config.monitor)
+        if monitor_idx < len(screens):
+            screen_geometry = screens[monitor_idx].geometry()
+            self.overlay = RectCheckOverlay(screen_geometry)
+            self.overlay.show()
+            value = self.ui.macroTable.item(row, 1).text()
+            if is_valid_rect_string_value(value):
+                x, y, width, height = string_to_rect_value(value)
+                self.overlay.display_rectangle(x, y, width, height)
+
+    def handle_rect_check_hide(self):
+        if hasattr(self, "overlay") and self.overlay.isVisible():
+            self.overlay.close()
 
     def clickPointClick(self, row):
         pass
