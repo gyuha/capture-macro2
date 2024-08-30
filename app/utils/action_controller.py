@@ -16,6 +16,7 @@ class ActionController(QObject):
         self._action_type = "pre_macro"
         self._action_macro = []
         self._monitor_index = 0
+        self.current_row = 0
 
     @property
     def action_type(self):
@@ -45,8 +46,11 @@ class ActionController(QObject):
 
     def start(self):
         self.is_running = True
-        for macro in self.action_macro:
-            print(macro.action, macro.value)
+        self.current_row = 0
+        self.signal_current_row.emit(0)
+        # for macro in self.action_macro:
+        #     print(macro.action, macro.value)
+        # self.signal_done.emit()
 
     def stop(self):
         self.is_running = False

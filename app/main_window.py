@@ -83,7 +83,9 @@ class MainWindow(QMainWindow):
         if self.action_controller.action_type == "pre_macro":
             self.action_controller.action_type = "macro"
             self.action_controller.action_macro = self.config.macro
+            self.action_controller.start()
         else:
+            self.on_stop()
             self.action_controller.stop()
 
     @Slot(str)
