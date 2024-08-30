@@ -93,6 +93,13 @@ class MainWindow(QMainWindow):
         # Add image to the list
         print("Adding image:", image_name)
 
+    @Slot(int)
+    def on_action_controller_current_row(self, row):
+        if self.action_controller.action_type == "pre_macro":
+            self.ui.pre_command_widget.ui.macroTable.selectRow(row)
+        else:
+            self.ui.command_widget.ui.macroTable.selectRow(row)
+
     def on_save(self):
         self.config.save_to_file()
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)

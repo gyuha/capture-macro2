@@ -47,7 +47,7 @@ class ActionController(QObject):
     def start(self):
         self.is_running = True
         self.current_row = 0
-        self.signal_current_row.emit(0)
+        self.signal_current_row.emit(self.current_row)
         # for macro in self.action_macro:
         #     print(macro.action, macro.value)
         # self.signal_done.emit()
