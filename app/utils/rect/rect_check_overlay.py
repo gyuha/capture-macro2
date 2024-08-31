@@ -6,16 +6,23 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget
 
 
 class RectCheckOverlay(QWidget):
-    def __init__(self, screen_geometry):
+    def __init__(self, screen):
         super().__init__()
+        self.screen = screen
+        self.device_pixel_ratio = screen.devicePixelRatio()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setGeometry(screen_geometry)
-        self.rect_to_display = None  # Store the rectangle to display
+        self.setGeometry(screen.geometry())
+        self.rect_to_display = None
 
     def display_rectangle(self, x, y, width, height):
         # Set the rectangle to display
-        self.rect_to_display = QRect(x, y, width, height)
+        self.rect_to_display = QRect(
+            x / self.device_pixel_ratio,
+            y / self.device_pixel_ratio,
+            width / self.device_pixel_ratio,
+            height / self.device_pixel_ratio,
+        )
         self.update()
 
     def paintEvent(self, event):
@@ -38,7 +45,7 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 800, 600)
 
         self.button = QPushButton("Show Overlay on Monitor 1", self)
-        self.button.setGeometry(50, 50, 200, 50)
+        self.button.setGeometry(50, 60, 200, 50)
         self.button.pressed.connect(lambda: self.show_overlay(0))
         self.button.released.connect(self.hide_overlay)
 
@@ -50,11 +57,10 @@ class MainWindow(QMainWindow):
     def show_overlay(self, monitor_index):
         screens = QApplication.screens()
         if monitor_index < len(screens):
-            screen_geometry = screens[monitor_index].geometry()
-            self.overlay = RectCheckOverlay(screen_geometry)
+            screen = screens[monitor_index]
+            self.overlay = RectCheckOverlay(screen)
             self.overlay.show()
-            # Display a rectangle at a specific location
-            self.overlay.display_rectangle(100, 100, 300, 200)
+            self.overlay.display_rectangle(50, 50, 3740, 2060)
         else:
             print(f"Monitor {monitor_index + 1} is not available.")
 

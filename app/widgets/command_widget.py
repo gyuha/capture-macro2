@@ -157,12 +157,13 @@ class CommandWidget(QWidget):
             self.ui.macroTable.blockSignals(False)
 
     def handle_screen_rect(self, row):
+        # 스크린 영역 선택
         self.action_row = row
         screens = QApplication.screens()
         monitor_idx = int(self.main.config.monitor)
         if monitor_idx < len(screens):
-            screen_geometry = screens[monitor_idx].geometry()
-            self.overlay = RectOverlay(screen_geometry)
+            screen = screens[monitor_idx]
+            self.overlay = RectOverlay(screen)
             self.overlay.rect_selected.connect(self.handle_rect_selected)
             self.overlay.show()
 
@@ -177,8 +178,8 @@ class CommandWidget(QWidget):
         screens = QApplication.screens()
         monitor_idx = int(self.main.config.monitor)
         if monitor_idx < len(screens):
-            screen_geometry = screens[monitor_idx].geometry()
-            self.overlay = RectCheckOverlay(screen_geometry)
+            screen = screens[monitor_idx]
+            self.overlay = RectCheckOverlay(screen)
             self.overlay.show()
             value = self.ui.macroTable.item(row, 1).text()
             if is_valid_rect_string_value(value):

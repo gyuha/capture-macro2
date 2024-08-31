@@ -2,18 +2,18 @@ capture_path: ./capture
 image_quality: 88
 macro:
 - action: capture
-  value: 814,223,928,916
+  value: 1810,456,769,1143
 - action: key
   value: right
 - action: click
-  value: 1408,1081,149,25
+  value: 2113,1624,222,40
 - action: delay
   value: '500'
 max_page: 1500
 monitor: 0
 pre_macro:
 - action: capture
-  value: 820,271,360,850
-- action: click
-  value: 1255,467,198,139
+  value: 1240,430,523,559
+- action: capture
+  value: 0,0,6484,3258
 same_count: 3

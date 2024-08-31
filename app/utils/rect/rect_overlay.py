@@ -6,25 +6,24 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget
 
 
 class RectOverlay(QWidget):
-    # Define a custom signal to send the rectangle data
     rect_selected = Signal(int, int, int, int)
 
-    def __init__(self, screen_geometry):
+    def __init__(self, screen):
         super().__init__()
+        self.screen = screen
+        self.device_pixel_ratio = screen.devicePixelRatio()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.start_point = QPoint()
         self.end_point = QPoint()
         self.is_drawing = False
-        self.setGeometry(screen_geometry)
+        self.setGeometry(screen.geometry())
 
-        # Initialize cursor position to the current mouse position
         self.cursor_position = QCursor.pos() - self.pos()
 
-        # Set up a timer to update the cursor position
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_cursor_position)
-        self.timer.start(16)  # Update approximately every 16ms (~60 FPS)
+        self.timer.start(16)
 
     def update_cursor_position(self):
         self.cursor_position = QCursor.pos() - self.pos()
@@ -34,27 +33,23 @@ class RectOverlay(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        # Fill the entire screen with semi-transparent black
         painter.fillRect(self.rect(), QColor(0, 0, 0, 127))
 
         if self.is_drawing:
-            # Calculate the rectangle being drawn
             rect = QRect(self.start_point, self.end_point).normalized()
 
-            # Clear the rectangle area to make it transparent
             painter.setCompositionMode(QPainter.CompositionMode_Clear)
             painter.fillRect(rect, QColor(0, 0, 0, 0))
 
-        # Draw crosshair lines
         painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
         pen = QPen(Qt.red, 0.5, Qt.DashLine)
         painter.setPen(pen)
         painter.drawLine(
             0, self.cursor_position.y(), self.width(), self.cursor_position.y()
-        )  # Horizontal line
+        )
         painter.drawLine(
             self.cursor_position.x(), 0, self.cursor_position.x(), self.height()
-        )  # Vertical line
+        )
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -73,8 +68,19 @@ class RectOverlay(QWidget):
             self.is_drawing = False
             self.update()
             rect = QRect(self.start_point, self.end_point).normalized()
-            # Emit the signal with the rectangle's data
-            self.rect_selected.emit(rect.x(), rect.y(), rect.width(), rect.height())
+            # Scale the rectangle coordinates
+            scaled_rect = QRect(
+                int(rect.x() * self.device_pixel_ratio),
+                int(rect.y() * self.device_pixel_ratio),
+                int(rect.width() * self.device_pixel_ratio),
+                int(rect.height() * self.device_pixel_ratio),
+            )
+            self.rect_selected.emit(
+                scaled_rect.x(),
+                scaled_rect.y(),
+                scaled_rect.width(),
+                scaled_rect.height(),
+            )
             self.close()
 
 
@@ -95,9 +101,8 @@ class MainWindow(QMainWindow):
     def show_overlay(self, monitor_index):
         screens = QApplication.screens()
         if monitor_index < len(screens):
-            screen_geometry = screens[monitor_index].geometry()
-            self.overlay = RectOverlay(screen_geometry)
-            # Connect the signal to a slot in MainWindow
+            screen = screens[monitor_index]
+            self.overlay = RectOverlay(screen)
             self.overlay.rect_selected.connect(self.handle_rect_selected)
             self.overlay.show()
         else:

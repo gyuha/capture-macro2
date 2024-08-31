@@ -30,3 +30,10 @@ def string_to_rect_value(value):
 
     # 3. Return the rectangle value
     return x, y, width, height
+
+
+def rect_str_to_ratio_rect(ratio, value):
+    if not is_valid_rect_string_value(value):
+        return None
+    values = map(int, value.split(","))
+    return [int(v * ratio) for v in values]

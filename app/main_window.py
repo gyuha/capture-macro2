@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QDialog, QMainWindow
 from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
+from app.utils.global_hot_key import GlobalHotKey
 from ui.main_window_ui import Ui_MainWindow
 
 
@@ -38,6 +39,13 @@ class MainWindow(QMainWindow):
         self.ui.actionSave.triggered.connect(self.on_save)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
+        # Global hotkey
+        self.hotkey_start = GlobalHotKey("f1")
+        self.hotkey_start.activated.connect(self.on_start)
+        self.hotkey_stop = GlobalHotKey("f2")
+        self.hotkey_start.activated.connect(self.on_stop)
+
+        # Action controller signals
         self.action_controller.signal_done.connect(self.on_action_controller_done)
         self.action_controller.signal_add_image.connect(
             self.on_action_controller_add_image

@@ -10,8 +10,10 @@ import mss.tools
 import pyautogui
 from PIL import Image
 from PySide6.QtCore import QObject, Signal
+from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config, Macro
+from app.utils.rect_value_utils import rect_str_to_ratio_rect
 
 
 class ActionController(QObject):
@@ -25,6 +27,7 @@ class ActionController(QObject):
         self._config = None
         self._action_type = "pre_macro"
         self._image_number = 0
+        self.device_pixel_ratio = 1
 
     @property
     def action_type(self):
@@ -95,7 +98,10 @@ class ActionController(QObject):
         self.signal_add_image.emit(self._image_number, file_path)
 
     def key(self, value):
-        pyautogui.press(value)
+        try:
+            pyautogui.press(value)
+        except ValueError:
+            print(f"Invalid key: {value}")
 
     def delay(self, value):
         total_delay = int(value)
@@ -109,7 +115,7 @@ class ActionController(QObject):
             time.sleep(remaining / 1000)
 
     def click(self, value):
-        x, y, width, height = map(int, value.split(","))
+        x, y, width, height = rect_str_to_ratio_rect(self.device_pixel_ratio, value)
         click_x = random.randint(x, x + width)
         click_y = random.randint(y, y + height)
         pyautogui.click(click_x, click_y)
@@ -125,8 +131,18 @@ class ActionController(QObject):
             else:
                 print(f"Unknown action: {macro.action}")
 
+    def done(self):
+        self.is_running = False
+        self.signal_done.emit()
+
     def start(self):
         self.is_running = True
+        screens = QApplication.screens()
+        if self.config.monitor > len(screens):
+            self.done()
+            return
+        screen = screens[self.config.monitor]
+        self.device_pixel_ratio = screen.devicePixelRatio()
         # self._config.capture의 경로가 없다면 생성
         if os.path.exists(self.config.capture_path) is False:
             os.makedirs(self.config.capture_path)
@@ -140,7 +156,7 @@ class ActionController(QObject):
             while self.is_running:
                 self.execute_macro(self.config.macro)
 
-        self.signal_done.emit()
+        self.done()
 
     def stop(self):
         self.is_running = False
