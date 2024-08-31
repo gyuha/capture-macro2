@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QDialog, QMainWindow
 from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
-from app.utils.global_hot_key import GlobalHotKey
+from app.utils.global_hot_keys import GlobalHotKeys
 from ui.main_window_ui import Ui_MainWindow
 
 
@@ -30,20 +30,23 @@ class MainWindow(QMainWindow):
     def connect_signals_slots(self):
 
         # Capture and control buttons
-        self.ui.btnCapture.clicked.connect(self.on_capture)
-        self.ui.btnStop.clicked.connect(self.on_stop)
-        self.ui.btnStart.clicked.connect(self.on_start)
+        self.ui.btnCapture.clicked.connect(self.handle_capture)
+        self.ui.btnStop.clicked.connect(self.handle_stop)
+        self.ui.btnStart.clicked.connect(self.handle_start)
 
         # Menu actions
-        self.ui.actionSettingDialog.triggered.connect(self.on_setting_dialog)
-        self.ui.actionSave.triggered.connect(self.on_save)
+        self.ui.actionSettingDialog.triggered.connect(self.handle_setting_dialog)
+        self.ui.actionSave.triggered.connect(self.handle_save)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
-        # Global hotkey
-        self.hotkey_start = GlobalHotKey("f1")
-        self.hotkey_start.activated.connect(self.on_start)
-        self.hotkey_stop = GlobalHotKey("f2")
-        self.hotkey_start.activated.connect(self.on_stop)
+        # 여러 전역 단축키 설정
+        self.hotkeys = GlobalHotKeys(
+            {
+                "f1": self.handle_start,
+                "f2": self.handle_stop,
+            }
+        )
+        self.hotkeys.activated.connect(self.on_hotkey_activated)
 
         # Action controller signals
         self.action_controller.signal_done.connect(self.on_action_controller_done)
@@ -62,7 +65,7 @@ class MainWindow(QMainWindow):
         self.ui.pre_command_widget.set_macro(self, "pre_macro", self.config.pre_macro)
         self.ui.command_widget.set_macro(self, "macro", self.config.macro)
 
-    def on_capture(self):
+    def handle_capture(self):
         # TODO: Implement capture logic
         pass
 
@@ -77,11 +80,15 @@ class MainWindow(QMainWindow):
         self.ui.image_list_widget.ui.btnDeleteAllFiles.setDisabled(status)
         self.ui.image_list_widget.ui.btnDeleteFile.setDisabled(status)
 
-    def on_stop(self):
+    def handle_stop(self):
         # 매크로 중지
+        print("📢 Stop")
+        self.action_controller.stop()
         self.set_action_status(False)
 
-    def on_start(self):
+    def handle_start(self):
+        if self.action_controller.is_running:
+            return
         self.set_action_status(True)
         # 매크로 시작
         self.action_controller.action_type = "pre_macro"
@@ -99,7 +106,7 @@ class MainWindow(QMainWindow):
             self.action_controller.action_macro = self.config.macro
             self.action_controller.start()
         else:
-            self.on_stop()
+            self.handle_stop()
             self.action_controller.stop()
 
     @Slot(int, str)
@@ -123,11 +130,17 @@ class MainWindow(QMainWindow):
         else:
             self.config.macro = config
 
-    def on_save(self):
+    def on_hotkey_activated(self, key):
+        print("📢[main_window.py:133]: ", key)
+        self.hotkeys.hot_keys[key]()
+        self.activateWindow()
+        self.raise_()
+
+    def handle_save(self):
         self.config.save_to_file()
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
-    def on_setting_dialog(self):
+    def handle_setting_dialog(self):
         # 설정 다이얼로그
         dialog = SettingDialog(self.config)
         result = dialog.exec_()  # 다이얼로그 실행

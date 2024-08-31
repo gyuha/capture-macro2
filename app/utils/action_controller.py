@@ -13,7 +13,6 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config, Macro
-from app.utils.rect_value_utils import rect_str_to_ratio_rect
 
 
 class ActionController(QObject):
@@ -115,7 +114,7 @@ class ActionController(QObject):
             time.sleep(remaining / 1000)
 
     def click(self, value):
-        x, y, width, height = rect_str_to_ratio_rect(self.device_pixel_ratio, value)
+        x, y, width, height = map(int, value.split(","))
         click_x = random.randint(x, x + width)
         click_y = random.randint(y, y + height)
         pyautogui.click(click_x, click_y)

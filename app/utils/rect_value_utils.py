@@ -36,4 +36,4 @@ def rect_str_to_ratio_rect(ratio, value):
     if not is_valid_rect_string_value(value):
         return None
     values = map(int, value.split(","))
-    return [int(v * ratio) for v in values]
+    return [int(v / ratio) for v in values]
