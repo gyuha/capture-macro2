@@ -60,20 +60,20 @@ class Ui_CommandWidget(object):
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.btnConfigInsert = QPushButton(self.groupBox)
-        self.btnConfigInsert.setObjectName(u"btnConfigInsert")
+        self.btnCommandInsert = QPushButton(self.groupBox)
+        self.btnCommandInsert.setObjectName(u"btnCommandInsert")
 
-        self.horizontalLayout_4.addWidget(self.btnConfigInsert)
+        self.horizontalLayout_4.addWidget(self.btnCommandInsert)
 
-        self.btnConfigAdd = QPushButton(self.groupBox)
-        self.btnConfigAdd.setObjectName(u"btnConfigAdd")
+        self.btnCommandAdd = QPushButton(self.groupBox)
+        self.btnCommandAdd.setObjectName(u"btnCommandAdd")
 
-        self.horizontalLayout_4.addWidget(self.btnConfigAdd)
+        self.horizontalLayout_4.addWidget(self.btnCommandAdd)
 
-        self.btnConfigRemove = QPushButton(self.groupBox)
-        self.btnConfigRemove.setObjectName(u"btnConfigRemove")
+        self.btnCommandRemove = QPushButton(self.groupBox)
+        self.btnCommandRemove.setObjectName(u"btnCommandRemove")
 
-        self.horizontalLayout_4.addWidget(self.btnConfigRemove)
+        self.horizontalLayout_4.addWidget(self.btnCommandRemove)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -98,8 +98,8 @@ class Ui_CommandWidget(object):
         ___qtablewidgetitem2.setText(QCoreApplication.translate("CommandWidget", u"\ub3d9\uc791", None));
         ___qtablewidgetitem3 = self.macroTable.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("CommandWidget", u"\ub3d9\uc7912", None));
-        self.btnConfigInsert.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \uc0bd\uc785", None))
-        self.btnConfigAdd.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \ucd94\uac00", None))
-        self.btnConfigRemove.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \uc0ad\uc81c", None))
+        self.btnCommandInsert.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \uc0bd\uc785", None))
+        self.btnCommandAdd.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \ucd94\uac00", None))
+        self.btnCommandRemove.setText(QCoreApplication.translate("CommandWidget", u"\uba85\ub839\uc5b4 \uc0ad\uc81c", None))
     # retranslateUi
 

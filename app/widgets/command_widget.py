@@ -86,23 +86,23 @@ class CommandWidget(QWidget):
         self.ui.macroTable.itemChanged.connect(self.update_macro_actions)
 
     def connect_signals_slots(self):
-        # Config buttons
-        self.ui.btnConfigInsert.clicked.connect(self.on_config_insert)
-        self.ui.btnConfigAdd.clicked.connect(self.on_config_add)
-        self.ui.btnConfigRemove.clicked.connect(self.on_config_remove)
+        # Macro buttons
+        self.ui.btnCommandInsert.clicked.connect(self.on_macro_insert)
+        self.ui.btnCommandAdd.clicked.connect(self.on_macro_add)
+        self.ui.btnCommandRemove.clicked.connect(self.on_macro_remove)
 
     def add_row(self, row, action="capture", value=""):
         self.ui.macroTable.insertRow(row)
         self.set_macro_table_row(row, action, value)
         self.update_macro_actions()
 
-    def on_config_insert(self):
+    def on_macro_insert(self):
         self.add_row(self.ui.macroTable.currentRow())
 
-    def on_config_add(self):
+    def on_macro_add(self):
         self.add_row(self.ui.macroTable.currentRow() + 1)
 
-    def on_config_remove(self):
+    def on_macro_remove(self):
         row = self.ui.macroTable.currentRow()
         self.ui.macroTable.removeRow(row)
         self.update_macro_actions()

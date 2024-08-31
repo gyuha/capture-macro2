@@ -85,21 +85,21 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QPushButton" name="btnConfigInsert">
+         <widget class="QPushButton" name="btnCommandInsert">
           <property name="text">
            <string>명령어 삽입</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnConfigAdd">
+         <widget class="QPushButton" name="btnCommandAdd">
           <property name="text">
            <string>명령어 추가</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnConfigRemove">
+         <widget class="QPushButton" name="btnCommandRemove">
           <property name="text">
            <string>명령어 삭제</string>
           </property>

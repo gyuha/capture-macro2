@@ -2,7 +2,7 @@ capture_path: ./capture
 image_quality: 88
 macro:
 - action: capture
-  value: 1810,456,769,1143
+  value: 1251,466,574,649
 - action: key
   value: right
 - action: click
@@ -15,5 +15,5 @@ pre_macro:
 - action: capture
   value: 1240,430,523,559
 - action: capture
-  value: 0,0,6484,3258
+  value: 0,0,3840,2157
 same_count: 3

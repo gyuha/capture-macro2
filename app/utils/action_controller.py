@@ -142,9 +142,6 @@ class ActionController(QObject):
             return
         screen = screens[self.config.monitor]
         self.device_pixel_ratio = screen.devicePixelRatio()
-        # self._config.capture의 경로가 없다면 생성
-        if os.path.exists(self.config.capture_path) is False:
-            os.makedirs(self.config.capture_path)
 
         threading.Thread(target=self.run_macros, daemon=True).start()
 

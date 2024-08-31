@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QDialog, QMainWindow
 from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
+from app.utils.file_util import create_directory_path
 from app.utils.global_hot_keys import GlobalHotKeys
 from ui.main_window_ui import Ui_MainWindow
 
@@ -89,6 +90,11 @@ class MainWindow(QMainWindow):
     def handle_start(self):
         if self.action_controller.is_running:
             return
+
+        if not create_directory_path(self.config.capture_path):
+            self.ui.statusbar.showMessage("캡처 경로를 확인해주세요.", 2000)
+            return
+
         self.set_action_status(True)
         # 매크로 시작
         self.action_controller.action_type = "pre_macro"
@@ -106,7 +112,6 @@ class MainWindow(QMainWindow):
             self.action_controller.action_macro = self.config.macro
             self.action_controller.start()
         else:
-            self.handle_stop()
             self.action_controller.stop()
 
     @Slot(int, str)
@@ -131,7 +136,6 @@ class MainWindow(QMainWindow):
             self.config.macro = config
 
     def on_hotkey_activated(self, key):
-        print("📢[main_window.py:133]: ", key)
         self.hotkeys.hot_keys[key]()
         self.activateWindow()
         self.raise_()
