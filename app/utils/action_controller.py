@@ -4,7 +4,11 @@ import threading
 import time
 from typing import List
 
+import mozjpeg_lossless_optimization
+import mss
+import mss.tools
 import pyautogui
+from PIL import Image
 from PySide6.QtCore import QObject, Signal
 
 from app.config.config import Config, Macro
@@ -12,7 +16,7 @@ from app.config.config import Config, Macro
 
 class ActionController(QObject):
     signal_done = Signal()
-    signal_add_image = Signal(str)
+    signal_add_image = Signal(int, str)
     signal_current_row = Signal(int)
 
     def __init__(self):
@@ -58,11 +62,37 @@ class ActionController(QObject):
 
     def capture(self, value):
         x, y, width, height = map(int, value.split(","))
-        filename = f"{self.config.capture_path}/{self._image_number:04}.jpg"
-        screenshot = pyautogui.screenshot(region=(x, y, width, height))
-        screenshot.save(filename)
-        self.signal_add_image.emit(filename)
+        file_path = f"{self.config.capture_path}/{self._image_number:04}.jpg"
+
+        with mss.mss() as sct:
+            screen_num = int(self.config.monitor)
+            mon = sct.monitors[screen_num + 1]
+
+            monitor = {
+                "top": mon["top"] + y,
+                "left": mon["left"] + x,
+                "width": width,
+                "height": height,
+                "mon": screen_num,
+            }
+            sct_img = sct.grab(monitor)
+            img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
+
+            path = os.path.join(file_path)
+            img.save(path, "JPEG", quality=int(self.config.image_quality))
+
+        # JPG 추가 압축히기
+        # https: // github.com/wanadev/mozjpeg-lossless-optimization
+        with open(path, "rb") as input_jpeg_file:
+            input_jpeg_bytes = input_jpeg_file.read()
+
+        output_jpeg_bytes = mozjpeg_lossless_optimization.optimize(input_jpeg_bytes)
+
+        with open(file_path, "wb") as output_jpeg_file:
+            output_jpeg_file.write(output_jpeg_bytes)
+
         self._image_number += 1
+        self.signal_add_image.emit(self._image_number, file_path)
 
     def key(self, value):
         pyautogui.press(value)

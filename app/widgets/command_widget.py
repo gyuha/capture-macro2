@@ -1,7 +1,7 @@
 from functools import partial
 from typing import List
 
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Signal, Slot
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -52,6 +52,8 @@ KEY_ACTIONS = [
 
 
 class CommandWidget(QWidget):
+    signal_update_config = Signal(str, object)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_CommandWidget()
@@ -92,6 +94,7 @@ class CommandWidget(QWidget):
     def add_row(self, row, action="capture", value=""):
         self.ui.macroTable.insertRow(row)
         self.set_macro_table_row(row, action, value)
+        self.update_macro_actions()
 
     def on_config_insert(self):
         self.add_row(self.ui.macroTable.currentRow())
@@ -102,6 +105,7 @@ class CommandWidget(QWidget):
     def on_config_remove(self):
         row = self.ui.macroTable.currentRow()
         self.ui.macroTable.removeRow(row)
+        self.update_macro_actions()
 
     def set_macro_table_row(self, row, action, value):
         actionCombo = QComboBox()
@@ -145,13 +149,11 @@ class CommandWidget(QWidget):
                 macro.append(
                     Macro(action=action, value=self.ui.macroTable.item(row, 1).text())
                 )
-            if self.macro_type == "pre_macro":
-                self.main.config.pre_macro = macro
-            else:
-                self.main.config.macro = macro
+
         except (AttributeError, KeyError, TypeError) as e:
             print(f"An error occurred: {e}")
         finally:
+            self.signal_update_config.emit(self.macro_type, macro)
             self.ui.macroTable.blockSignals(False)
 
     def handle_screen_rect(self, row):

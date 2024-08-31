@@ -43,6 +43,9 @@ class MainWindow(QMainWindow):
             self.on_action_controller_add_image
         )
 
+        self.ui.pre_command_widget.signal_update_config.connect(self.on_update_config)
+        self.ui.command_widget.signal_update_config.connect(self.on_update_config)
+
     def set_macro(self):
         # 매크로 설정
         self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
@@ -91,9 +94,11 @@ class MainWindow(QMainWindow):
             self.on_stop()
             self.action_controller.stop()
 
-    @Slot(str)
-    def on_action_controller_add_image(self, image_name):
+    @Slot(int, str)
+    def on_action_controller_add_image(self, image_number, image_name):
         # Add image to the list
+        self.image_number = image_number
+        print("Adding image:", image_number)
         print("Adding image:", image_name)
 
     @Slot(int)
@@ -102,6 +107,13 @@ class MainWindow(QMainWindow):
             self.ui.pre_command_widget.ui.macroTable.selectRow(row)
         else:
             self.ui.command_widget.ui.macroTable.selectRow(row)
+
+    @Slot(str, object)
+    def on_update_config(self, config_type, config):
+        if config_type == "pre_macro":
+            self.config.pre_macro = config
+        else:
+            self.config.macro = config
 
     def on_save(self):
         self.config.save_to_file()
@@ -116,4 +128,6 @@ class MainWindow(QMainWindow):
             self.config.save_to_file()
             print("Settings applied:", self.config)
         else:
+            print("Settings dialog canceled")
+            print("Settings dialog canceled")
             print("Settings dialog canceled")
