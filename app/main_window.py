@@ -24,6 +24,8 @@ class MainWindow(QMainWindow):
 
         self.ui.btnStop.setDisabled(True)
 
+        self.image_number = 0
+
     def connect_signals_slots(self):
 
         # Capture and control buttons
@@ -72,6 +74,7 @@ class MainWindow(QMainWindow):
         self.set_action_status(True)
         # 매크로 시작
         self.action_controller.action_type = "pre_macro"
+        self.action_controller.config = self.config
         self.action_controller.action_macro = self.config.pre_macro
         self.action_controller.monitor_index = int(self.config.monitor)
 

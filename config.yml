@@ -3,7 +3,7 @@ image_quality: 88
 macro:
 - action: capture
   value: 444,667,437,661
-- action: delay
+- action: key
   value: right
 - action: delay
   value: '3000'

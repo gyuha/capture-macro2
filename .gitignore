@@ -10,5 +10,6 @@ default-s6.json
 
 build
 dist
+capture
 .idea
 /.vscode/PythonImportHelper-v2-Completion.json

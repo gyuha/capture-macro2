@@ -1,8 +1,13 @@
+import os
+import random
+import threading
+import time
 from typing import List
 
+import pyautogui
 from PySide6.QtCore import QObject, Signal
 
-from app.config.config import Macro
+from app.config.config import Config, Macro
 
 
 class ActionController(QObject):
@@ -13,10 +18,9 @@ class ActionController(QObject):
     def __init__(self):
         super().__init__()
         self.is_running = False
+        self._config = None
         self._action_type = "pre_macro"
-        self._action_macro = []
-        self._monitor_index = 0
-        self.current_row = 0
+        self._image_number = 0
 
     @property
     def action_type(self):
@@ -37,20 +41,76 @@ class ActionController(QObject):
         self._action_macro = value
 
     @property
-    def monitor_index(self):
-        return self._monitor_index
+    def config(self):
+        return self._config
 
-    @monitor_index.setter
-    def monitor_index(self, value):
-        self._monitor_index = value
+    @config.setter
+    def config(self, value: Config):
+        self._config = value
+
+    @property
+    def image_number(self):
+        return self.image_number
+
+    @image_number.setter
+    def image_number(self, value):
+        self._image_number = value
+
+    def capture(self, value):
+        x, y, width, height = map(int, value.split(","))
+        filename = f"{self.config.capture_path}/{self._image_number:04}.jpg"
+        screenshot = pyautogui.screenshot(region=(x, y, width, height))
+        screenshot.save(filename)
+        self.signal_add_image.emit(filename)
+        self._image_number += 1
+
+    def key(self, value):
+        pyautogui.press(value)
+
+    def delay(self, value):
+        total_delay = int(value)
+        interval = 100  # 100ms 간격으로 체크
+        for _ in range(0, total_delay, interval):
+            if not self.is_running:
+                return
+            time.sleep(interval / 1000)
+        remaining = total_delay % interval
+        if remaining > 0 and self.is_running:
+            time.sleep(remaining / 1000)
+
+    def click(self, value):
+        x, y, width, height = map(int, value.split(","))
+        click_x = random.randint(x, x + width)
+        click_y = random.randint(y, y + height)
+        pyautogui.click(click_x, click_y)
+
+    def execute_macro(self, macro_list: List[Macro]):
+        for macro in macro_list:
+            if not self.is_running:
+                break
+            action_method = getattr(self, macro.action, None)
+            if action_method:
+                print(f"Executing {macro.action} with value: {macro.value}")
+                action_method(macro.value)
+            else:
+                print(f"Unknown action: {macro.action}")
 
     def start(self):
         self.is_running = True
-        self.current_row = 0
-        self.signal_current_row.emit(self.current_row)
-        # for macro in self.action_macro:
-        #     print(macro.action, macro.value)
-        # self.signal_done.emit()
+        # self._config.capture의 경로가 없다면 생성
+        if os.path.exists(self.config.capture_path) is False:
+            os.makedirs(self.config.capture_path)
+
+        threading.Thread(target=self.run_macros, daemon=True).start()
+
+    def run_macros(self):
+        if self._action_type == "pre_macro":
+            self.execute_macro(self.config.pre_macro)
+        else:
+            while self.is_running:
+                self.execute_macro(self.config.macro)
+
+        self.signal_done.emit()
 
     def stop(self):
         self.is_running = False
