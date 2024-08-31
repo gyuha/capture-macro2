@@ -5,3 +5,4 @@ extension-pkg-allow-list=PySide6
 disable=
     missing-class-docstring,
     missing-module-docstring
+    broad-exception-caught

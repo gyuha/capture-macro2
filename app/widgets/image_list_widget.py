@@ -49,4 +49,3 @@ class ImageListWidget(QWidget):
 
     def add_image(self, path):
         self.ui.imageFiles.addItem(path)
-        self.ui.imageFiles.addItem(path)
