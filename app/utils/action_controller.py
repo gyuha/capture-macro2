@@ -8,6 +8,7 @@ import mss
 import mss.tools
 import pyautogui
 from PIL import Image
+from pynput.mouse import Button, Controller
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
@@ -27,6 +28,7 @@ class ActionController(QObject):
         self._action_type = "pre_macro"
         self._image_number = 0
         self.device_pixel_ratio = 1
+        self.mouse = Controller()
 
     @property
     def action_type(self):
@@ -109,7 +111,8 @@ class ActionController(QObject):
         x, y, width, height = map(int, value.split(","))
         click_x = random.randint(x, x + width)
         click_y = random.randint(y, y + height)
-        pyautogui.click(click_x, click_y)
+        self.mouse.position = (click_x, click_y)
+        self.mouse.click(Button.left, 1)
 
     def execute_macro(self, macro_list: List[Macro]):
         for macro in macro_list:

@@ -6,9 +6,9 @@ macro:
 - action: key
   value: right
 - action: click
-  value: 2035,1273,339,178
+  value: 2130,1633,186,19
 - action: delay
-  value: '500'
+  value: '3000'
 max_page: 1500
 monitor: 0
 pre_macro:
