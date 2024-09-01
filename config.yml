@@ -13,7 +13,7 @@ max_page: 1500
 monitor: 0
 pre_macro:
 - action: capture
-  value: 1240,430,523,559
+  value: 546,951,660,873
 - action: capture
   value: 0,0,3840,2157
 same_count: 3
