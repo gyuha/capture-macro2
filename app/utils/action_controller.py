@@ -4,7 +4,6 @@ import threading
 import time
 from typing import List
 
-import mozjpeg_lossless_optimization
 import mss
 import mss.tools
 import pyautogui
@@ -13,6 +12,7 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config, Macro
+from app.utils.jpg_image_optimize import jpg_image_optimize
 
 
 class ActionController(QObject):
@@ -81,17 +81,9 @@ class ActionController(QObject):
             img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
 
             path = os.path.join(file_path)
-            img.save(path, "JPEG", quality=int(self.config.image_quality))
 
-        # JPG 추가 압축히기
-        # https: // github.com/wanadev/mozjpeg-lossless-optimization
-        with open(path, "rb") as input_jpeg_file:
-            input_jpeg_bytes = input_jpeg_file.read()
-
-        output_jpeg_bytes = mozjpeg_lossless_optimization.optimize(input_jpeg_bytes)
-
-        with open(file_path, "wb") as output_jpeg_file:
-            output_jpeg_file.write(output_jpeg_bytes)
+            # 이미지 저장 하기
+            jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
         self._image_number += 1
         self.signal_add_image.emit(self._image_number, file_path)

@@ -154,5 +154,3 @@ class MainWindow(QMainWindow):
             print("Settings applied:", self.config)
         else:
             print("Settings dialog canceled")
-            print("Settings dialog canceled")
-            print("Settings dialog canceled")
