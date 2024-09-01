@@ -6,14 +6,16 @@ from typing import List
 
 import mss
 import mss.tools
-import pyautogui
 from PIL import Image
-from pynput.mouse import Button, Controller
+from pynput.keyboard import Controller as KeyboardController
+from pynput.mouse import Button
+from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config, Macro
 from app.utils.jpg_image_optimize import jpg_image_optimize
+from app.utils.pynput_keymap import get_key_from_string
 
 
 class ActionController(QObject):
@@ -28,7 +30,8 @@ class ActionController(QObject):
         self._action_type = "pre_macro"
         self._image_number = 0
         self.device_pixel_ratio = 1
-        self.mouse = Controller()
+        self.mouse = MouseController()
+        self.keyboard = KeyboardController()
 
     @property
     def action_type(self):
@@ -92,7 +95,10 @@ class ActionController(QObject):
 
     def key(self, value):
         try:
-            pyautogui.press(value)
+            send_key = get_key_from_string(value)
+            if send_key:
+                self.keyboard.press(send_key)
+                self.keyboard.release(send_key)
         except ValueError:
             print(f"Invalid key: {value}")
 
@@ -106,6 +112,13 @@ class ActionController(QObject):
         remaining = total_delay % interval
         if remaining > 0 and self.is_running:
             time.sleep(remaining / 1000)
+
+    def scroll(self, value):
+        x, y, width, height = map(int, value.split(","))
+        click_x = random.randint(x, x + width)
+        click_y = random.randint(y, y + height)
+        self.mouse.position = (click_x, click_y)
+        self.mouse.scroll(0, -1)
 
     def click(self, value):
         x, y, width, height = map(int, value.split(","))
@@ -150,4 +163,5 @@ class ActionController(QObject):
         self.done()
 
     def stop(self):
+        self.is_running = False
         self.is_running = False
