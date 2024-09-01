@@ -95,6 +95,7 @@ class Ui_SettingDialog(object):
 
         self.btnImagePath = QPushButton(self.frame)
         self.btnImagePath.setObjectName(u"btnImagePath")
+        self.btnImagePath.setAutoDefault(False)
 
         self.horizontalLayout_2.addWidget(self.btnImagePath)
 
@@ -126,8 +127,18 @@ class Ui_SettingDialog(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
+        QWidget.setTabOrder(self.leMonitorNum, self.leSameCount)
+        QWidget.setTabOrder(self.leSameCount, self.leMaxPage)
+        QWidget.setTabOrder(self.leMaxPage, self.leImageCompress)
+        QWidget.setTabOrder(self.leImageCompress, self.leImagePath)
+        QWidget.setTabOrder(self.leImagePath, self.btnImagePath)
+        QWidget.setTabOrder(self.btnImagePath, self.btnCancel)
+        QWidget.setTabOrder(self.btnCancel, self.btnOk)
 
         self.retranslateUi(SettingDialog)
+
+        self.btnOk.setDefault(True)
+
 
         QMetaObject.connectSlotsByName(SettingDialog)
     # setupUi

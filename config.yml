@@ -6,7 +6,7 @@ macro:
 - action: key
   value: right
 - action: delay
-  value: '300'
+  value: '123'
 max_page: 1500
 monitor: 0
 pre_macro:

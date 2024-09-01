@@ -1,7 +1,7 @@
 from functools import partial
 from typing import List
 
-from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtCore import Signal, Slot
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -72,6 +72,7 @@ class CommandWidget(QWidget):
 
         # 액션을 실행 한 행
         self.action_row = -1
+        self.ui.macroTable.selectRow(1)
 
     def set_macro(self, main, macro_type: str = "macro", macro: List[Macro] = None):
         self.macro = macro
@@ -139,13 +140,10 @@ class CommandWidget(QWidget):
                     self.ui.macroTable.setCellWidget(row, 2, button)
                     self.ui.macroTable.setCellWidget(row, 3, button2)
                 else:
-                    placeholder_item = QTableWidgetItem()
-                    placeholder_item.setFlags(Qt.ItemIsEnabled)
-                    self.ui.macroTable.setItem(row, 2, placeholder_item)
-
-                    placeholder_item2 = QTableWidgetItem()
-                    placeholder_item2.setFlags(Qt.ItemIsEnabled)
-                    self.ui.macroTable.setItem(row, 3, placeholder_item2)
+                    item2 = QTableWidgetItem("")
+                    item3 = QTableWidgetItem("")
+                    self.ui.macroTable.setItem(row, 2, item2)
+                    self.ui.macroTable.setItem(row, 3, item3)
                 macro.append(
                     Macro(action=action, value=self.ui.macroTable.item(row, 1).text())
                 )
@@ -190,5 +188,9 @@ class CommandWidget(QWidget):
         if hasattr(self, "overlay") and self.overlay.isVisible():
             self.overlay.close()
 
-    def clickPointClick(self, row):
-        pass
+    def set_row_colors(self, row, background_color, text_color):
+        for column in range(self.ui.macroTable.columnCount()):
+            item = self.ui.macroTable.item(row, column)
+            if item is not None:
+                item.setBackground(background_color)
+                item.setForeground(text_color)
