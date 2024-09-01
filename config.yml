@@ -2,11 +2,11 @@ capture_path: ./capture
 image_quality: 88
 macro:
 - action: capture
-  value: 1251,466,574,649
+  value: 162,236,1464,1444
 - action: key
   value: right
 - action: delay
-  value: '123'
+  value: '500'
 max_page: 1500
 monitor: 0
 pre_macro:
