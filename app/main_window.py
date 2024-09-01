@@ -1,3 +1,4 @@
+from pynput import keyboard
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QDialog, QMainWindow
 
@@ -5,7 +6,6 @@ from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
 from app.utils.file_util import create_directory_path
-from app.utils.global_hot_keys import GlobalHotKeys
 from ui.main_window_ui import Ui_MainWindow
 
 
@@ -41,13 +41,12 @@ class MainWindow(QMainWindow):
         self.ui.actionExit_Q.triggered.connect(self.close)
 
         # 여러 전역 단축키 설정
-        self.hotkeys = GlobalHotKeys(
-            {
-                "f1": self.handle_start,
-                "f2": self.handle_stop,
-            }
+
+        # 전역 단축키 설정
+        self.hotkeys = keyboard.GlobalHotKeys(
+            {"<f1>": self.handle_start, "<f2>": self.handle_stop}
         )
-        self.hotkeys.activated.connect(self.on_hotkey_activated)
+        self.hotkeys.start()
 
         # Action controller signals
         self.action_controller.signal_done.connect(self.on_action_controller_done)
