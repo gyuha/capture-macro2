@@ -1,7 +1,9 @@
+import glob
 import os
 
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QMessageBox
 
+from app.utils.file_util import removePathFiles
 from ui.image_list_widget_ui import Ui_ImageListWidget
 
 
@@ -32,7 +34,25 @@ class ImageListWidget(QWidget):
         """
         전체 파일 삭제
         """
-        self.ui.imageFiles.clear()
+        ret = QMessageBox.question(
+            self,
+            "경고",
+            "정말 모든 파일을 지우시겠습니까?",
+            QMessageBox.No | QMessageBox.Yes,
+            QMessageBox.Yes,
+            )
+
+        if ret == QMessageBox.Yes:
+            try:
+                for file in ["*.png", "*.jpg"]:
+                    path = os.path.join(self.config.capture_path, file)
+                    files = glob.glob(path)
+                    removePathFiles(files)
+                self.lsFiles.clear()
+                self.lbPreview.clear()
+                self.startFileNumber()
+            except Exception as e:
+                print(e)
 
     def on_delete_file(self):
         """

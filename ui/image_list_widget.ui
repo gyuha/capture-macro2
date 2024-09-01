@@ -38,10 +38,10 @@
       <item>
        <widget class="QListWidget" name="imageFiles">
         <property name="frameShape">
-         <enum>QFrame::Box</enum>
+         <enum>QFrame::Shape::Box</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Sunken</enum>
+         <enum>QFrame::Shadow::Sunken</enum>
         </property>
         <property name="iconSize">
          <size>
@@ -50,10 +50,10 @@
          </size>
         </property>
         <property name="textElideMode">
-         <enum>Qt::ElideLeft</enum>
+         <enum>Qt::TextElideMode::ElideLeft</enum>
         </property>
         <property name="verticalScrollMode">
-         <enum>QAbstractItemView::ScrollPerItem</enum>
+         <enum>QAbstractItemView::ScrollMode::ScrollPerItem</enum>
         </property>
         <property name="gridSize">
          <size>
@@ -62,7 +62,7 @@
          </size>
         </property>
         <property name="viewMode">
-         <enum>QListView::ListMode</enum>
+         <enum>QListView::ViewMode::ListMode</enum>
         </property>
        </widget>
       </item>
@@ -91,7 +91,7 @@
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -100,6 +100,13 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnOpenFolder">
+          <property name="text">
+           <string>폴더 열기</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btnToPdf">

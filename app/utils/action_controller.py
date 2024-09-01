@@ -26,9 +26,10 @@ class ActionController(QObject):
     def __init__(self):
         super().__init__()
         self.is_running = False
-        self._config = None
+        self.config = Config()
         self._action_type = "pre_macro"
         self._image_number = 0
+        self._action_macro = []
         self.device_pixel_ratio = 1
         self.mouse = MouseController()
         self.keyboard = KeyboardController()
@@ -50,14 +51,6 @@ class ActionController(QObject):
     @action_macro.setter
     def action_macro(self, value: List[Macro]):
         self._action_macro = value
-
-    @property
-    def config(self):
-        return self._config
-
-    @config.setter
-    def config(self, value: Config):
-        self._config = value
 
     @property
     def image_number(self):
@@ -163,5 +156,4 @@ class ActionController(QObject):
         self.done()
 
     def stop(self):
-        self.is_running = False
         self.is_running = False

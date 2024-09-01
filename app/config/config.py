@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-
+from app.utils.qt_singleton import QtSingleton
 import yaml
 
 
@@ -16,8 +16,9 @@ class Macro:
         return {"action": self.action, "value": self.value}
 
 
-class Config:
+class Config(QtSingleton):
     def __init__(self, filepath: str = "config.yml"):
+        super().__init__()
         self.capture_path = ""
         self.window_name = ""
         self.monitor = 0
