@@ -72,7 +72,7 @@ class ImageListWidget(QWidget):
 
                 self.ui.imageFiles.clear()
                 # self.label_preview.clear()
-                self.start_file_number()
+                self.last_file_number()
             except Exception as e:
                 print(f"파일 삭제 중 오류 발생: {e}")
 
@@ -102,17 +102,17 @@ class ImageListWidget(QWidget):
         선택된 파일 삭제
         """
         try:
-            item = self.lsFiles.selectedItems()
-            row = self.lsFiles.currentRow()
+            item = self.ui.imageFiles.selectedItems()
+            row = self.ui.imageFiles.currentRow()
             if len(item) > 0:
-                os.remove(os.path.join(self.Config, item[0].text()))
-                self.lsFiles.takeItem(row)
+                os.remove(os.path.join(self.config.capture_path, item[0].text()))
+                self.ui.imageFiles.takeItem(row)
+            self.last_file_number()
         except Exception as e:
             print(e)
 
     @Slot(str)
     def on_add_image(self, image_path):
-        print("📢[image_list_widget.py:110]: ", image_path)
         self.add_image_item(image_path)
         self.last_file_select()
         if self.image_diff.diff(image_path):
@@ -135,20 +135,19 @@ class ImageListWidget(QWidget):
         return QPixmap.fromImage(qImg)
 
     def add_image_item(self, image_path):
-        print("📢[image_list_widget.py:106]: ", image_path)
-        # self.ui.imageFiles.addItem(path)
         try:
             # or not (path.endswith(".jpg") and path.endswith(".png")):
-            if os.path.isdir(image_path) or not (image_path.endswith(".jpg")):
+            if os.path.isdir(image_path) or not image_path.lower().endswith(".jpg"):
                 return
             picture = Image.open(image_path)
-            picture.thumbnail((80, 120), Image.Resampling.NEAREST)
+            picture.thumbnail((80, 80), Image.Resampling.NEAREST)
 
             icon = QIcon(self.pil2pixmap(picture))
             item = QListWidgetItem(os.path.basename(image_path), self.ui.imageFiles)
             item.setStatusTip(image_path)
             item.setIcon(icon)
-        except Exception as e:
+            self.ui.lbImageNumber.setText(str(self.app_core.image_number))
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(e)
 
     def last_file_select(self):
@@ -174,5 +173,5 @@ class ImageListWidget(QWidget):
         num = int(os.path.splitext(basename)[0])
         self.app_core.image_number = num
         self.app_core.image_number += 1
-        print("📢[image_list_widget.py:177]: ", self.app_core.image_number)
+        self.ui.lbImageNumber.setText(str(self.app_core.image_number))
         # self.leCurrentCount.setText(str(num))

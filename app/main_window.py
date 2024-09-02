@@ -49,7 +49,6 @@ class MainWindow(QMainWindow):
 
         # Action controller signals
         self.app_core.signal_macro_done.connect(self.on_action_controller_done)
-        self.app_core.signal_add_image.connect(self.on_action_controller_add_image)
 
         self.ui.pre_command_widget.signal_update_config.connect(self.on_update_config)
         self.ui.command_widget.signal_update_config.connect(self.on_update_config)
@@ -110,12 +109,6 @@ class MainWindow(QMainWindow):
             self.action_controller.start()
         else:
             self.handle_stop()
-
-    @Slot(str)
-    def on_action_controller_add_image(self, image_name):
-        # Add image to the list
-        self.app_core.image_number += 1
-        print("Adding image:", image_name)
 
     @Slot(str, object)
     def on_update_config(self, config_type, config):
