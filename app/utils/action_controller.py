@@ -13,36 +13,28 @@ from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
+from app.app_core import AppCore
 from app.config.config import Config, Macro
 from app.utils.jpg_image_optimize import jpg_image_optimize
 from app.utils.pynput_keymap import get_key_from_string
 
 
 class ActionController(QObject):
-    signal_done = Signal()
     signal_add_image = Signal(int, str)
-    signal_current_row = Signal(int)
 
     def __init__(self):
         super().__init__()
-        self.is_running = False
+
+        self.app_core = AppCore()
+        self.app_core.macro_type = "pre_macro"
+        self.app_core.is_running = False
+
         self.config = Config()
-        self._action_type = "pre_macro"
-        self._image_number = 0
         self._action_macro = []
         self.device_pixel_ratio = 1
         self.mouse = MouseController()
         self.keyboard = KeyboardController()
-
-    @property
-    def action_type(self):
-        return self._action_type
-
-    @action_type.setter
-    def action_type(self, value):
-        if value not in ["pre_macro", "macro"]:
-            raise ValueError("action_type must be 'pre_macro' or 'macro'")
-        self._action_type = value
+        self.current_row = 0
 
     @property
     def action_macro(self):
@@ -52,17 +44,9 @@ class ActionController(QObject):
     def action_macro(self, value: List[Macro]):
         self._action_macro = value
 
-    @property
-    def image_number(self):
-        return self.image_number
-
-    @image_number.setter
-    def image_number(self, value):
-        self._image_number = value
-
     def capture(self, value):
         x, y, width, height = map(int, value.split(","))
-        file_path = f"{self.config.capture_path}/{self._image_number:04}.jpg"
+        file_path = f"{self.config.capture_path}/{self.app_core.image_number:04}.jpg"
 
         with mss.mss() as sct:
             screen_num = int(self.config.monitor)
@@ -75,6 +59,13 @@ class ActionController(QObject):
                 "height": height,
                 "mon": screen_num,
             }
+
+            if not self.app_core.is_windows:
+                monitor["top"] = int(monitor["top"] / self.device_pixel_ratio)
+                monitor["left"] = int(monitor["left"] / self.device_pixel_ratio)
+                monitor["width"] = int(monitor["width"] / self.device_pixel_ratio)
+                monitor["height"] = int(monitor["height"] / self.device_pixel_ratio)
+
             sct_img = sct.grab(monitor)
             img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
 
@@ -83,8 +74,8 @@ class ActionController(QObject):
             # 이미지 저장 하기
             jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
-        self._image_number += 1
-        self.signal_add_image.emit(self._image_number, file_path)
+        self.app_core.image_number += 1
+        self.app_core.signal_add_image.emit(file_path)
 
     def key(self, value):
         try:
@@ -99,11 +90,11 @@ class ActionController(QObject):
         total_delay = int(value)
         interval = 100  # 100ms 간격으로 체크
         for _ in range(0, total_delay, interval):
-            if not self.is_running:
+            if not self.app_core.is_running:
                 return
             time.sleep(interval / 1000)
         remaining = total_delay % interval
-        if remaining > 0 and self.is_running:
+        if remaining > 0 and self.app_core.is_running:
             time.sleep(remaining / 1000)
 
     def scroll(self, value):
@@ -122,8 +113,10 @@ class ActionController(QObject):
 
     def execute_macro(self, macro_list: List[Macro]):
         for macro in macro_list:
-            if not self.is_running:
+            if not self.app_core.is_running:
                 break
+            # self.app_core.macro_row = index
+            # print(index)
             action_method = getattr(self, macro.action, None)
             if action_method:
                 print(f"Executing {macro.action} with value: {macro.value}")
@@ -132,28 +125,32 @@ class ActionController(QObject):
                 print(f"Unknown action: {macro.action}")
 
     def done(self):
-        self.is_running = False
-        self.signal_done.emit()
+        self.app_core.is_running = False
+        self.app_core.signal_macro_done.emit()
 
     def start(self):
-        self.is_running = True
+        self.app_core.is_running = True
+
+        # 화면 설정 가져 오기
         screens = QApplication.screens()
         if self.config.monitor > len(screens):
             self.done()
             return
+
         screen = screens[self.config.monitor]
         self.device_pixel_ratio = screen.devicePixelRatio()
 
         threading.Thread(target=self.run_macros, daemon=True).start()
 
     def run_macros(self):
-        if self._action_type == "pre_macro":
+        if self.app_core.macro_type == "pre_macro":
             self.execute_macro(self.config.pre_macro)
-        else:
-            while self.is_running:
-                self.execute_macro(self.config.macro)
+            self.app_core.is_running = False
+            self.app_core.signal_macro_done.emit()
+            return
 
-        self.done()
+        while self.app_core.is_running:
+            self.execute_macro(self.config.macro)
 
     def stop(self):
-        self.is_running = False
+        self.app_core.is_running = False

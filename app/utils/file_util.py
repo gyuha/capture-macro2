@@ -5,12 +5,15 @@ def current_dir_path():
     return os.getcwd()
 
 
-def removePathFiles(files):
-    for f in files:
+def remove_path_files(files):
+    """
+    주어진 파일 목록의 파일들을 삭제합니다.
+    """
+    for file in files:
         try:
-            os.remove(f)
-        except OSError as e:
-            print(f"Error: {f}: {e.strerror}")
+            os.remove(file)
+        except Exception as e:
+            print(f"파일 삭제 중 오류 발생: {file} - {e}")
 
 
 def dir_outer(path):

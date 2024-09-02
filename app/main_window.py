@@ -2,6 +2,7 @@ from pynput import keyboard
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QDialog, QMainWindow
 
+from app.app_core import AppCore
 from app.config.config import Config
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
@@ -12,6 +13,7 @@ from ui.main_window_ui import Ui_MainWindow
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.app_core = AppCore()
         self.config = Config()
 
         self.pre_command_widget = None
@@ -26,11 +28,16 @@ class MainWindow(QMainWindow):
 
         self.ui.btnStop.setDisabled(True)
 
-        self.image_number = 0
+        # 전역 단축키 설정
+        self.hotkeys = keyboard.GlobalHotKeys(
+            {"<f1>": self.handle_start, "<f2>": self.handle_stop}
+        )
+        self.hotkeys.start()
 
     def connect_signals_slots(self):
-
-        # Capture and control buttons
+        """
+        Capture and control buttons
+        """
         self.ui.btnCapture.clicked.connect(self.handle_capture)
         self.ui.btnStop.clicked.connect(self.handle_stop)
         self.ui.btnStart.clicked.connect(self.handle_start)
@@ -40,17 +47,9 @@ class MainWindow(QMainWindow):
         self.ui.actionSave.triggered.connect(self.handle_save)
         self.ui.actionExit_Q.triggered.connect(self.close)
 
-        # 여러 전역 단축키 설정
-
-        # 전역 단축키 설정
-        self.hotkeys = keyboard.GlobalHotKeys(
-            {"<f1>": self.handle_start, "<f2>": self.handle_stop}
-        )
-        self.hotkeys.start()
-
         # Action controller signals
-        self.action_controller.signal_done.connect(self.on_action_controller_done)
-        self.action_controller.signal_add_image.connect(
+        self.app_core.signal_macro_done.connect(self.on_action_controller_done)
+        self.app_core.signal_add_image.connect(
             self.on_action_controller_add_image
         )
 
@@ -70,7 +69,7 @@ class MainWindow(QMainWindow):
         pass
 
     def set_action_status(self, status: bool):
-        self.action_controller.is_running = status
+        self.app_core.is_running = status
         self.ui.command_widget.setDisabled(status)
         self.ui.pre_command_widget.setDisabled(status)
         self.ui.btnStart.setDisabled(status)
@@ -87,7 +86,7 @@ class MainWindow(QMainWindow):
         self.set_action_status(False)
 
     def handle_start(self):
-        if self.action_controller.is_running:
+        if self.app_core.is_running:
             return
 
         if not create_directory_path(self.config.capture_path):
@@ -96,7 +95,7 @@ class MainWindow(QMainWindow):
 
         self.set_action_status(True)
         # 매크로 시작
-        self.action_controller.action_type = "pre_macro"
+        self.app_core.macro_type = "pre_macro"
         self.action_controller.config = self.config
         self.action_controller.action_macro = self.config.pre_macro
         self.action_controller.monitor_index = int(self.config.monitor)
@@ -106,26 +105,18 @@ class MainWindow(QMainWindow):
     @Slot()
     def on_action_controller_done(self):
         # Action controller done
-        if self.action_controller.action_type == "pre_macro":
-            self.action_controller.action_type = "macro"
+        if self.app_core.macro_type == "pre_macro":
+            self.app_core.macro_type = "macro"
             self.action_controller.action_macro = self.config.macro
             self.action_controller.start()
         else:
             self.action_controller.stop()
 
-    @Slot(int, str)
-    def on_action_controller_add_image(self, image_number, image_name):
+    @Slot(str)
+    def on_action_controller_add_image(self, image_name):
         # Add image to the list
-        self.image_number = image_number
-        print("Adding image:", image_number)
+        self.app_core.image_number += 1
         print("Adding image:", image_name)
-
-    @Slot(int)
-    def on_action_controller_current_row(self, row):
-        if self.action_controller.action_type == "pre_macro":
-            self.ui.pre_command_widget.ui.macroTable.selectRow(row)
-        else:
-            self.ui.command_widget.ui.macroTable.selectRow(row)
 
     @Slot(str, object)
     def on_update_config(self, config_type, config):
