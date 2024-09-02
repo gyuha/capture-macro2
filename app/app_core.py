@@ -8,6 +8,8 @@ from app.utils.qt_singleton import QtSingleton
 class AppCore(QtSingleton):
     signal_add_image = Signal(str)
     signal_macro_done = Signal()
+    signal_image_preview = Signal(str)
+    signal_image_clear = Signal()
 
     def __init__(self):
         super().__init__()

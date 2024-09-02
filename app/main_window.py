@@ -1,5 +1,6 @@
 from pynput import keyboard
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QMainWindow
 
 from app.app_core import AppCore
@@ -34,6 +35,8 @@ class MainWindow(QMainWindow):
         )
         self.hotkeys.start()
 
+        self.lb_preview_width = 100
+
     def connect_signals_slots(self):
         """
         Capture and control buttons
@@ -49,6 +52,10 @@ class MainWindow(QMainWindow):
 
         # Action controller signals
         self.app_core.signal_macro_done.connect(self.on_action_controller_done)
+
+        # Image preview singals
+        self.app_core.signal_image_preview.connect(self.on_image_preview)
+        self.app_core.signal_image_clear.connect(self.on_image_clear)
 
         self.ui.pre_command_widget.signal_update_config.connect(self.on_update_config)
         self.ui.command_widget.signal_update_config.connect(self.on_update_config)
@@ -136,3 +143,22 @@ class MainWindow(QMainWindow):
             print("Settings applied:", self.config)
         else:
             print("Settings dialog canceled")
+
+    @Slot(str)
+    def on_image_preview(self, image_path):
+        pix = QPixmap()
+        pix.load(image_path)
+        pix = pix.scaledToWidth(self.lb_preview_width, Qt.SmoothTransformation)
+        self.ui.lbPreview.setPixmap(pix)
+
+    @Slot()
+    def on_image_clear(self):
+        self.ui.lbPreview.clear()
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.lb_preview_width = self.ui.lbPreview.width()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.lb_preview_width = self.ui.lbPreview.width()

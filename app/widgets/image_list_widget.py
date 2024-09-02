@@ -45,11 +45,10 @@ class ImageListWidget(QWidget):
         self.app_core.signal_add_image.connect(self.on_add_image)
 
     def handle_item_selection_changed(self):
-        pass
-        # item = self.lsFiles.selectedItems()
-        # if len(item) > 0:
-        #     path = os.path.join(self.core.capturePath, item[0].text())
-        #     # self.previewDisplay(path)
+        item = self.ui.imageFiles.selectedItems()
+        if len(item) > 0:
+            image_path = os.path.join(self.config.capture_path, item[0].text())
+            self.app_core.signal_image_preview.emit(image_path)
 
     def handle_delete_all_files(self):
         """
@@ -73,6 +72,7 @@ class ImageListWidget(QWidget):
                 self.ui.imageFiles.clear()
                 # self.label_preview.clear()
                 self.last_file_number()
+                self.app_core.signal_image_clear.emit()
             except Exception as e:
                 print(f"파일 삭제 중 오류 발생: {e}")
 
@@ -108,6 +108,7 @@ class ImageListWidget(QWidget):
                 os.remove(os.path.join(self.config.capture_path, item[0].text()))
                 self.ui.imageFiles.takeItem(row)
             self.last_file_number()
+            self.app_core.signal_image_clear.emit()
         except Exception as e:
             print(e)
 
