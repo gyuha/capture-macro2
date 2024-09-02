@@ -1,9 +1,8 @@
-import glob
-import os
-import re
 from typing import Any, Dict, List
-from app.utils.qt_singleton import QtSingleton
+
 import yaml
+
+from app.utils.qt_singleton import QtSingleton
 
 
 class Macro:
@@ -35,9 +34,6 @@ class Config(QtSingleton):
         self.macro: List[Macro] = []
 
         self.load_from_file(filepath)
-
-        # 사용 용 전역 값
-        self.image_number = 0   # 이미지 번호 저장용
 
     def load_from_file(self, filepath: str) -> None:
         with open(filepath, "r", encoding="utf-8") as file:
@@ -81,28 +77,6 @@ class Config(QtSingleton):
             f")"
         )
 
-    def get_next_image_number(folder_path):
-        # jpg와 png 파일 목록 가져오기
-        image_files = glob.glob(os.path.join(folder_path, "*.jpg")) + \
-                      glob.glob(os.path.join(folder_path, "*.png"))
-
-        if not image_files:
-            return 0  # 파일이 없으면 0부터 시작
-
-        # 파일 이름에서 숫자 추출
-        numbers = []
-        for file in image_files:
-            filename = os.path.basename(file)
-            match = re.search(r'\d+', filename)
-            if match:
-                numbers.append(int(match.group()))
-
-        if not numbers:
-            return 0  # 숫자를 찾지 못했으면 0부터 시작
-
-        # 가장 큰 숫자 찾기 및 1 더하기
-        return max(numbers) + 1
-
 
 if __name__ == "__main__":
     config = Config()
@@ -114,5 +88,7 @@ if __name__ == "__main__":
     # 설정을 파일에서 읽어오기
     # config = Config.load_from_file("config.yml")
 
+    # 변경 후 파일에 저장하기
+    # config.save_to_file("new_config.yml")
     # 변경 후 파일에 저장하기
     # config.save_to_file("new_config.yml")

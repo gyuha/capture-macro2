@@ -10,7 +10,7 @@ from PIL import Image
 from pynput.keyboard import Controller as KeyboardController
 from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
 
 from app.app_core import AppCore
@@ -20,7 +20,6 @@ from app.utils.pynput_keymap import get_key_from_string
 
 
 class ActionController(QObject):
-    signal_add_image = Signal(int, str)
 
     def __init__(self):
         super().__init__()
@@ -60,7 +59,7 @@ class ActionController(QObject):
                 "mon": screen_num,
             }
 
-            if not self.app_core.is_windows:
+            if self.app_core.is_mac:
                 monitor["top"] = int(monitor["top"] / self.device_pixel_ratio)
                 monitor["left"] = int(monitor["left"] / self.device_pixel_ratio)
                 monitor["width"] = int(monitor["width"] / self.device_pixel_ratio)

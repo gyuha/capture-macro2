@@ -49,9 +49,7 @@ class MainWindow(QMainWindow):
 
         # Action controller signals
         self.app_core.signal_macro_done.connect(self.on_action_controller_done)
-        self.app_core.signal_add_image.connect(
-            self.on_action_controller_add_image
-        )
+        self.app_core.signal_add_image.connect(self.on_action_controller_add_image)
 
         self.ui.pre_command_widget.signal_update_config.connect(self.on_update_config)
         self.ui.command_widget.signal_update_config.connect(self.on_update_config)
@@ -95,6 +93,7 @@ class MainWindow(QMainWindow):
 
         self.set_action_status(True)
         # 매크로 시작
+        self.app_core.same_count = 0
         self.app_core.macro_type = "pre_macro"
         self.action_controller.config = self.config
         self.action_controller.action_macro = self.config.pre_macro
@@ -110,7 +109,7 @@ class MainWindow(QMainWindow):
             self.action_controller.action_macro = self.config.macro
             self.action_controller.start()
         else:
-            self.action_controller.stop()
+            self.handle_stop()
 
     @Slot(str)
     def on_action_controller_add_image(self, image_name):
