@@ -16,7 +16,7 @@ from app.utils.rect.rect_overlay import RectOverlay
 from app.utils.rect_value_utils import is_valid_rect_string_value, string_to_rect_value
 from ui.command_widget_ui import Ui_CommandWidget
 
-MACRO_ACTIONS = ["capture", "delay", "click", "key", "scroll"]
+MACRO_ACTIONS = ["capture", "delay", "click", "key", "scroll", "move"]
 # TODO : 키 목록을 콤보박스에서 가져오도록 수가
 KEY_ACTIONS = [
     "up",

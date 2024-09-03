@@ -14,8 +14,8 @@ from ui.main_window_ui import Ui_MainWindow
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.app_core = AppCore()
         self.config = Config()
+        self.app_core = AppCore()
 
         self.pre_command_widget = None
         self.ui = Ui_MainWindow()
@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
         self.hotkeys.start()
 
         self.lb_preview_width = 100
+
 
     def connect_signals_slots(self):
         """

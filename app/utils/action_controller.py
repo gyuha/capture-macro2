@@ -30,10 +30,13 @@ class ActionController(QObject):
 
         self.config = Config()
         self._action_macro = []
-        self.device_pixel_ratio = 1
         self.mouse = MouseController()
         self.keyboard = KeyboardController()
         self.current_row = 0
+
+        # 화면 설정 가져 오기
+        self.screens = QApplication.screens()
+        self.monitor = self.screens[0].geometry()
 
     @property
     def action_macro(self):
@@ -51,6 +54,8 @@ class ActionController(QObject):
             screen_num = int(self.config.monitor)
             mon = sct.monitors[screen_num + 1]
 
+            self.app_core.signal_mouse_event.emit("move", mon["left"], 0)
+
             monitor = {
                 "top": mon["top"] + y,
                 "left": mon["left"] + x,
@@ -60,10 +65,11 @@ class ActionController(QObject):
             }
 
             if self.app_core.is_mac:
-                monitor["top"] = int(monitor["top"] / self.device_pixel_ratio)
-                monitor["left"] = int(monitor["left"] / self.device_pixel_ratio)
-                monitor["width"] = int(monitor["width"] / self.device_pixel_ratio)
-                monitor["height"] = int(monitor["height"] / self.device_pixel_ratio)
+                device_pixel_ratio = self.app_core.device_pixel_ratio
+                monitor["top"] = int(monitor["top"] / device_pixel_ratio)
+                monitor["left"] = int(monitor["left"] / device_pixel_ratio)
+                monitor["width"] = int(monitor["width"] / device_pixel_ratio)
+                monitor["height"] = int(monitor["height"] / device_pixel_ratio)
 
             sct_img = sct.grab(monitor)
             img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
@@ -96,19 +102,26 @@ class ActionController(QObject):
         if remaining > 0 and self.app_core.is_running:
             time.sleep(remaining / 1000)
 
-    def scroll(self, value):
+    def mouse_move(self, value):
         x, y, width, height = map(int, value.split(","))
-        click_x = random.randint(x, x + width)
-        click_y = random.randint(y, y + height)
-        self.mouse.position = (click_x, click_y)
-        self.mouse.scroll(0, -1)
+        move_x = random.randint(x, x + width)
+        move_y = random.randint(y, y + height)
+
+        move_x += self.app_core.monitor.left()
+        move_y += self.app_core.monitor.top()
+
+        if self.app_core.is_mac:
+            move_x = int(move_x / self.app_core.device_pixel_ratio)
+            move_y = int(move_y / self.app_core.device_pixel_ratio)
+        return move_x, move_y
+
+    def scroll(self, value):
+        x, y = self.mouse_move(value)
+        self.app_core.signal_mouse_event.emit("scroll", x, y)
 
     def click(self, value):
-        x, y, width, height = map(int, value.split(","))
-        click_x = random.randint(x, x + width)
-        click_y = random.randint(y, y + height)
-        self.mouse.position = (click_x, click_y)
-        self.mouse.click(Button.left, 1)
+        x, y = self.mouse_move(value)
+        self.app_core.signal_mouse_event.emit("click", x, y)
 
     def execute_macro(self, macro_list: List[Macro]):
         for macro in macro_list:
@@ -130,14 +143,9 @@ class ActionController(QObject):
     def start(self):
         self.app_core.is_running = True
 
-        # 화면 설정 가져 오기
-        screens = QApplication.screens()
-        if self.config.monitor > len(screens):
+        if not self.app_core.set_monitor():
             self.done()
             return
-
-        screen = screens[self.config.monitor]
-        self.device_pixel_ratio = screen.devicePixelRatio()
 
         threading.Thread(target=self.run_macros, daemon=True).start()
 

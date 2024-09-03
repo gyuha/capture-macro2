@@ -18,9 +18,13 @@ class ImageDiff:
         if self.preImage is None:
             self.preImage = self.readFile(imagePath)
             return False
-        currentImage = self.readFile(imagePath)
+        try:
+            currentImage = self.readFile(imagePath)
 
-        (score, diff) = compare_ssim(self.preImage, currentImage, full=True)
-        diff = (diff * 255).astype("uint8")
-        self.preImage = currentImage
-        return True if score >= 1.0 else False
+            (score, diff) = compare_ssim(self.preImage, currentImage, full=True)
+            diff = (diff * 255).astype("uint8")
+            self.preImage = currentImage
+            return True if score >= 1.0 else False
+        except Exception as e:
+            print(e)
+            return False
