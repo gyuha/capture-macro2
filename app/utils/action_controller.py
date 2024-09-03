@@ -8,7 +8,6 @@ import mss
 import mss.tools
 from PIL import Image
 from pynput.keyboard import Controller as KeyboardController
-from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
@@ -54,7 +53,8 @@ class ActionController(QObject):
             screen_num = int(self.config.monitor)
             mon = sct.monitors[screen_num + 1]
 
-            self.app_core.signal_mouse_event.emit("move", mon["left"], 0)
+            if self.app_core.is_mac:
+                self.app_core.signal_mouse_event.emit("move", mon["left"], 0)
 
             monitor = {
                 "top": mon["top"] + y,
