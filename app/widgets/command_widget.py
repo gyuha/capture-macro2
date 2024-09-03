@@ -129,7 +129,12 @@ class CommandWidget(QWidget):
                 action = self.ui.macroTable.cellWidget(row, 0).currentText()
                 self.ui.macroTable.removeCellWidget(row, 2)
                 self.ui.macroTable.removeCellWidget(row, 3)
-                if action == "capture" or action == "click" or action == "scroll":
+                if (
+                    action == "capture"
+                    or action == "click"
+                    or action == "scroll"
+                    or action == "move"
+                ):
                     button = QPushButton()
                     button.setText("영역선택")
                     button.clicked.connect(partial(self.handle_screen_rect, row))
