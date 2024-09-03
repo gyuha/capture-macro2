@@ -5,14 +5,21 @@ import re
 from pathlib import Path
 
 from PIL import Image
-from PySide6.QtCore import QUrl, Slot
+from PySide6.QtCore import Qt, QUrl, Slot
 from PySide6.QtGui import QDesktopServices, QIcon, QImage, QPixmap
-from PySide6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QListWidgetItem,
+    QMessageBox,
+    QProgressDialog,
+    QWidget,
+)
 
 from app.app_core import AppCore
 from app.config.config import Config
 from app.utils.file_util import remove_path_files
 from app.utils.image_diff import ImageDiff
+from app.utils.image_to_pdf_converter import ImageToPdfConverter
 from ui.image_list_widget_ui import Ui_ImageListWidget
 
 
@@ -30,9 +37,13 @@ class ImageListWidget(QWidget):
 
         self.ui = Ui_ImageListWidget()
         self.ui.setupUi(self)
-        self.connect_signals_slots()
+
+        self.image_to_pdf_converter = ImageToPdfConverter()
 
         self.load_capture_files()
+        self.progress_dialog = None
+
+        self.connect_signals_slots()
 
     def connect_signals_slots(self):
         self.ui.imageFiles.itemSelectionChanged.connect(
@@ -41,8 +52,12 @@ class ImageListWidget(QWidget):
         self.ui.btnDeleteAllFiles.clicked.connect(self.handle_delete_all_files)
         self.ui.btnDeleteFile.clicked.connect(self.handle_delete_file)
         self.ui.btnOpenFolder.clicked.connect(self.handle_open_folder)
+        self.ui.btnToPdf.clicked.connect(self.handle_to_pdf)
 
         self.app_core.signal_add_image.connect(self.on_add_image)
+
+        self.image_to_pdf_converter.signal_progress.connect(self.handle_progress)
+        self.image_to_pdf_converter.signal_finished.connect(self.handle_finished)
 
     def handle_item_selection_changed(self):
         item = self.ui.imageFiles.selectedItems()
@@ -176,3 +191,42 @@ class ImageListWidget(QWidget):
         self.app_core.image_number += 1
         self.ui.lbImageNumber.setText(str(self.app_core.image_number))
         # self.leCurrentCount.setText(str(num))
+
+    def handle_to_pdf(self):
+        """
+        이미지를 PDF로 변환
+        """
+        try:
+            file_name = QFileDialog.getSaveFileName(self, "Save file", "", ".pdf")
+            if not file_name:
+                return
+            file_path = file_name[0]
+            if not file_path:
+                return
+            if not file_name[0].endswith(".pdf"):
+                file_path = file_path + ".pdf"
+
+            self.progress_dialog = QProgressDialog(
+                "Save to pdf", "Cancel", 0, 100, self
+            )
+            self.progress_dialog.setWindowTitle("Save to pdf")
+
+            self.image_to_pdf_converter.setFile(self.config.capture_path, file_path)
+            self.image_to_pdf_converter.start()
+
+            self.progress_dialog.setWindowModality(Qt.WindowModal)
+            self.progress_dialog.forceShow()
+
+            print("PDF 생성 완료")
+        except Exception as e:
+            print(f"PDF 변환 중 오류 발생: {e}")
+
+    @Slot(int)
+    def handle_progress(self, value):
+        if not self.progress_dialog.wasCanceled():
+            self.progress_dialog.setValue(value)
+
+    @Slot()
+    def handle_finished(self):
+        self.progress_dialog.close()
+        print("PDF 생성 완료")

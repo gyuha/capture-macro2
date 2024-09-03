@@ -5,5 +5,11 @@
   // "qtForPython.qml.path": "${workspaceFolder}/venv/Scripts/pyside6-qml.exe",
   "qtForPython.qmlls.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlls.exe",
   "qtForPython.qmlls.enabled": false,
-  "qtForPython.qml.enabled": false
+  "qtForPython.qml.enabled": false,
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/venv/Lib/site-packages/PySide6"
+  ],
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/venv/Lib/site-packages/PySide6"
+  ]
 }

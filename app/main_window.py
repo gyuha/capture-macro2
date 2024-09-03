@@ -37,11 +37,7 @@ class MainWindow(QMainWindow):
 
         self.lb_preview_width = 100
 
-
     def connect_signals_slots(self):
-        """
-        Capture and control buttons
-        """
         self.ui.btnCapture.clicked.connect(self.handle_capture)
         self.ui.btnStop.clicked.connect(self.handle_stop)
         self.ui.btnStart.clicked.connect(self.handle_start)

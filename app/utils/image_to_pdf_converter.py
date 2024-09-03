@@ -1,4 +1,5 @@
 import os
+
 from PIL import Image
 from PySide6.QtCore import QThread, Signal
 from reportlab.lib.units import inch
@@ -6,16 +7,24 @@ from reportlab.pdfgen import canvas
 
 
 class ImageToPdfConverter(QThread):
-    progress = Signal(int)
-    finished = Signal()
+    signal_progress = Signal(int)
+    signal_finished = Signal()
 
-    def __init__(self, image_folder, output_pdf):
+    def __init__(self):
         super().__init__()
+        self.image_folder = ""
+        self.output_pdf = ""
+
+    def setFile(self, image_folder, output_pdf):
         self.image_folder = image_folder
         self.output_pdf = output_pdf
 
     def run(self):
-        image_files = [f for f in os.listdir(self.image_folder) if f.lower().endswith(("png", "jpg", "jpeg"))]
+        image_files = [
+            f
+            for f in os.listdir(self.image_folder)
+            if f.lower().endswith(("png", "jpg", "jpeg"))
+        ]
         image_files.sort()
 
         c = canvas.Canvas(self.output_pdf)
@@ -33,21 +42,24 @@ class ImageToPdfConverter(QThread):
             c.setPageSize((width_inch * inch, height_inch * inch))
 
             # 이미지를 페이지에 그리기
-            c.drawImage(image_path, 0, 0, width=width_inch * inch, height=height_inch * inch)
+            c.drawImage(
+                image_path, 0, 0, width=width_inch * inch, height=height_inch * inch
+            )
             c.showPage()
 
             # 진행 상태 업데이트
-            self.progress.emit(int((i + 1) / total_images * 100))
+            self.signal_progress.emit(int((i + 1) / total_images * 100))
 
         c.save()
-        self.finished.emit()
+        self.signal_finished.emit()
 
 
 if __name__ == "__main__":
-    input_image_folder = "images"
+    input_image_folder = "capture"
     output_pdf_file = "output.pdf"
 
     converter = ImageToPdfConverter(input_image_folder, output_pdf_file)
     converter.start()
     converter.wait()
+    print("PDF 생성 완료")
     print("PDF 생성 완료")
