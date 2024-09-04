@@ -1,7 +1,8 @@
-from pynput import keyboard
-from PySide6.QtCore import Qt, Slot
+from PySide6 import QtCore
+from PySide6.QtCore import Slot
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QMainWindow
+from pynput import keyboard
 
 from app.app_core import AppCore
 from app.config.config import Config
@@ -66,8 +67,10 @@ class MainWindow(QMainWindow):
         self.ui.command_widget.set_macro(self, "macro", self.config.macro)
 
     def handle_capture(self):
-        # TODO: Implement capture logic
-        pass
+        table = self.ui.command_widget.ui.macroTable
+        for row in range(table.rowCount()):
+            if table.cellWidget(row, 0).currentText() == "capture":
+                self.action_controller.capture(table.item(row, 1).text().strip())
 
     def set_action_status(self, status: bool):
         self.app_core.is_running = status
@@ -145,7 +148,7 @@ class MainWindow(QMainWindow):
     def on_image_preview(self, image_path):
         pix = QPixmap()
         pix.load(image_path)
-        pix = pix.scaledToWidth(self.lb_preview_width, Qt.SmoothTransformation)
+        pix = pix.scaledToWidth(self.lb_preview_width, QtCore.Qt.TransformationMode.SmoothTransformation)
         self.ui.lbPreview.setPixmap(pix)
 
     @Slot()

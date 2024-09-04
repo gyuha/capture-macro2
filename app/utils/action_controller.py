@@ -7,15 +7,14 @@ from typing import List
 import mss
 import mss.tools
 from PIL import Image
-from pynput.keyboard import Controller as KeyboardController
-from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
+from pynput.keyboard import Controller as KeyboardController
+from pynput.mouse import Controller as MouseController
 
 from app.app_core import AppCore
 from app.config.config import Config, Macro
 from app.utils.jpg_image_optimize import jpg_image_optimize
-from app.utils.pynput_keymap import get_key_from_string
 
 
 class ActionController(QObject):
@@ -37,6 +36,7 @@ class ActionController(QObject):
         self.screens = QApplication.screens()
         self.monitor = self.screens[0].geometry()
 
+
     @property
     def action_macro(self):
         return self._action_macro
@@ -53,8 +53,6 @@ class ActionController(QObject):
             screen_num = int(self.config.monitor)
             mon = sct.monitors[screen_num + 1]
 
-            if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit("move", mon["left"], 0)
 
             monitor = {
                 "top": mon["top"] + y,
@@ -71,6 +69,10 @@ class ActionController(QObject):
                 monitor["width"] = int(monitor["width"] / device_pixel_ratio)
                 monitor["height"] = int(monitor["height"] / device_pixel_ratio)
 
+            current_mouse_position = self.mouse.position
+            if self.app_core.is_mac:
+                self.app_core.signal_mouse_event.emit("move", mon["left"] + mon["width"], mon["top"] + mon["height"])
+
             sct_img = sct.grab(monitor)
             img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
 
@@ -79,17 +81,14 @@ class ActionController(QObject):
             # 이미지 저장 하기
             jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
+            if self.app_core.is_mac:
+                self.app_core.signal_mouse_event.emit("move", current_mouse_position[0], current_mouse_position[1])
+
         self.app_core.image_number += 1
         self.app_core.signal_add_image.emit(file_path)
 
     def key(self, value):
-        try:
-            send_key = get_key_from_string(value)
-            if send_key:
-                self.keyboard.press(send_key)
-                self.keyboard.release(send_key)
-        except ValueError:
-            print(f"Invalid key: {value}")
+        self.app_core.signal_key_event.emit(value)
 
     def delay(self, value):
         total_delay = int(value)
