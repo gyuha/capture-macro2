@@ -1,0 +1,15 @@
+capture_path: ./capture
+image_quality: 88
+macro:
+- action: capture
+  value: 90,116,1988,2740
+- action: key
+  value: right
+- action: delay
+  value: '450'
+max_page: 1500
+monitor: 0
+pre_macro:
+- action: click
+  value: 1064,68,376,16
+same_count: 3

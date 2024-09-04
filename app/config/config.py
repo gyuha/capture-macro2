@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict, List
 
 import yaml
@@ -19,7 +20,7 @@ class Macro:
 
 
 class Config(QtSingleton):
-    def __init__(self, filepath: str = "config.yml"):
+    def __init__(self):
         super().__init__()
 
         # 저장용 설정 값
@@ -33,7 +34,29 @@ class Config(QtSingleton):
         self.pre_macro: List[Macro] = []
         self.macro: List[Macro] = []
 
-        self.load_from_file(filepath)
+        self.load_from_file(self.get_config_path())
+
+    def make_default_config(self, config_path: str):
+        config = {
+            'capture_path': '~/.CaptureMacro/capture',
+            'image_quality': 88,
+            'max_page': 1500,
+            'monitor': 0,
+            'same_count': 3,
+            "pre_macro": [],
+            "macro": []
+        }
+        with open(config_path, 'w', encoding='utf-8') as file:
+            yaml.dump(config, file, default_flow_style=False)
+
+    def get_config_path(self):
+        app_name = "CaptureMacro"
+        config_dir = os.path.expanduser(f"~/.{app_name}")
+        config_path = os.path.join(config_dir, "config.yml")
+        if not os.path.exists(config_dir):
+            os.makedirs(config_dir)
+            self.make_default_config(config_path)
+        return config_path
 
     def load_from_file(self, filepath: str) -> None:
         with open(filepath, "r", encoding="utf-8") as file:
@@ -58,8 +81,8 @@ class Config(QtSingleton):
             "macro": [macro.to_dict() for macro in self.macro],
         }
 
-    def save_to_file(self, filepath: str = "config.yml") -> None:
-        with open(filepath, "w", encoding="utf-8") as file:
+    def save_to_file(self) -> None:
+        with open(self.get_config_path(), "w", encoding="utf-8") as file:
             yaml.dump(self.to_dict(), file, default_flow_style=False)
 
     def __str__(self) -> str:

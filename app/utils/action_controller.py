@@ -36,7 +36,6 @@ class ActionController(QObject):
         self.screens = QApplication.screens()
         self.monitor = self.screens[0].geometry()
 
-
     @property
     def action_macro(self):
         return self._action_macro
@@ -52,7 +51,6 @@ class ActionController(QObject):
         with mss.mss() as sct:
             screen_num = int(self.config.monitor)
             mon = sct.monitors[screen_num + 1]
-
 
             monitor = {
                 "top": mon["top"] + y,
