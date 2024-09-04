@@ -25,6 +25,7 @@ Capture macro 2
 - [ ] If the selected image is deleted, preview the image that is in focus.
 - [x] image to pdf
   - [ ] image ocr
+- [ ] Application icon
 - [ ] Creating an executable file
   - [ ] for MacOS
   - [ ] for Windows
