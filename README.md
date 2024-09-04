@@ -8,7 +8,7 @@ Capture macro 2
   - [x] config file structure
     - [x] save path
     - [x] compress level
-- [ ] macro process
+- [x] macro process
     - [x] macro type
       - [x] wheel scroll
       - [x] click
@@ -17,11 +17,17 @@ Capture macro 2
     - [x] Setting up the event area
     - [x] insert, delete, move
     - [x] save/load
-- [ ] image capture
+- [x] image capture
   - [x] image save path
   - [x] compress level
-  - [ ] image preview
-- [ ] image to pdf
+  - [x] image preview
+- [ ] Execute the capture command in the action list.
+- [ ] If the selected image is deleted, preview the image that is in focus.
+- [x] image to pdf
+  - [ ] image ocr
+- [ ] Creating an executable file
+  - [ ] for MacOS
+  - [ ] for Windows
 
 ## 개발 환경 설정
 ### Windows
