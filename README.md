@@ -23,9 +23,10 @@ Capture macro 2
   - [x] image preview
 - [ ] Execute the capture command in the action list.
 - [ ] If the selected image is deleted, preview the image that is in focus.
+- [ ] capture button을 처음에 눌렀을 경우 모니터 해상도가 적용되지 않음
 - [x] image to pdf
   - [ ] image ocr
-- [ ] Application icon
+- [x] Application icon
 - [ ] Creating an executable file
   - [ ] for MacOS
   - [ ] for Windows
