@@ -3,8 +3,9 @@ import platform
 from typing import Any, Dict, List
 
 import yaml
+from PySide6.QtCore import QObject
 
-from app.utils.qt_singleton import QtSingleton
+from app.utils.singleton_meta import SingletonMeta
 
 
 class Macro:
@@ -20,7 +21,7 @@ class Macro:
         return {"action": self.action, "value": self.value}
 
 
-class Config(QtSingleton):
+class Config(QObject, metaclass=SingletonMeta):
     def __init__(self):
         super().__init__()
 
@@ -44,9 +45,6 @@ class Config(QtSingleton):
         if system == "Windows":
             # 윈도우의 경우
             base_dir = os.path.expanduser("~\\Documents")
-        elif system == "Darwin":
-            # 맥의 경우
-            base_dir = os.path.expanduser("~/Library/Application Support")
         else:
             # 기타 운영 체제의 경우 (기본적으로 홈 디렉토리 사용)
             base_dir = os.path.expanduser("~")

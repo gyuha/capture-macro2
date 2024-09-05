@@ -122,8 +122,11 @@ class ImageListWidget(QWidget):
             if len(item) > 0:
                 os.remove(os.path.join(self.config.capture_path, item[0].text()))
                 self.ui.imageFiles.takeItem(row)
+            if self.ui.imageFiles.count() > row and row > 0:
+                self.ui.imageFiles.setCurrentRow(row - 1)
             self.last_file_number()
             self.app_core.signal_image_clear.emit()
+            self.handle_item_selection_changed()
         except Exception as e:
             print(e)
 
@@ -179,6 +182,9 @@ class ImageListWidget(QWidget):
         self.last_file_number()
 
     def last_file_number(self):
+        """
+        마지막 파일 번호 가져오기
+        """
         files = os.listdir(self.config.capture_path)
         p = re.compile(r"^\d+.jpg$")
         files = [s for s in files if p.match(s)]

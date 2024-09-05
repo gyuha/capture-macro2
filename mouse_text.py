@@ -1,16 +1,16 @@
-import random
-
 import sys
+import time
 
-from PySide6.QtCore import QPoint, QRect, Qt, QTimer, Signal, Slot
-from PySide6.QtGui import QColor, QCursor, QPainter, QPen
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget
-
-from pynput.keyboard import Controller as KeyboardController
-from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
-
-from PySide6.QtWidgets import QLineEdit, QVBoxLayout
+from pynput.mouse import Listener as MouseListener
+from PySide6.QtWidgets import (
+    QApplication,
+    QLineEdit,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class MainWindow(QMainWindow):
@@ -45,11 +45,28 @@ class MainWindow(QMainWindow):
         # Initialize mouse controller
         self.mouse = MouseController()
 
+        # Initialize mouse listener
+        self.listener = MouseListener(
+            on_move=self.on_move, on_click=self.on_click, on_scroll=self.on_scroll
+        )
+        self.listener.start()
+
+    def on_move(self, x, y):
+        print("Position : x:%s, y:%s" % (x, y))
+
+    def on_click(self, x, y, button, pressed):
+        print("Button: %s, Position: (%s, %s), Pressed: %s " % (button, x, y, pressed))
+
+    def on_scroll(self, x, y, dx, dy):
+        print("Scroll: (%s, %s) (%s, %s)." % (x, y, dx, dy))
+
     def move_mouse_to_coordinates(self):
         try:
             x = int(self.x_input.text())
             y = int(self.y_input.text())
             self.mouse.position = (x, y)
+            time.sleep(0.5)  # 0.5초 대기
+            self.mouse.click(MouseController.left, 1)  # 클릭 이벤트 발생
         except ValueError:
             print("Invalid input. Please enter valid integers for X and Y coordinates.")
 

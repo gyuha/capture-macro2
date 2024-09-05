@@ -1,0 +1,1 @@
+pyinstaller CaptureMacro.spec

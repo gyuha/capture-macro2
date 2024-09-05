@@ -7,10 +7,9 @@ from typing import List
 import mss
 import mss.tools
 from PIL import Image
+from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
-from pynput.keyboard import Controller as KeyboardController
-from pynput.mouse import Controller as MouseController
 
 from app.app_core import AppCore
 from app.config.config import Config, Macro
@@ -29,7 +28,6 @@ class ActionController(QObject):
         self.config = Config()
         self._action_macro = []
         self.mouse = MouseController()
-        self.keyboard = KeyboardController()
         self.current_row = 0
 
         # 화면 설정 가져 오기
@@ -69,7 +67,9 @@ class ActionController(QObject):
 
             current_mouse_position = self.mouse.position
             if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit("move", mon["left"] + mon["width"], mon["top"] + mon["height"])
+                self.app_core.signal_mouse_event.emit(
+                    "move", mon["left"] + mon["width"], mon["top"] + mon["height"]
+                )
 
             sct_img = sct.grab(monitor)
             img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
@@ -80,7 +80,9 @@ class ActionController(QObject):
             jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
             if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit("move", current_mouse_position[0], current_mouse_position[1])
+                self.app_core.signal_mouse_event.emit(
+                    "move", current_mouse_position[0], current_mouse_position[1]
+                )
 
         self.app_core.image_number += 1
         self.app_core.signal_add_image.emit(file_path)

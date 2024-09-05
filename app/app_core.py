@@ -1,18 +1,18 @@
 import platform
-
-from PySide6.QtCore import Signal, Slot
-
-from app.config.config import Config
-from app.utils.pynput_keymap import get_key_from_string
-from app.utils.qt_singleton import QtSingleton
-from PySide6.QtWidgets import QApplication
+import time
 
 from pynput.keyboard import Controller as KeyboardController
 from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
+from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtWidgets import QApplication
+
+from app.config.config import Config
+from app.utils.pynput_keymap import get_key_from_string
+from app.utils.singleton_meta import SingletonMeta
 
 
-class AppCore(QtSingleton):
+class AppCore(QObject, metaclass=SingletonMeta):
     signal_add_image = Signal(str)
     signal_macro_done = Signal()
     signal_image_preview = Signal(str)
@@ -22,7 +22,9 @@ class AppCore(QtSingleton):
     signal_key_event = Signal(str)
 
     def __init__(self):
-        super().__init__()
+        super(AppCore, self).__init__()
+
+        self.signals_connected = False
 
         self.total_image_count = 0
         self.image_number = 0  # 이미지 번호 저장용
@@ -58,15 +60,18 @@ class AppCore(QtSingleton):
         return True
 
     def connect_signals_slots(self):
-        self.signal_mouse_event.connect(self.on_mouse_event)
-        self.signal_key_event.connect(self.on_key_event)
+        if not self.signals_connected:
+            self.signal_mouse_event.connect(self.on_mouse_event)
+            self.signal_key_event.connect(self.on_key_event)
+            self.signals_connected = True
 
     @Slot(str, int, int)
     def on_mouse_event(self, event, x, y):
         try:
             self.mouse.position = (x, y)
+            time.sleep(0.01)
             if event == "scroll":
-                self.mouse.scroll(Button.left, -1)
+                self.mouse.scroll(0, -1)
             elif event == "click":
                 self.mouse.click(Button.left, 1)
         except AttributeError:
