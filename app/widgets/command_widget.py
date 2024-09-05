@@ -83,6 +83,7 @@ class CommandWidget(QWidget):
         for row, macro in enumerate(self.macro):
             self.set_macro_table_row(row, macro.action, macro.value)
         self.update_macro_actions()
+        self.button_enable()
 
         self.ui.macroTable.itemChanged.connect(self.update_macro_actions)
 
@@ -107,6 +108,7 @@ class CommandWidget(QWidget):
         row = self.ui.macroTable.currentRow()
         self.ui.macroTable.removeRow(row)
         self.update_macro_actions()
+        self.button_enable()
 
     def set_macro_table_row(self, row, action, value):
         actionCombo = QComboBox()
@@ -120,6 +122,12 @@ class CommandWidget(QWidget):
         item = QTableWidgetItem(value)
         # item.currentTextChanged.connect(self.updateMacroActions)
         self.ui.macroTable.setItem(row, 1, item)
+        self.button_enable()
+
+    def button_enable(self):
+        flag = self.ui.macroTable.rowCount() > 0
+        self.ui.btnCommandRemove.setEnabled(flag)
+        self.ui.btnCommandInsert.setEnabled(flag)
 
     def update_macro_actions(self):
         self.ui.macroTable.blockSignals(True)
