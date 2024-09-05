@@ -1,4 +1,5 @@
 import os
+import platform
 from typing import Any, Dict, List
 
 import yaml
@@ -36,17 +37,40 @@ class Config(QtSingleton):
 
         self.load_from_file(self.get_config_path())
 
+    def get_default_data_folder(self, app_name):
+        # 운영 체제 감지
+        system = platform.system()
+
+        if system == "Windows":
+            # 윈도우의 경우
+            base_dir = os.path.expanduser("~\\Documents")
+        elif system == "Darwin":
+            # 맥의 경우
+            base_dir = os.path.expanduser("~/Library/Application Support")
+        else:
+            # 기타 운영 체제의 경우 (기본적으로 홈 디렉토리 사용)
+            base_dir = os.path.expanduser("~")
+
+        # 어플리케이션 전용 폴더 경로 생성
+        app_data_folder = os.path.join(base_dir, app_name)
+
+        # 폴더가 존재하지 않으면 생성
+        if not os.path.exists(app_data_folder):
+            os.makedirs(app_data_folder)
+
+        return app_data_folder
+
     def make_default_config(self, config_path: str):
         config = {
-            'capture_path': '~/.CaptureMacro/capture',
-            'image_quality': 88,
-            'max_page': 1500,
-            'monitor': 0,
-            'same_count': 3,
+            "capture_path": self.get_default_data_folder("CaptureMacro"),
+            "image_quality": 88,
+            "max_page": 1500,
+            "monitor": 0,
+            "same_count": 3,
             "pre_macro": [],
-            "macro": []
+            "macro": [],
         }
-        with open(config_path, 'w', encoding='utf-8') as file:
+        with open(config_path, "w", encoding="utf-8") as file:
             yaml.dump(config, file, default_flow_style=False)
 
     def get_config_path(self):
@@ -99,19 +123,3 @@ class Config(QtSingleton):
             f"  macro=[\n    {macro_str}\n  ]\n"
             f")"
         )
-
-
-if __name__ == "__main__":
-    config = Config()
-    # config.save_to_file("config.yml")
-
-    print(config)
-
-    # 사용 예시:
-    # 설정을 파일에서 읽어오기
-    # config = Config.load_from_file("config.yml")
-
-    # 변경 후 파일에 저장하기
-    # config.save_to_file("new_config.yml")
-    # 변경 후 파일에 저장하기
-    # config.save_to_file("new_config.yml")
