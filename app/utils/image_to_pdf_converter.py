@@ -62,4 +62,3 @@ if __name__ == "__main__":
     converter.start()
     converter.wait()
     print("PDF 생성 완료")
-    print("PDF 생성 완료")

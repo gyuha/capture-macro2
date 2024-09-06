@@ -29,7 +29,7 @@ Capture macro 2
 - [x] Creating an executable file
   - [x] for MacOS
   - [x] for Windows
-- [ ] macro list selected cursor when action doing
+- [x] macro list selected cursor when action doing
 
 ## 개발 환경 설정
 ### Windows
@@ -38,3 +38,11 @@ Capture macro 2
 - pyenv-win
   - python 3.10.11
 - vscode
+
+### Etc
+mac용 아이콘 업데이트 하기
+```bash
+python ./app/utils/create_icon.py
+```
+
+
