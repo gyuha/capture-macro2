@@ -17,17 +17,20 @@ fi
 
 echo "Building version: $VERSION"
 
-# PyInstaller를 사용하여 앱 빌드
-echo "Building the app with PyInstaller..."
-pyinstaller -y "$SPEC_FILE"
-
-# 앱 번들 경로
+## 임시 파일 정리
+#rm -rf build dist
+#
+## PyInstaller를 사용하여 앱 빌드
+#echo "Building the app with PyInstaller..."
+#pyinstaller "$SPEC_FILE" || { echo "PyInstaller failed"; exit 1; }
+#
+## 앱 번들 경로
 APP_BUNDLE="dist/$APP_NAME.app"
 
 # 아이콘 파일 복사 (필요한 경우)
 if [ -f "$ICON_FILE" ]; then
     echo "Copying icon file..."
-    cp "$ICON_FILE" "$APP_BUNDLE/Contents/Resources/"
+    cp "$ICON_FILE" "$APP_BUNDLE/Contents/Resources/" || { echo "Icon copy failed"; exit 1; }
 fi
 
 # DMG 생성
@@ -40,23 +43,21 @@ TMP_DMG_PATH="dist/${APP_NAME}-tmp.dmg"
 
 # 임시 DMG 생성
 hdiutil create -srcfolder "$APP_BUNDLE" -volname "$APP_NAME $VERSION" -fs HFS+ \
-        -fsargs "-c c=64,a=16,e=16" -format UDRW -size 200m "$TMP_DMG_PATH"
+        -fsargs "-c c=64,a=16,e=16" -format UDRW -size 500m "$TMP_DMG_PATH" || { echo "DMG creation failed"; exit 1; }
 
+echo "DMG created: $TMP_DMG_PATH"
 # 임시 DMG를 마운트
 MOUNT_DIR="/Volumes/$APP_NAME $VERSION"
-hdiutil attach -readwrite -noverify -noautoopen "$TMP_DMG_PATH"
+hdiutil attach -readwrite -noverify -noautoopen "$TMP_DMG_PATH" || { echo "DMG mount failed"; exit 1; }
 
-# 볼륨 아이콘 설정 (선택사항)
-# cp /path/to/volume_icon.icns "$MOUNT_DIR/.VolumeIcon.icns"
-# SetFile -c icnC "$MOUNT_DIR/.VolumeIcon.icns"
+echo "DMG mounted: $MOUNT_DIR"
 
 # 응용 프로그램 폴더로의 심볼릭 링크 생성
-ln -s /Applications "$MOUNT_DIR/Applications"
+ln -s /Applications "$MOUNT_DIR/Applications" || { echo "Symlink creation failed"; exit 1; }
 
 # DMG 최종화
-hdiutil detach "$MOUNT_DIR"
-hdiutil convert "$TMP_DMG_PATH" -format UDZO -o "$DMG_PATH"
+hdiutil detach "$MOUNT_DIR" || { echo "DMG detach failed"; exit 1; }
+hdiutil convert "$TMP_DMG_PATH" -format UDZO -o "$DMG_PATH" || { echo "DMG conversion failed"; exit 1; }
 rm -f "$TMP_DMG_PATH"
 
 echo "DMG creation complete: $DMG_PATH"
-
