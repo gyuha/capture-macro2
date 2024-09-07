@@ -48,9 +48,7 @@ python ./app/utils/create_icon.py
 ### 빌드 옵션
 ```bash
 pyinstaller --icon=resources/icon.png \
-            --add-data=venv/lib/python3.10/site-packages/pynput:pynput \
             --name=CaptureMacro \
-            --add-binary '/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/Resources/AXMakeProcessTrusted:AXMakeProcessTrusted' \
             --noconsole \
             --windowed \
             --noupx \
