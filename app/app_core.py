@@ -1,16 +1,15 @@
 import platform
 import time
+import os
 
-from pynput.keyboard import Controller as KeyboardController
-from pynput.mouse import Button
-from pynput.mouse import Controller as MouseController
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config
-from app.utils.pynput_keymap import get_key_from_string
+from app.utils.input_controller import InputController
 from app.utils.singleton_meta import SingletonMeta
 
+os.environ['PYNPUT_BACKEND'] = 'darwin'
 
 class AppCore(QObject, metaclass=SingletonMeta):
     signal_add_image = Signal(str)
@@ -45,8 +44,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
         self.monitor = self.screen.geometry()
         self.device_pixel_ratio = 1
 
-        self.mouse = MouseController()
-        self.keyboard = KeyboardController()
+        self.input_controller = InputController()
 
         self.connect_signals_slots()
 
@@ -68,20 +66,19 @@ class AppCore(QObject, metaclass=SingletonMeta):
     @Slot(str, int, int)
     def on_mouse_event(self, event, x, y):
         try:
-            self.mouse.position = (x, y)
+            self.input_controller.move_mouse(x, y)
             time.sleep(0.01)
             if event == "scroll":
-                self.mouse.scroll(0, -1)
+                self.input_controller.scroll_mouse(-1)
             elif event == "click":
-                self.mouse.click(Button.left, 1)
+                self.input_controller.click_mouse()
         except AttributeError:
             print(f"Unknown event: {event}")
 
     @Slot(str)
     def on_key_event(self, key):
+        print("========> ", key)
         try:
-            send_key = get_key_from_string(key)
-            self.keyboard.press(send_key)
-            self.keyboard.release(send_key)
+            self.input_controller.press_key(key)
         except AttributeError:
             print(f"Unknown key: {key}")

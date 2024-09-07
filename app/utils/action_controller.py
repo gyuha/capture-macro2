@@ -7,12 +7,13 @@ from typing import List
 import mss
 import mss.tools
 from PIL import Image
-from pynput.mouse import Controller as MouseController
+import pyautogui
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
 
 from app.app_core import AppCore
 from app.config.config import Config, Macro
+from app.utils.input_controller import InputController
 from app.utils.jpg_image_optimize import jpg_image_optimize
 
 
@@ -27,8 +28,9 @@ class ActionController(QObject):
 
         self.config = Config()
         self._action_macro = []
-        self.mouse = MouseController()
         self.current_row = 0
+
+        self.input_controller = InputController()
 
         # 화면 설정 가져 오기
         self.screens = QApplication.screens()
@@ -65,7 +67,7 @@ class ActionController(QObject):
                 monitor["width"] = int(monitor["width"] / device_pixel_ratio)
                 monitor["height"] = int(monitor["height"] / device_pixel_ratio)
 
-            current_mouse_position = self.mouse.position
+            x, y = self.input_controller.get_mouse_position()
             if self.app_core.is_mac:
                 self.app_core.signal_mouse_event.emit(
                     "move", mon["left"] + mon["width"], mon["top"] + mon["height"]
@@ -81,7 +83,7 @@ class ActionController(QObject):
 
             if self.app_core.is_mac:
                 self.app_core.signal_mouse_event.emit(
-                    "move", current_mouse_position[0], current_mouse_position[1]
+                    "move", x, y
                 )
 
         self.app_core.image_number += 1
