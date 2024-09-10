@@ -1,55 +1,36 @@
-
-import platform
-import time
-import pyautogui
+from pynput import keyboard, mouse
+from pynput.mouse import Button
 
 from app.utils.pynput_keymap import get_key_from_string
 
 
 class InputController:
     def __init__(self):
-        self.system = platform.system()
-        if self.system == "Windows":
-            from pynput import mouse, keyboard
-            self.mouse = mouse.Controller()
-            self.keyboard = keyboard.Controller()
-        elif self.system == "Darwin":  # macOS
-            pass  # We'll use pyautogui for macOS
-        else:
-            raise NotImplementedError(f"Unsupported operating system: {self.system}")
+        self.mouse = mouse.Controller()
+        self.keyboard = keyboard.Controller()
 
     def move_mouse(self, x, y):
-        if self.system == "Windows":
-            self.mouse.position = (x, y)
-        elif self.system == "Darwin":
-            pyautogui.moveTo(x, y)
+        """
+        move_mouse(x, y) moves the mouse to the specified x, y coordinates.
+        """
+        self.mouse.position = (x, y)
 
     def click_mouse(self):
-        if self.system == "Windows":
-            self.mouse.click(self.mouse.Button.left)
-        elif self.system == "Darwin":
-            pyautogui.click()
+        """
+        click_mouse() clicks the left mouse button once.
+        """
+        self.mouse.click(Button.left, 1)
 
     def press_key(self, key):
-        if self.system == "Windows":
-            send_key = get_key_from_string(key)
-            self.keyboard.press(send_key)
-            self.keyboard.release(send_key)
-        elif self.system == "Darwin":
-            pyautogui.press(key)
+        send_key = get_key_from_string(key)
+        self.keyboard.press(send_key)
+        self.keyboard.release(send_key)
 
     def scroll_mouse(self, clicks):
-        if self.system == "Windows":
-            self.mouse.scroll(0, clicks)
-        elif self.system == "Darwin":
-            pyautogui.scroll(clicks)
+        self.mouse.scroll(0, clicks)
 
     def get_mouse_position(self):
-        if self.system == "Windows":
-            pos = self.mouse.position
-            return (pos.x, pos.y)  # Convert Point to tuple
-        elif self.system == "Darwin":
-            return pyautogui.position()  # Already returns a tuple-like object
+        return self.mouse.position
 
         # Usage example:
 # controller = InputController()
