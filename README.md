@@ -1,6 +1,12 @@
 # capture-macro2
 Capture macro 2
 
+## MacOS에서 설정
+1. 마우스, 키보드 컨트롤
+     - `시스템설정 > 개인정보 보호 및 보안 > 손쉬운 사용`에 CaptureMacro 앱을 추가 권한을 추가 합니다.
+2. 캡쳐 컨트롤
+     - `시스템설정 > 개인정보 보호 및 보안 > 화면 및 시스템 오디오 녹음`에 CaptureMacro 앱을 추가 하고 권한을 켜 줍니다.
+
 ## Todo
 - [x] init ui design
     -  [x] in widget
