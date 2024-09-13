@@ -20,11 +20,7 @@ class ImageToPdfConverter(QThread):
         self.output_pdf = output_pdf
 
     def run(self):
-        image_files = [
-            f
-            for f in os.listdir(self.image_folder)
-            if f.lower().endswith(("png", "jpg", "jpeg"))
-        ]
+        image_files = [f for f in os.listdir(self.image_folder) if f.lower().endswith(("png", "jpg", "jpeg"))]
         image_files.sort()
 
         c = canvas.Canvas(self.output_pdf)
@@ -42,9 +38,7 @@ class ImageToPdfConverter(QThread):
             c.setPageSize((width_inch * inch, height_inch * inch))
 
             # 이미지를 페이지에 그리기
-            c.drawImage(
-                image_path, 0, 0, width=width_inch * inch, height=height_inch * inch
-            )
+            c.drawImage(image_path, 0, 0, width=width_inch * inch, height=height_inch * inch)
             c.showPage()
 
             # 진행 상태 업데이트

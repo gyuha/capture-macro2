@@ -203,13 +203,13 @@ class ImageListWidget(QWidget):
         이미지를 PDF로 변환
         """
         try:
-            file_name = QFileDialog.getSaveFileName(self, "Save file", "", ".pdf")
-            if not file_name:
-                return
-            file_path = file_name[0]
-            if not file_path:
-                return
-            if not file_name[0].endswith(".pdf"):
+            if self.app_core.is_windows:
+                default_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+            else:  # macOS and other Unix-like systems
+                default_path = os.path.join(os.path.expanduser('~/Desktop'))
+
+            file_path, _ = QFileDialog.getSaveFileName(self, "Save file", default_path, "PDF Files (*.pdf)")
+            if not file_path.endswith(".pdf"):
                 file_path = file_path + ".pdf"
 
             self.progress_dialog = QProgressDialog(
