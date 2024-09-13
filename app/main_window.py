@@ -1,7 +1,7 @@
 from pynput import keyboard
 from PySide6 import QtCore
-from PySide6.QtCore import Slot
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QPixmap, QResizeEvent
 from PySide6.QtWidgets import QDialog, QMainWindow
 
 from app.app_core import AppCore
@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
         self.set_macro()
 
         self.ui.btnStop.setDisabled(True)
+        self.current_image_path = None
 
         # 전역 단축키 설정
         self.hotkeys = keyboard.GlobalHotKeys(
@@ -147,40 +148,31 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def on_image_preview(self, image_path):
-        pix = QPixmap()
-        pix.load(image_path)
-        
-        label_width = self.lb_preview_width
-        label_height = self.ui.lbPreview.height()
-        
-        # 이미지 비율 계산
-        img_ratio = pix.width() / pix.height()
-        label_ratio = label_width / label_height
-        
-        if img_ratio < label_ratio:
-            # 이미지가 더 높은 경우 (또는 이미지 높이가 라벨 높이보다 큰 경우)
-            pix = pix.scaledToHeight(
-                label_height, QtCore.Qt.TransformationMode.SmoothTransformation
-            )
-        else:
-            # 이미지가 더 넓은 경우
-            pix = pix.scaledToWidth(
-                label_width, QtCore.Qt.TransformationMode.SmoothTransformation
-            )
-        
-        # QLabel의 크기를 조정된 이미지 크기로 설정
-        self.ui.lbPreview.setFixedSize(pix.width(), pix.height())
-        
-        # 이미지를 QLabel에 설정하고 중앙 정렬
-        self.ui.lbPreview.setPixmap(pix)
-        self.ui.lbPreview.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        
-        # QLabel을 포함하는 위젯(예: 스크롤 영역)의 레이아웃 중앙에 배치
-        if self.ui.lbPreview.parent():
-            parent_layout = self.ui.lbPreview.parent().layout()
-            if parent_layout:
-                parent_layout.setAlignment(self.ui.lbPreview, QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.current_image_path = image_path
+        self.update_image_preview()
 
+    def update_image_preview(self):
+        if not self.current_image_path:
+            return
+
+        pix = QPixmap(self.current_image_path)
+        self.resize_and_set_image(pix)
+
+    def resize_and_set_image(self, pix):
+        label_width = self.ui.lbPreview.width()
+        label_height = self.ui.lbPreview.height()
+
+        # 이미지를 QLabel 크기에 맞게 조정
+        scaled_pix = pix.scaled(
+            label_width,
+            label_height,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+
+        # 이미지를 QLabel에 설정하고 중앙 정렬
+        self.ui.lbPreview.setPixmap(scaled_pix)
+        self.ui.lbPreview.setAlignment(Qt.AlignmentFlag.AlignCenter)
     @Slot()
     def on_image_clear(self):
         self.ui.lbPreview.clear()
@@ -189,6 +181,7 @@ class MainWindow(QMainWindow):
         super().showEvent(event)
         self.lb_preview_width = self.ui.lbPreview.width()
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event: QResizeEvent):
         super().resizeEvent(event)
-        self.lb_preview_width = self.ui.lbPreview.width()
+        if self.current_image_path:
+            self.update_image_preview()
