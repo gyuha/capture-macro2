@@ -71,8 +71,12 @@ class MainWindow(QMainWindow):
         self.app_core.set_monitor()
         table = self.ui.command_widget.ui.macroTable
         for row in range(table.rowCount()):
-            if table.cellWidget(row, 0).currentText() == "capture":
-                self.action_controller.capture(table.item(row, 1).text().strip())
+            cell_widget = table.cellWidget(row, 0)
+            if cell_widget and hasattr(cell_widget, 'currentText') and callable(cell_widget.currentText):
+                if cell_widget.currentText() == "capture":
+                    item = table.item(row, 1)
+                    if item:
+                        self.action_controller.capture(item.text().strip())
 
     def set_action_status(self, status: bool):
         self.app_core.is_running = status
@@ -109,7 +113,7 @@ class MainWindow(QMainWindow):
 
         self.action_controller.start()
 
-    @Slot()
+    # @Slot()
     def on_action_controller_done(self):
         # Action controller done
         if self.app_core.macro_type == "pre_macro":
@@ -119,7 +123,7 @@ class MainWindow(QMainWindow):
         else:
             self.handle_stop()
 
-    @Slot(str, object)
+    # @Slot(str, object)
     def on_update_config(self, config_type, config):
         if config_type == "pre_macro":
             self.config.pre_macro = config
@@ -146,7 +150,7 @@ class MainWindow(QMainWindow):
         else:
             print("Settings dialog canceled")
 
-    @Slot(str)
+    # @Slot(str)
     def on_image_preview(self, image_path):
         self.current_image_path = image_path
         self.update_image_preview()
@@ -178,7 +182,7 @@ class MainWindow(QMainWindow):
         self.ui.lbPreview.setPixmap(scaled_pix)
         self.ui.lbPreview.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-    @Slot()
+    # @Slot()
     def on_image_clear(self):
         self.ui.lbPreview.clear()
 

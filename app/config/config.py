@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 
 import yaml
 from PySide6.QtCore import QObject
+from PySide6.QtWidgets import QApplication
 
 from app.utils.singleton_meta import SingletonMeta
 
@@ -86,6 +87,12 @@ class Config(QObject, metaclass=SingletonMeta):
 
         self.capture_path = data["capture_path"]
         self.monitor = data["monitor"]
+        # 모니터 수 확인
+        num_monitors = len(QApplication.screens())
+        # self.monitor 값이 모니터 수보다 크면 0으로 설정
+        if self.monitor >= num_monitors:
+            self.monitor = 0
+
         self.same_count = data["same_count"]
         self.image_quality = data["image_quality"]
         self.max_page = data["max_page"]

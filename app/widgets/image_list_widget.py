@@ -130,8 +130,8 @@ class ImageListWidget(QWidget):
         except Exception as e:
             print(e)
 
-    @Slot(str)
-    def on_add_image(self, image_path):
+    # @Slot(str)
+    def on_add_image(self, image_path: str):
         self.add_image_item(image_path)
         self.last_file_select()
         if self.image_diff.diff(image_path):

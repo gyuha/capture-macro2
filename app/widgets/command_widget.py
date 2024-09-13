@@ -134,7 +134,8 @@ class CommandWidget(QWidget):
         macro: List[Macro] = []
         try:
             for row in range(self.ui.macroTable.rowCount()):
-                action = self.ui.macroTable.cellWidget(row, 0).currentText()
+                cell_widget = self.ui.macroTable.cellWidget(row, 0)
+                action = cell_widget.currentText() if cell_widget and hasattr(cell_widget, 'currentText') and callable(cell_widget.currentText) else ""
                 self.ui.macroTable.removeCellWidget(row, 2)
                 self.ui.macroTable.removeCellWidget(row, 3)
                 if (
@@ -157,8 +158,10 @@ class CommandWidget(QWidget):
                     item3 = QTableWidgetItem("")
                     self.ui.macroTable.setItem(row, 2, item2)
                     self.ui.macroTable.setItem(row, 3, item3)
+
+                value = self.ui.macroTable.item(row, 1).text() if self.ui.macroTable.item(row, 1) else ""
                 macro.append(
-                    Macro(action=action, value=self.ui.macroTable.item(row, 1).text())
+                    Macro(action=action, value=value)
                 )
 
         except (AttributeError, KeyError, TypeError) as e:

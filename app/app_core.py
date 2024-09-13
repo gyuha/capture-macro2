@@ -63,7 +63,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
             self.signal_key_event.connect(self.on_key_event)
             self.signals_connected = True
 
-    @Slot(str, int, int)
+    # @Slot(str, int, int)
     def on_mouse_event(self, event, x, y):
         try:
             self.input_controller.move_mouse(x, y)
@@ -75,7 +75,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
         except AttributeError:
             print(f"Unknown event: {event}")
 
-    @Slot(str)
+    # @Slot(str)
     def on_key_event(self, key):
         print("========> ", key)
         try:
