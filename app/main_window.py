@@ -170,9 +170,14 @@ class MainWindow(QMainWindow):
             Qt.TransformationMode.SmoothTransformation,
         )
 
+        # QLabel의 배경을 투명하게 설정
+        self.ui.lbPreview.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.ui.lbPreview.setStyleSheet("background-color: transparent;")
+
         # 이미지를 QLabel에 설정하고 중앙 정렬
         self.ui.lbPreview.setPixmap(scaled_pix)
         self.ui.lbPreview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
     @Slot()
     def on_image_clear(self):
         self.ui.lbPreview.clear()
