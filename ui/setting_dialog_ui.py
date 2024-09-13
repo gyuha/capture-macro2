@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QFrame,
-    QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFormLayout,
+    QFrame, QHBoxLayout, QLabel, QLayout,
+    QLineEdit, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
@@ -43,25 +43,35 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
 
-        self.leMonitorNum = QLineEdit(self.frame)
-        self.leMonitorNum.setObjectName(u"leMonitorNum")
+        self.cbMonitorNum = QComboBox(self.frame)
+        self.cbMonitorNum.setObjectName(u"cbMonitorNum")
+        self.cbMonitorNum.setMinimumSize(QSize(200, 0))
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leMonitorNum)
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.cbMonitorNum)
 
         self.label_2 = QLabel(self.frame)
         self.label_2.setObjectName(u"label_2")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
 
-        self.leSameCount = QLineEdit(self.frame)
-        self.leSameCount.setObjectName(u"leSameCount")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.sbSameCount = QSlider(self.frame)
+        self.sbSameCount.setObjectName(u"sbSameCount")
+        self.sbSameCount.setMinimumSize(QSize(200, 0))
+        self.sbSameCount.setValue(3)
+        self.sbSameCount.setOrientation(Qt.Orientation.Horizontal)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.leSameCount)
+        self.horizontalLayout_5.addWidget(self.sbSameCount)
 
-        self.label_3 = QLabel(self.frame)
-        self.label_3.setObjectName(u"label_3")
+        self.lbSameCount = QLabel(self.frame)
+        self.lbSameCount.setObjectName(u"lbSameCount")
+        self.lbSameCount.setMinimumSize(QSize(30, 0))
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
+        self.horizontalLayout_5.addWidget(self.lbSameCount)
+
+
+        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_5)
 
         self.label_4 = QLabel(self.frame)
         self.label_4.setObjectName(u"label_4")
@@ -70,13 +80,35 @@ class Ui_SettingDialog(object):
 
         self.leMaxPage = QLineEdit(self.frame)
         self.leMaxPage.setObjectName(u"leMaxPage")
+        self.leMaxPage.setClearButtonEnabled(True)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.leMaxPage)
 
-        self.leImageCompress = QLineEdit(self.frame)
-        self.leImageCompress.setObjectName(u"leImageCompress")
+        self.label_3 = QLabel(self.frame)
+        self.label_3.setObjectName(u"label_3")
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.leImageCompress)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.sbImageCompress = QSlider(self.frame)
+        self.sbImageCompress.setObjectName(u"sbImageCompress")
+        self.sbImageCompress.setMinimumSize(QSize(200, 0))
+        self.sbImageCompress.setMinimum(50)
+        self.sbImageCompress.setMaximum(100)
+        self.sbImageCompress.setValue(88)
+        self.sbImageCompress.setOrientation(Qt.Orientation.Horizontal)
+
+        self.horizontalLayout_4.addWidget(self.sbImageCompress)
+
+        self.lbImageCompress = QLabel(self.frame)
+        self.lbImageCompress.setObjectName(u"lbImageCompress")
+        self.lbImageCompress.setMinimumSize(QSize(30, 0))
+
+        self.horizontalLayout_4.addWidget(self.lbImageCompress)
+
+
+        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_4)
 
         self.label_5 = QLabel(self.frame)
         self.label_5.setObjectName(u"label_5")
@@ -89,7 +121,7 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.leImagePath = QLineEdit(self.frame)
         self.leImagePath.setObjectName(u"leImagePath")
-        self.leImagePath.setMinimumSize(QSize(0, 22))
+        self.leImagePath.setMinimumSize(QSize(200, 22))
 
         self.horizontalLayout_2.addWidget(self.leImagePath)
 
@@ -127,10 +159,7 @@ class Ui_SettingDialog(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
-        QWidget.setTabOrder(self.leMonitorNum, self.leSameCount)
-        QWidget.setTabOrder(self.leSameCount, self.leMaxPage)
-        QWidget.setTabOrder(self.leMaxPage, self.leImageCompress)
-        QWidget.setTabOrder(self.leImageCompress, self.leImagePath)
+        QWidget.setTabOrder(self.leMaxPage, self.leImagePath)
         QWidget.setTabOrder(self.leImagePath, self.btnImagePath)
         QWidget.setTabOrder(self.btnImagePath, self.btnCancel)
         QWidget.setTabOrder(self.btnCancel, self.btnOk)
@@ -146,13 +175,12 @@ class Ui_SettingDialog(object):
     def retranslateUi(self, SettingDialog):
         SettingDialog.setWindowTitle(QCoreApplication.translate("SettingDialog", u"\uc124\uc815", None))
         self.label.setText(QCoreApplication.translate("SettingDialog", u"\ubaa8\ub2c8\ud130 \ubc88\ud638", None))
-        self.leMonitorNum.setText(QCoreApplication.translate("SettingDialog", u"0", None))
         self.label_2.setText(QCoreApplication.translate("SettingDialog", u"\uc911\ubcf5 \uc774\ubbf8\uc9c0 \uc911\ub2e8", None))
-        self.leSameCount.setText(QCoreApplication.translate("SettingDialog", u"3", None))
-        self.label_3.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc555\ucd95\uc728", None))
+        self.lbSameCount.setText(QCoreApplication.translate("SettingDialog", u"10", None))
         self.label_4.setText(QCoreApplication.translate("SettingDialog", u"\ucd5c\ub300 \ud398\uc774\uc9c0", None))
         self.leMaxPage.setText(QCoreApplication.translate("SettingDialog", u"1500", None))
-        self.leImageCompress.setText(QCoreApplication.translate("SettingDialog", u"80", None))
+        self.label_3.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc555\ucd95\uc728", None))
+        self.lbImageCompress.setText(QCoreApplication.translate("SettingDialog", u"88", None))
         self.label_5.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc800\uc7a5 \uacbd\ub85c", None))
         self.btnImagePath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))

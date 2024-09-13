@@ -45,9 +45,12 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="leMonitorNum">
-          <property name="text">
-           <string>0</string>
+         <widget class="QComboBox" name="cbMonitorNum">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -59,18 +62,37 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="leSameCount">
-          <property name="text">
-           <string>3</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>이미지 압축율</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QSlider" name="sbSameCount">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="value">
+             <number>3</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbSameCount">
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>10</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_4">
@@ -84,14 +106,56 @@
           <property name="text">
            <string>1500</string>
           </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>이미지 압축율</string>
+          </property>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="leImageCompress">
-          <property name="text">
-           <string>80</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QSlider" name="sbImageCompress">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="minimum">
+             <number>50</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>88</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbImageCompress">
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>88</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_5">
@@ -112,7 +176,7 @@
            <widget class="QLineEdit" name="leImagePath">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>200</width>
               <height>22</height>
              </size>
             </property>
@@ -172,10 +236,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>leMonitorNum</tabstop>
-  <tabstop>leSameCount</tabstop>
   <tabstop>leMaxPage</tabstop>
-  <tabstop>leImageCompress</tabstop>
   <tabstop>leImagePath</tabstop>
   <tabstop>btnImagePath</tabstop>
   <tabstop>btnCancel</tabstop>
