@@ -155,7 +155,6 @@ class ImageListWidget(QWidget):
 
     def add_image_item(self, image_path):
         try:
-            # or not (path.endswith(".jpg") and path.endswith(".png")):
             if os.path.isdir(image_path) or not image_path.lower().endswith(".jpg"):
                 return
             picture = Image.open(image_path)
@@ -176,6 +175,7 @@ class ImageListWidget(QWidget):
         self.ui.imageFiles.clear()
         Path(self.config.capture_path).mkdir(parents=True, exist_ok=True)
         files = os.listdir(self.config.capture_path)
+        files.sort(key=lambda f: os.path.splitext(f)[0])  # Sort files by filename without extension
         for file in files:
             path = os.path.join(self.config.capture_path, file)
             self.add_image_item(path)
@@ -185,18 +185,15 @@ class ImageListWidget(QWidget):
         """
         마지막 파일 번호 가져오기
         """
-        files = os.listdir(self.config.capture_path)
-        p = re.compile(r"^\d+.jpg$")
-        files = [s for s in files if p.match(s)]
-        if len(files) == 0:
-            self.app_core.image_number = 0
-            return
-        basename = os.path.basename(files[-1])
-        num = int(os.path.splitext(basename)[0])
-        self.app_core.image_number = num
-        self.app_core.image_number += 1
+        if self.ui.imageFiles.count() == 0:
+            num = 0
+        else:
+            last_item_text = self.ui.imageFiles.item(self.ui.imageFiles.count() - 1).text()
+            match = re.search(r'\d+', last_item_text)
+            num = int(match.group()) if match else 0
+
+        self.app_core.image_number = num + 1
         self.ui.lbImageNumber.setText(str(self.app_core.image_number))
-        # self.leCurrentCount.setText(str(num))
 
     def handle_to_pdf(self):
         """
