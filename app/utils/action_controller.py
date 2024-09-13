@@ -7,7 +7,6 @@ from typing import List
 import mss
 import mss.tools
 from PIL import Image
-import pyautogui
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
 
@@ -50,7 +49,7 @@ class ActionController(QObject):
 
         with mss.mss() as sct:
             screen_num = int(self.config.monitor)
-            mon = sct.monitors[screen_num + 1]
+            mon = sct.monitors[screen_num]
 
             monitor = {
                 "top": mon["top"] + y,
@@ -82,9 +81,7 @@ class ActionController(QObject):
             jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
             if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit(
-                    "move", x, y
-                )
+                self.app_core.signal_mouse_event.emit("move", x, y)
 
         self.app_core.image_number += 1
         self.app_core.signal_add_image.emit(file_path)

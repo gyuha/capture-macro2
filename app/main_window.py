@@ -149,10 +149,37 @@ class MainWindow(QMainWindow):
     def on_image_preview(self, image_path):
         pix = QPixmap()
         pix.load(image_path)
-        pix = pix.scaledToWidth(
-            self.lb_preview_width, QtCore.Qt.TransformationMode.SmoothTransformation
-        )
+        
+        label_width = self.lb_preview_width
+        label_height = self.ui.lbPreview.height()
+        
+        # 이미지 비율 계산
+        img_ratio = pix.width() / pix.height()
+        label_ratio = label_width / label_height
+        
+        if img_ratio < label_ratio:
+            # 이미지가 더 높은 경우 (또는 이미지 높이가 라벨 높이보다 큰 경우)
+            pix = pix.scaledToHeight(
+                label_height, QtCore.Qt.TransformationMode.SmoothTransformation
+            )
+        else:
+            # 이미지가 더 넓은 경우
+            pix = pix.scaledToWidth(
+                label_width, QtCore.Qt.TransformationMode.SmoothTransformation
+            )
+        
+        # QLabel의 크기를 조정된 이미지 크기로 설정
+        self.ui.lbPreview.setFixedSize(pix.width(), pix.height())
+        
+        # 이미지를 QLabel에 설정하고 중앙 정렬
         self.ui.lbPreview.setPixmap(pix)
+        self.ui.lbPreview.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        
+        # QLabel을 포함하는 위젯(예: 스크롤 영역)의 레이아웃 중앙에 배치
+        if self.ui.lbPreview.parent():
+            parent_layout = self.ui.lbPreview.parent().layout()
+            if parent_layout:
+                parent_layout.setAlignment(self.ui.lbPreview, QtCore.Qt.AlignmentFlag.AlignCenter)
 
     @Slot()
     def on_image_clear(self):
