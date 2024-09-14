@@ -2,15 +2,13 @@
 import os
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from PySide6.QtCore import QThread, Signal
-from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
 import pytesseract
 from pytesseract import Output
 import pandas as pd
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from PyPDF2 import PdfWriter, PdfReader
+from io import BytesIO
 
 class ImageToPdfConverter(QThread):
     signal_progress = Signal(int)
@@ -21,8 +19,8 @@ class ImageToPdfConverter(QThread):
         self.image_folder = ""
         self.output_pdf = ""
         
-        # 한글 폰트 등록 (폰트 파일의 경로는 실제 경로로 변경해야 합니다)
-        pdfmetrics.registerFont(TTFont('NanumGothic', 'NanumGothic.ttf'))
+        # 시스템 폰트 경로 (macOS)
+        self.font_path = "/System/Library/Fonts/AppleSDGothicNeo.ttc"
 
     def setFile(self, image_folder, output_pdf):
         self.image_folder = image_folder
@@ -36,45 +34,53 @@ class ImageToPdfConverter(QThread):
         morphed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
         return Image.fromarray(morphed)
 
+    def create_pdf_with_text(self, image_path, ocr_data):
+        img = Image.open(image_path).convert("RGBA")
+        txt = Image.new("RGBA", img.size, (255, 255, 255, 0))
+        draw = ImageDraw.Draw(txt)
+
+        for _, row in ocr_data.iterrows():
+            if pd.notna(row['text']) and row['conf'] > 10:
+                x = row['left']
+                y = row['top']
+                text = row['text'].strip()
+                if text and not all(char == '■' for char in text):
+                    font = ImageFont.truetype(self.font_path, int(row['height']))
+                    draw.text((x, y), text, font=font, fill=(0, 0, 0, 0))
+
+        combined = Image.alpha_composite(img, txt)
+        combined = combined.convert("RGB")
+        
+        img_byte_arr = BytesIO()
+        combined.save(img_byte_arr, format='PDF')
+        img_byte_arr.seek(0)
+        
+        return img_byte_arr
+
     def run(self):
         image_files = [f for f in os.listdir(self.image_folder) if f.lower().endswith(("png", "jpg", "jpeg"))]
         image_files.sort()
 
-        c = canvas.Canvas(self.output_pdf)
+        output = PdfWriter()
         total_images = len(image_files)
 
         for i, image_file in enumerate(image_files):
             image_path = os.path.join(self.image_folder, image_file)
             img = Image.open(image_path)
-
             preprocessed_img = self.preprocess_image(img)
-
-            width_inch = img.width / 72.0
-            height_inch = img.height / 72.0
-
-            c.setPageSize((width_inch * inch, height_inch * inch))
-            c.drawImage(image_path, 0, 0, width=width_inch * inch, height=height_inch * inch)
 
             custom_config = r'--oem 3 --psm 6 -l kor+eng'
             ocr_data = pytesseract.image_to_data(preprocessed_img, config=custom_config, output_type=Output.DATAFRAME)
 
-            for _, row in ocr_data.iterrows():
-                if pd.notna(row['text']) and row['conf'] > 10:
-                    x = row['left'] / 72.0 * inch
-                    y = height_inch * inch - (row['top'] + row['height']) / 72.0 * inch
-                    font_size = row['height'] / 72.0 * 72
+            pdf_page_bytes = self.create_pdf_with_text(image_path, ocr_data)
+            pdf_reader = PdfReader(pdf_page_bytes)
+            output.add_page(pdf_reader.pages[0])
 
-                    # UTF-8로 명시적 디코딩
-                    text = row['text'].encode('utf-8').decode('utf-8').strip()
-                    if text and not all(char == '■' for char in text):
-                        c.setFont("NanumGothic", font_size)  # 한글 폰트 사용
-                        c.setFillColorRGB(0, 0, 1)
-                        c.drawString(x, y, text)
-
-            c.showPage()
             self.signal_progress.emit(int((i + 1) / total_images * 100))
 
-        c.save()
+        with open(self.output_pdf, "wb") as output_file:
+            output.write(output_file)
+
         self.signal_finished.emit()
 
 if __name__ == "__main__":
