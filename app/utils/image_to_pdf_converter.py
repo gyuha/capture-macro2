@@ -10,20 +10,26 @@ import pandas as pd
 from PyPDF2 import PdfWriter, PdfReader
 from io import BytesIO
 
+from app.config.config import Config
+
 class ImageToPdfConverter(QThread):
     signal_progress = Signal(int)
     signal_finished = Signal()
 
     def __init__(self):
         super().__init__()
-        self.image_folder = ""
+        self.config = Config()
         self.output_pdf = ""
         
         # 시스템 폰트 경로 (macOS)
         self.font_path = "/System/Library/Fonts/AppleSDGothicNeo.ttc"
 
-    def setFile(self, image_folder, output_pdf):
-        self.image_folder = image_folder
+        # 폰트 파일이 존재하지 않을 경우 기본 폰트 경로 설정
+        if not os.path.exists(self.font_path):
+            self.font_path = "/Library/Fonts/Arial Unicode.ttf.ttf"
+
+    def setFile(self, config: Config, output_pdf: str):
+        self.config = config
         self.output_pdf = output_pdf
 
     def preprocess_image(self, image):
@@ -58,23 +64,32 @@ class ImageToPdfConverter(QThread):
         return img_byte_arr
 
     def run(self):
-        image_files = [f for f in os.listdir(self.image_folder) if f.lower().endswith(("png", "jpg", "jpeg"))]
+        image_files = [f for f in os.listdir(self.config.capture_path) if f.lower().endswith(("png", "jpg", "jpeg"))]
         image_files.sort()
 
         output = PdfWriter()
         total_images = len(image_files)
 
         for i, image_file in enumerate(image_files):
-            image_path = os.path.join(self.image_folder, image_file)
+            image_path = os.path.join(self.config.capture_path, image_file)
             img = Image.open(image_path)
-            preprocessed_img = self.preprocess_image(img)
+            if self.config.use_ocr:
+                preprocessed_img = self.preprocess_image(img)
 
-            custom_config = r'--oem 3 --psm 6 -l kor+eng'
-            ocr_data = pytesseract.image_to_data(preprocessed_img, config=custom_config, output_type=Output.DATAFRAME)
+                custom_config = r'--oem 3 --psm 6 -l kor+eng'
+                ocr_data = pytesseract.image_to_data(preprocessed_img, config=custom_config, output_type=Output.DATAFRAME)
 
-            pdf_page_bytes = self.create_pdf_with_text(image_path, ocr_data)
-            pdf_reader = PdfReader(pdf_page_bytes)
-            output.add_page(pdf_reader.pages[0])
+                pdf_page_bytes = self.create_pdf_with_text(image_path, ocr_data)
+                pdf_reader = PdfReader(pdf_page_bytes)
+                output.add_page(pdf_reader.pages[0])
+            else:
+                img = img.convert("RGB")
+                img_byte_arr = BytesIO()
+                img.save(img_byte_arr, format='PDF')
+                img_byte_arr.seek(0)
+                
+                pdf_reader = PdfReader(img_byte_arr)
+                output.add_page(pdf_reader.pages[0])
 
             self.signal_progress.emit(int((i + 1) / total_images * 100))
 
@@ -82,13 +97,3 @@ class ImageToPdfConverter(QThread):
             output.write(output_file)
 
         self.signal_finished.emit()
-
-if __name__ == "__main__":
-    input_image_folder = "capture"
-    output_pdf_file = "output.pdf"
-
-    converter = ImageToPdfConverter()
-    converter.setFile(input_image_folder, output_pdf_file)
-    converter.start()
-    converter.wait()
-    print("PDF 생성 완료")

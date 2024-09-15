@@ -28,24 +28,34 @@ class Config(QObject, metaclass=SingletonMeta):
 
         # 저장용 설정 값
         self.capture_path = ""
-        self.window_name = ""
-        self.monitor = 0
-        self.same_count = 0
         self.click_point = ""
-        self.screen_rect = ""
         self.image_quality = 0
-        self.pre_macro: List[Macro] = []
         self.macro: List[Macro] = []
+        self.monitor = 0
+        self.pdf_path = ""
+        self.pre_macro: List[Macro] = []
+        self.same_count = 0
+        self.screen_rect = ""
+        self.use_ocr = False
+        self.window_name = ""
 
         self.load_from_file(self.get_config_path())
+
+    def get_default_pdf_folder(self):
+        system = platform.system()
+        base_dir = ""
+        if system in ["Windows", "Darwin"]:  # Windows or macOS
+            base_dir = os.path.join(os.path.expanduser("~"), "Desktop")
+        else:
+            base_dir = os.path.expanduser("~")
+        return base_dir
 
     def get_default_data_folder(self, app_name):
         # 운영 체제 감지
         system = platform.system()
 
-        if system == "Windows":
-            # 윈도우의 경우
-            base_dir = os.path.expanduser("~\\Documents")
+        if system in ["Windows", "Darwin"]:  # Windows or macOS
+            base_dir = os.path.expanduser("~/Documents")
         else:
             # 기타 운영 체제의 경우 (기본적으로 홈 디렉토리 사용)
             base_dir = os.path.expanduser("~")
@@ -62,6 +72,8 @@ class Config(QObject, metaclass=SingletonMeta):
     def make_default_config(self, config_path: str):
         config = {
             "capture_path": self.get_default_data_folder("CaptureMacro"),
+            "pdf_path": self.get_default_pdf_folder(),
+            "use_ocr": False,
             "image_quality": 88,
             "max_page": 1500,
             "monitor": 0,
@@ -82,10 +94,19 @@ class Config(QObject, metaclass=SingletonMeta):
         return config_path
 
     def load_from_file(self, filepath: str) -> None:
+        if not os.path.exists(filepath):
+            self.make_default_config(filepath)
+        
         with open(filepath, "r", encoding="utf-8") as file:
             data = yaml.safe_load(file)
 
-        self.capture_path = data["capture_path"]
+        self.capture_path = (
+            data["capture_path"] if "capture_path" in data else self.get_default_data_folder("CaptureMacro")
+        )
+        self.pdf_path = data["pdf_path"] if "pdf_path" in data else self.get_default_pdf_folder()
+        self.use_ocr = data["use_ocr"] if "use_ocr" in data else False
+        if platform.system() == "Windows":
+            self.use_ocr = False
         self.monitor = data["monitor"]
         # 모니터 수 확인
         num_monitors = len(QApplication.screens())
@@ -120,11 +141,13 @@ class Config(QObject, metaclass=SingletonMeta):
         return (
             f"Config(\n"
             f"  capture_path={self.capture_path},\n"
-            f"  monitor={self.monitor},\n"
-            f"  same_count={self.same_count},\n"
             f"  image_quality={self.image_quality},\n"
+            f"  macro=[\n    {macro_str}\n  ],\n"
+            f"  pdf_path=[\n    {self.pdf_path}\n  ],\n"
+            f"  use_ocr={self.use_ocr},\n"
             f"  max_page={self.max_page},\n"
+            f"  monitor={self.monitor},\n"
             f"  pre_macro=[\n    {pre_macro_str}\n  ],\n"
-            f"  macro=[\n    {macro_str}\n  ]\n"
+            f"  same_count={self.same_count}\n"
             f")"
         )

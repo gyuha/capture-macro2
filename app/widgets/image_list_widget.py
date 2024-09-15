@@ -214,7 +214,7 @@ class ImageListWidget(QWidget):
             )
             self.progress_dialog.setWindowTitle("Save to pdf")
 
-            self.image_to_pdf_converter.setFile(self.config.capture_path, file_path)
+            self.image_to_pdf_converter.setFile(self.config, file_path)
             self.image_to_pdf_converter.start()
 
             self.progress_dialog.setWindowModality(Qt.WindowModal)

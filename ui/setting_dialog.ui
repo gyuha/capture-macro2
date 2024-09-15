@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>463</width>
-    <height>258</height>
+    <width>401</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>463</width>
-    <height>258</height>
+    <width>500</width>
+    <height>350</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -193,6 +193,68 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>PDF 저장경로</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="lePdfPath">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>22</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnPdfPath">
+            <property name="text">
+             <string>선택</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>OCR 사용</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QCheckBox" name="cbUseOcr">
+          <property name="text">
+           <string>사용</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>&lt;a href=&quot;https://github.com/gyuha/capture-macro2/blob/main/Tesseract_install.md&quot;&gt;Tesseract 설치&lt;/a&gt;</string>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

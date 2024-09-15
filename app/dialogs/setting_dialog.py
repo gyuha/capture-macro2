@@ -27,6 +27,9 @@ class SettingDialog(QDialog):
         self.connect_signals_slots()
         self.populate_monitor_combo()
 
+        if not self.app_core.is_windows:
+            self.ui.cbUseOcr.setEnabled(False)
+
     def load_settings(self):
         # Config 객체의 값을 UI에 설정
         self.ui.cbMonitorNum.setCurrentIndex(self.config.monitor)
@@ -36,14 +39,19 @@ class SettingDialog(QDialog):
         self.ui.sbSameCount.setValue(self.config.same_count)
         self.ui.lbSameCount.setText(f"{self.config.same_count}")
         self.ui.leImagePath.setText(self.config.capture_path)
+        self.ui.lePdfPath.setText(self.config.pdf_path)
+        self.ui.cbUseOcr.setChecked(self.config.use_ocr)
 
     def connect_signals_slots(self):
         self.ui.btnCancel.clicked.connect(self.cancel)
         self.ui.btnOk.clicked.connect(self.ok)
-        self.ui.btnImagePath.clicked.connect(self.select_path)
         self.ui.cbMonitorNum.currentIndexChanged.connect(self.on_monitor_changed)
         self.ui.sbSameCount.valueChanged.connect(lambda value: self.ui.lbSameCount.setText(str(value)))
-        self.ui.sbSameCount.valueChanged.connect(lambda value: self.ui.lbSameCount.setText(str(value)))
+
+        self.ui.btnImagePath.clicked.connect(self.select_path)
+        self.ui.btnPdfPath.clicked.connect(self.select_pdf_path)
+
+        self.ui.cbUseOcr.stateChanged.connect(self.on_change_use_ocr)
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기
@@ -70,14 +78,21 @@ class SettingDialog(QDialog):
 
         self.config.monitor = self.ui.cbMonitorNum.currentIndex()
         self.config.same_count = self.ui.sbSameCount.value()
+        self.config.use_ocr = self.ui.cbUseOcr.isChecked()
+        self.config.pdf_path = self.ui.lePdfPath.text()
 
         # 다이얼로그 닫기
         self.accept()
 
     def select_path(self):
-        # 파일 선택 다이얼로그 열기
-        path = QFileDialog.getExistingDirectory(self, "Select Directory")
+        initial_path = self.ui.leImagePath.text() or "/"
+        path = QFileDialog.getExistingDirectory(self, "Select Directory", initial_path)
         self.ui.leImagePath.setText(path)
+
+    def select_pdf_path(self):
+        initial_path = self.ui.leImagePath.text() or "/"
+        path = QFileDialog.getExistingDirectory(self, "Select Directory", initial_path)
+        self.ui.lePdfPath.setText(path)
 
     def populate_monitor_combo(self):
         screens = QApplication.screens()
@@ -125,3 +140,10 @@ class SettingDialog(QDialog):
         selected_monitor_text = self.ui.cbMonitorNum.itemText(index)
 
         print(f"Selected monitor changed: Index = {selected_monitor_index}, Text = {selected_monitor_text}")
+
+    def on_change_use_ocr(self, state):
+        if state == 2:
+            if not self.app_core.is_windows:
+                self.ui.cbUseOcr.setChecked(True)
+        else:
+            self.ui.cbUseOcr.setChecked(False)

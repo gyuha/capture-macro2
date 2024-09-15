@@ -15,17 +15,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFormLayout,
-    QFrame, QHBoxLayout, QLabel, QLayout,
-    QLineEdit, QPushButton, QSizePolicy, QSlider,
-    QSpacerItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog,
+    QFormLayout, QFrame, QHBoxLayout, QLabel,
+    QLayout, QLineEdit, QPushButton, QSizePolicy,
+    QSlider, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(463, 258)
-        SettingDialog.setMaximumSize(QSize(463, 258))
+        SettingDialog.resize(401, 350)
+        SettingDialog.setMaximumSize(QSize(500, 350))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
         self.verticalLayout_2 = QVBoxLayout(SettingDialog)
@@ -134,6 +134,49 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_2)
 
+        self.label_6 = QLabel(self.frame)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_6)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setSpacing(0)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.lePdfPath = QLineEdit(self.frame)
+        self.lePdfPath.setObjectName(u"lePdfPath")
+        self.lePdfPath.setMinimumSize(QSize(200, 22))
+
+        self.horizontalLayout_3.addWidget(self.lePdfPath)
+
+        self.btnPdfPath = QPushButton(self.frame)
+        self.btnPdfPath.setObjectName(u"btnPdfPath")
+
+        self.horizontalLayout_3.addWidget(self.btnPdfPath)
+
+
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_3)
+
+        self.label_7 = QLabel(self.frame)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_7)
+
+        self.label_9 = QLabel(self.frame)
+        self.label_9.setObjectName(u"label_9")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_9)
+
+        self.cbUseOcr = QCheckBox(self.frame)
+        self.cbUseOcr.setObjectName(u"cbUseOcr")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cbUseOcr)
+
+        self.label_8 = QLabel(self.frame)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setOpenExternalLinks(True)
+
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.label_8)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
@@ -183,6 +226,12 @@ class Ui_SettingDialog(object):
         self.lbImageCompress.setText(QCoreApplication.translate("SettingDialog", u"88", None))
         self.label_5.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc800\uc7a5 \uacbd\ub85c", None))
         self.btnImagePath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))
+        self.label_6.setText(QCoreApplication.translate("SettingDialog", u"PDF \uc800\uc7a5\uacbd\ub85c", None))
+        self.btnPdfPath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))
+        self.label_7.setText(QCoreApplication.translate("SettingDialog", u"OCR \uc0ac\uc6a9", None))
+        self.label_9.setText("")
+        self.cbUseOcr.setText(QCoreApplication.translate("SettingDialog", u"\uc0ac\uc6a9", None))
+        self.label_8.setText(QCoreApplication.translate("SettingDialog", u"<a href=\"https://github.com/gyuha/capture-macro2/blob/main/Tesseract_install.md\">Tesseract \uc124\uce58</a>", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi
