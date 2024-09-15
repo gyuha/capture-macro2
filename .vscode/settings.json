@@ -1,15 +1,13 @@
 {
-  "qtForPython.designer.path": "${workspaceFolder}/venv/bin/pyside6-designer",
-  "qtForPython.uic.path": "${workspaceFolder}/venv/bin/pyside6-uic",
-  "qtForPython.qmlformat.path": "${workspaceFolder}/bin/pyside6-qmlformat",
-  // "qtForPython.qml.path": "${workspaceFolder}/venv/Scripts/pyside6-qml.exe",
-  "qtForPython.qmlls.path": "${workspaceFolder}/venv/bin/pyside6-qmlls",
-  "qtForPython.qmlls.enabled": false,
-  "qtForPython.qml.enabled": false,
-  "python.autoComplete.extraPaths": [
-    "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
-  ],
-  "python.analysis.extraPaths": [
-    "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
-  ]
+    "qtForPython.qmlls.enabled": false,
+    "qtForPython.designer.path": "${workspaceFolder}/venv/bin/pyside6-designer",
+    "qtForPython.uic.path": "${workspaceFolder}/venv/bin/pyside6-uic",
+    "qtForPython.qmlformat.path": "${workspaceFolder}/bin/pyside6-qmlformat",
+    "qtForPython.qmlls.path": "${workspaceFolder}/venv/bin/pyside6-qmlls",
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
+    ],
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
+    ]
 }

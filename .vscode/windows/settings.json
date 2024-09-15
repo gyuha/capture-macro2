@@ -3,7 +3,5 @@
     "qtForPython.uic.path": "${workspaceFolder}/venv/Scripts/pyside6-uic.exe",
     "qtForPython.qmlformat.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlformat.exe",
     // "qtForPython.qml.path": "${workspaceFolder}/venv/Scripts/pyside6-qml.exe",
-    "qtForPython.qmlls.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlls.exe",
-    "qtForPython.qmlls.enabled": false,
-    "qtForPython.qml.enabled": false
+    "qtForPython.qmlls.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlls.exe"
 }

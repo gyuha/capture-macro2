@@ -1,1 +1,3 @@
-{}
+{
+    "qtForPython.qmlls.enabled": false
+}
