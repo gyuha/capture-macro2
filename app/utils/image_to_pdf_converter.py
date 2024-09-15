@@ -1,4 +1,3 @@
-
 import os
 import cv2
 import numpy as np
@@ -9,8 +8,11 @@ from pytesseract import Output
 import pandas as pd
 from PyPDF2 import PdfWriter, PdfReader
 from io import BytesIO
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
 
 from app.config.config import Config
+
 
 class ImageToPdfConverter(QThread):
     signal_progress = Signal(int)
@@ -20,7 +22,7 @@ class ImageToPdfConverter(QThread):
         super().__init__()
         self.config = Config()
         self.output_pdf = ""
-        
+
         # 시스템 폰트 경로 (macOS)
         self.font_path = "/System/Library/Fonts/AppleSDGothicNeo.ttc"
 
@@ -46,24 +48,24 @@ class ImageToPdfConverter(QThread):
         draw = ImageDraw.Draw(txt)
 
         for _, row in ocr_data.iterrows():
-            if pd.notna(row['text']) and row['conf'] > 10:
-                x = row['left']
-                y = row['top']
-                text = row['text'].strip()
-                if text and not all(char == '■' for char in text):
-                    font = ImageFont.truetype(self.font_path, int(row['height']))
+            if pd.notna(row["text"]) and row["conf"] > 10:
+                x = row["left"]
+                y = row["top"]
+                text = row["text"].strip()
+                if text and not all(char == "■" for char in text):
+                    font = ImageFont.truetype(self.font_path, int(row["height"]))
                     draw.text((x, y), text, font=font, fill=(0, 0, 0, 0))
 
         combined = Image.alpha_composite(img, txt)
         combined = combined.convert("RGB")
-        
+
         img_byte_arr = BytesIO()
-        combined.save(img_byte_arr, format='PDF')
+        combined.save(img_byte_arr, format="PDF")
         img_byte_arr.seek(0)
-        
+
         return img_byte_arr
 
-    def run(self):
+    def create_pdf(self):
         image_files = [f for f in os.listdir(self.config.capture_path) if f.lower().endswith(("png", "jpg", "jpeg"))]
         image_files.sort()
 
@@ -73,23 +75,18 @@ class ImageToPdfConverter(QThread):
         for i, image_file in enumerate(image_files):
             image_path = os.path.join(self.config.capture_path, image_file)
             img = Image.open(image_path)
-            if self.config.use_ocr:
-                preprocessed_img = self.preprocess_image(img)
 
-                custom_config = r'--oem 3 --psm 6 -l kor+eng'
-                ocr_data = pytesseract.image_to_data(preprocessed_img, config=custom_config, output_type=Output.DATAFRAME)
+            img = img.convert("RGB")
+            img_byte_arr = BytesIO()
+            img.save(img_byte_arr, format="PDF")
+            img_byte_arr.seek(0)
 
-                pdf_page_bytes = self.create_pdf_with_text(image_path, ocr_data)
-                pdf_reader = PdfReader(pdf_page_bytes)
-                output.add_page(pdf_reader.pages[0])
-            else:
-                img = img.convert("RGB")
-                img_byte_arr = BytesIO()
-                img.save(img_byte_arr, format='PDF')
-                img_byte_arr.seek(0)
-                
-                pdf_reader = PdfReader(img_byte_arr)
-                output.add_page(pdf_reader.pages[0])
+            pdf_reader = PdfReader(img_byte_arr)
+            output.add_page(pdf_reader.pages[0])
+
+            # Close and delete the BytesIO object
+            img_byte_arr.close()
+            del img_byte_arr
 
             self.signal_progress.emit(int((i + 1) / total_images * 100))
 
@@ -97,3 +94,36 @@ class ImageToPdfConverter(QThread):
             output.write(output_file)
 
         self.signal_finished.emit()
+
+    def create_pdf_with_ocr(self):
+        image_files = [f for f in os.listdir(self.config.capture_path) if f.lower().endswith(("png", "jpg", "jpeg"))]
+        image_files.sort()
+
+        output = PdfWriter()
+        total_images = len(image_files)
+
+        for i, image_file in enumerate(image_files):
+            image_path = os.path.join(self.config.capture_path, image_file)
+            img = Image.open(image_path)
+
+            preprocessed_img = self.preprocess_image(img)
+
+            custom_config = r"--oem 3 --psm 6 -l kor+eng"
+            ocr_data = pytesseract.image_to_data(preprocessed_img, config=custom_config, output_type=Output.DATAFRAME)
+
+            pdf_page_bytes = self.create_pdf_with_text(image_path, ocr_data)
+            pdf_reader = PdfReader(pdf_page_bytes)
+            output.add_page(pdf_reader.pages[0])
+
+            self.signal_progress.emit(int((i + 1) / total_images * 100))
+
+        with open(self.output_pdf, "wb") as output_file:
+            output.write(output_file)
+
+        self.signal_finished.emit()
+
+    def run(self):
+        if self.config.use_ocr:
+            self.create_pdf_with_ocr()
+        else:
+            self.create_pdf()
