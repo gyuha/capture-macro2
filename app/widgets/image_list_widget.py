@@ -38,26 +38,20 @@ class ImageListWidget(QWidget):
         self.ui = Ui_ImageListWidget()
         self.ui.setupUi(self)
 
-        self.image_to_pdf_converter = ImageToPdfConverter()
-
         self.load_capture_files()
         self.progress_dialog = None
 
         self.connect_signals_slots()
+        self.image_to_pdf_converter = None
 
     def connect_signals_slots(self):
-        self.ui.imageFiles.itemSelectionChanged.connect(
-            self.handle_item_selection_changed
-        )
+        self.ui.imageFiles.itemSelectionChanged.connect(self.handle_item_selection_changed)
         self.ui.btnDeleteAllFiles.clicked.connect(self.handle_delete_all_files)
         self.ui.btnDeleteFile.clicked.connect(self.handle_delete_file)
         self.ui.btnOpenFolder.clicked.connect(self.handle_open_folder)
         self.ui.btnToPdf.clicked.connect(self.handle_to_pdf)
 
         self.app_core.signal_add_image.connect(self.on_add_image)
-
-        self.image_to_pdf_converter.signal_progress.connect(self.handle_progress)
-        self.image_to_pdf_converter.signal_finished.connect(self.handle_finished)
 
     def handle_item_selection_changed(self):
         item = self.ui.imageFiles.selectedItems()
@@ -189,7 +183,7 @@ class ImageListWidget(QWidget):
             num = 0
         else:
             last_item_text = self.ui.imageFiles.item(self.ui.imageFiles.count() - 1).text()
-            match = re.search(r'\d+', last_item_text)
+            match = re.search(r"\d+", last_item_text)
             num = int(match.group()) if match else 0
 
         self.app_core.image_number = num + 1
@@ -199,28 +193,35 @@ class ImageListWidget(QWidget):
         """
         이미지를 PDF로 변환
         """
+        if self.image_to_pdf_converter and self.image_to_pdf_converter.isRunning():
+            QMessageBox.warning(self, "경고", "변환이 이미 진행 중입니다.")
+            return
+
         try:
             if self.app_core.is_windows:
-                default_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+                default_path = os.path.join(os.path.expanduser("~"), "Desktop")
             else:  # macOS and other Unix-like systems
-                default_path = os.path.join(os.path.expanduser('~/Desktop'))
+                default_path = os.path.join(os.path.expanduser("~/Desktop"))
 
             file_path, _ = QFileDialog.getSaveFileName(self, "Save file", default_path, "PDF Files (*.pdf)")
             if not file_path.endswith(".pdf"):
                 file_path = file_path + ".pdf"
 
-            self.progress_dialog = QProgressDialog(
-                "Save to pdf", "Cancel", 0, 100, self
-            )
+            self.progress_dialog = QProgressDialog("Save to pdf", "Cancel", 0, 100, self)
             self.progress_dialog.setWindowTitle("Save to pdf")
 
-            self.image_to_pdf_converter.setFile(self.config, file_path)
+            if self.image_to_pdf_converter:
+                self.image_to_pdf_converter.signal_progress.disconnect()
+                self.image_to_pdf_converter.signal_finished.disconnect()
+
+            self.image_to_pdf_converter = ImageToPdfConverter(self.config.capture_path, file_path)
+            self.image_to_pdf_converter.signal_progress.connect(self.handle_progress)
+            self.image_to_pdf_converter.signal_finished.connect(self.handle_finished)
             self.image_to_pdf_converter.start()
 
             self.progress_dialog.setWindowModality(Qt.WindowModal)
             self.progress_dialog.forceShow()
 
-            print("PDF 생성 완료")
         except Exception as e:
             print(f"PDF 변환 중 오류 발생: {e}")
 
