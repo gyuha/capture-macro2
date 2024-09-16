@@ -36,13 +36,16 @@ Capture macro 2
   - [x] for MacOS
   - [x] for Windows
 - [x] macro list selected cursor when action doing
+- [ ] settings save to QSettings
+  - [ ] image compress level widget change to spinnerbox
+  - [ ] start, end global hot-key change
 
 ## 개발 환경 설정
 ### Windows
 
 #### Required
 - pyenv-win
-  - python 3.10.11
+  - python 3.12.12
 - vscode
 
 ### Etc
