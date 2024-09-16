@@ -1,3 +1,4 @@
+altgraph==0.17.4
 appnope==0.1.4
 asttokens==2.4.1
 attrs==24.2.0
@@ -22,6 +23,7 @@ jupyter_client==8.6.2
 jupyter_core==5.7.2
 jupyterlab_pygments==0.3.0
 lazy_loader==0.4
+macholib==1.16.3
 MarkupSafe==2.1.5
 matplotlib-inline==0.1.7
 mistune==3.0.2
@@ -44,6 +46,8 @@ prompt_toolkit==3.0.47
 ptyprocess==0.7.0
 pure_eval==0.2.3
 Pygments==2.18.0
+pyinstaller==6.10.0
+pyinstaller-hooks-contrib==2024.8
 pynput==1.7.7
 pyobjc-core==10.3.1
 pyobjc-framework-ApplicationServices==10.3.1
@@ -62,6 +66,7 @@ requests==2.32.3
 rpds-py==0.20.0
 scikit-image==0.24.0
 scipy==1.14.1
+setuptools==75.1.0
 shiboken6==6.7.2
 six==1.16.0
 soupsieve==2.6
