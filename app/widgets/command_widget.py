@@ -1,7 +1,7 @@
 from functools import partial
 from typing import List
 
-from PySide6.QtCore import Signal, Slot
+from PySide6.QtCore import Signal, Slot, Qt
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -51,6 +51,14 @@ KEY_ACTIONS = [
     "end",
 ]
 
+DEFAULT_ACTION_VALUES = {
+    "capture": "0,0,0,0",
+    "click": "0,0,0,0",
+    "scroll": "0,0,0,0",
+    "move": "0,0,0,0",
+    "delay": "500",
+    "key": "right"
+}
 
 class CommandWidget(QWidget):
 
@@ -68,6 +76,7 @@ class CommandWidget(QWidget):
         self.ui.macroTable.setColumnWidth(2, 60)
         self.ui.macroTable.setColumnWidth(3, 60)
 
+        self.init_table = False
         # 마우스 선택 상자 오버레이
         self.overlay = None
 
@@ -78,8 +87,11 @@ class CommandWidget(QWidget):
         self.ui.macroTable.setRowCount(len(self.macros()))
         self.ui.macroTable.setAlternatingRowColors(True)
 
+        self.init_table = False
         for row, macro in enumerate(self.macros()):
             self.set_macro_table_row(row, macro.action, macro.value)
+
+        self.init_table = True
         self.update_macro_actions()
 
         self.button_enable_setting()
@@ -101,6 +113,7 @@ class CommandWidget(QWidget):
         self.ui.btnCommandRemove.clicked.connect(self.on_macro_remove)
 
     def add_row(self, row, action="capture", value=None):
+        value = DEFAULT_ACTION_VALUES.get(action, value)
         new_macro = Macro(action, value)
         self.macros().insert(row, new_macro)
 
@@ -117,15 +130,15 @@ class CommandWidget(QWidget):
 
     def on_macro_remove(self):
         row = self.ui.macroTable.currentRow()
-        self.macros.pop(row)
+        self.macros().pop(row)
         self.ui.macroTable.removeRow(row)
         self.update_macro_actions()
         self.button_enable_setting()
 
-    def set_macro_table_row(self, row, action, value):
+    def set_macro_table_row(self, row: int, action, value):
         actionCombo = QComboBox()
         actionCombo.addItems(MACRO_ACTIONS)
-        actionCombo.currentTextChanged.connect(self.update_macro_actions)
+        actionCombo.currentTextChanged.connect(lambda action, r=row: self.update_macro_actions(r, action))
         index = actionCombo.findText(action)
         if index > -1:
             actionCombo.setCurrentIndex(index)
@@ -141,8 +154,14 @@ class CommandWidget(QWidget):
         self.ui.btnCommandRemove.setEnabled(flag)
         self.ui.btnCommandInsert.setEnabled(flag)
 
-    def update_macro_actions(self):
+    def update_macro_actions(self, row: int = None, action: str = None):
+        print('📢[command_widget.py:145]: ', row)
         self.ui.macroTable.blockSignals(True)
+
+        if self.init_table and row is not None and action is not None:
+            self.macros()[row].value = DEFAULT_ACTION_VALUES.get(action, self.macros()[row].value)
+            self.macros()[row].action = action  
+
         try:
             for row in range(self.ui.macroTable.rowCount()):
                 value = self.macros()[row].value
@@ -176,6 +195,7 @@ class CommandWidget(QWidget):
                     # 1번째 cell을 입력 상자로 설정
                     input_item = QTableWidgetItem("")
                     input_item.setText(value)
+                    input_item.setFlags(input_item.flags() & ~Qt.ItemIsEditable)
                     self.ui.macroTable.setItem(row, 1, input_item)  # 입력 상자로 설정
                 elif action == "key":
                     keyCombo = QComboBox()
@@ -193,7 +213,7 @@ class CommandWidget(QWidget):
                     delaySpin.setRange(1, 20000)
                     delaySpin.setSuffix("ms")
                     delaySpin.setValue(
-                        int(value) if value.isdigit() else 500
+                        int(value) if value.isdigit() else 500  # value가 str이면 500으로 처리
                     )  # 기본 값을 500으로 설정
                     delaySpin.valueChanged.connect(
                         lambda val, r=row: self.update_macro_delay(r, val)
@@ -202,7 +222,9 @@ class CommandWidget(QWidget):
 
                 if action == "key" or action == "delay":
                     item2 = QTableWidgetItem("")
+                    item2.setFlags(input_item.flags() & ~Qt.ItemIsEditable)
                     item3 = QTableWidgetItem("")
+                    item3.setFlags(input_item.flags() & ~Qt.ItemIsEditable)
                     self.ui.macroTable.setItem(row, 2, item2)
                     self.ui.macroTable.setItem(row, 3, item3)
 
@@ -225,7 +247,8 @@ class CommandWidget(QWidget):
 
     @Slot(int, int, int, int)
     def handle_rect_selected(self, x, y, width, height):
-        self.ui.macroTable.item(self.action_row, 1).setText(f"{x},{y},{width},{height}")
+        # self.ui.macroTable.item(self.action_row, 1).setText(f"{x},{y},{width},{height}")
+        self.macros()[self.action_row].value = f"{x},{y},{width},{height}"
         self.update_macro_actions()
         self.overlay.close()
 
@@ -260,5 +283,5 @@ class CommandWidget(QWidget):
 
     def update_macro_delay(self, row, value):
         if row < len(self.macros()):
-            self.macros()[row].value = str(value)  # macro의 값을 업데이트
+            self.macros()[row].value = int(value)  # macro의 값을 업데이트
             # self.update_macro_actions()  # 매크로 액션 업데이트 호출
