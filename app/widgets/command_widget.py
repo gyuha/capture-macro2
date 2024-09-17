@@ -155,7 +155,6 @@ class CommandWidget(QWidget):
         self.ui.btnCommandInsert.setEnabled(flag)
 
     def update_macro_actions(self, row: int = None, action: str = None):
-        print('📢[command_widget.py:145]: ', row)
         self.ui.macroTable.blockSignals(True)
 
         if self.init_table and row is not None and action is not None:
