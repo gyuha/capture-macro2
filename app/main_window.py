@@ -109,7 +109,6 @@ class MainWindow(QMainWindow):
         self.app_core.macro_type = "pre_macro"
         self.action_controller.config = self.config
         self.action_controller.action_macro = self.config.pre_macro
-        self.action_controller.monitor_index = int(self.config.monitor)
 
         self.action_controller.start()
 

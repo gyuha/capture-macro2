@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QTableWidgetItem,
     QWidget,
+    QSpinBox,
 )
 
 from app.config.config import Macro
@@ -153,7 +154,24 @@ class CommandWidget(QWidget):
                     button2.released.connect(self.handle_rect_check_hide)
                     self.ui.macroTable.setCellWidget(row, 2, button)
                     self.ui.macroTable.setCellWidget(row, 3, button2)
-                else:
+                elif action == "key":
+                    keyCombo = QComboBox()
+                    keyCombo.addItems(KEY_ACTIONS)
+                    current_value = value if value is not None else "right"
+                    keyCombo.currentTextChanged.connect(lambda text, r=row: self.update_macro_value(r, text))
+                    index = keyCombo.findText(current_value)  # 수정된 부분
+                    if index > -1:
+                        keyCombo.setCurrentIndex(index)
+                    self.ui.macroTable.setCellWidget(row, 1, keyCombo)
+                elif action == "delay":
+                    delaySpin = QSpinBox()
+                    delaySpin.setRange(1, 20000)
+                    delaySpin.setSuffix("ms")
+                    delaySpin.setValue(value if value else 500)  # 기본 값을 500으로 설정
+                    delaySpin.valueChanged.connect(lambda val, r=row: self.update_macro_delay(r, val))  # 수정된 부분
+                    self.ui.macroTable.setCellWidget(row, 1, delaySpin)
+                
+                if action == "key" or action == "delay":
                     item2 = QTableWidgetItem("")
                     item3 = QTableWidgetItem("")
                     self.ui.macroTable.setItem(row, 2, item2)
@@ -210,3 +228,13 @@ class CommandWidget(QWidget):
             if item is not None:
                 item.setBackground(background_color)
                 item.setForeground(text_color)
+
+    def update_macro_value(self, row, action):
+        if row < len(self.macro):
+            self.macro[row].value = action  # macro의 값을 업데이트
+            self.update_macro_actions()  # 매크로 액션 업데이트 호출
+
+    def update_macro_delay(self, row, value):
+        if row < len(self.macro):
+            self.macro[row].value = str(value)  # macro의 값을 업데이트
+            self.update_macro_actions()  # 매크로 액션 업데이트 호출
