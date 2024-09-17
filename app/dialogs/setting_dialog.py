@@ -19,28 +19,21 @@ class SettingDialog(QDialog):
         # 초기 설정 값 로드
         self.load_settings()
 
-        # QIntValidator를 생성하고 leMaxPage에 설정
-        int_validator = QIntValidator(1, 9999, self)  # 1부터 9999까지의 정수만 허용
-        self.ui.leMaxPage.setValidator(int_validator)
-
         # 신호를 슬롯에 연결
         self.connect_signals_slots()
         self.populate_monitor_combo()
 
-        if not self.app_core.is_windows:
-            self.ui.cbUseOcr.setEnabled(False)
 
     def load_settings(self):
         # Config 객체의 값을 UI에 설정
         self.ui.cbMonitorNum.setCurrentIndex(self.config.monitor)
-        self.ui.leMaxPage.setText(str(self.config.max_page))
+        self.ui.sbMaxPage.setValue(self.config.max_page)
         self.ui.sbImageCompress.setValue(self.config.image_quality)
-        self.ui.lbImageCompress.setText(f"{self.config.image_quality}")
         self.ui.sbSameCount.setValue(self.config.same_count)
         self.ui.lbSameCount.setText(f"{self.config.same_count}")
         self.ui.leImagePath.setText(self.config.capture_path)
         self.ui.lePdfPath.setText(self.config.pdf_path)
-        self.ui.cbUseOcr.setChecked(self.config.use_ocr)
+        self.ui.sbImageSize.setValue(self.config.image_size)
 
     def connect_signals_slots(self):
         self.ui.btnCancel.clicked.connect(self.cancel)
@@ -51,7 +44,6 @@ class SettingDialog(QDialog):
         self.ui.btnImagePath.clicked.connect(self.select_path)
         self.ui.btnPdfPath.clicked.connect(self.select_pdf_path)
 
-        self.ui.cbUseOcr.stateChanged.connect(self.on_change_use_ocr)
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기
@@ -61,25 +53,11 @@ class SettingDialog(QDialog):
         # 변경된 설정을 Config 객체에 저장
         self.config.capture_path = self.ui.leImagePath.text()
         self.config.image_quality = self.ui.sbImageCompress.value()
-
-        # leMaxPage의 값이 비어있지 않은지 확인하고, 정수로 변환
-        max_page_text = self.ui.leMaxPage.text()
-        if max_page_text:
-            try:
-                self.config.max_page = int(max_page_text)
-            except ValueError:
-                # 정수로 변환할 수 없는 경우 처리 (이 경우는 QIntValidator 때문에 발생하지 않아야 함)
-                print("Invalid value for max_page")
-                return
-        else:
-            # 값이 비어있는 경우 처리
-            print("Max page value is required")
-            return
-
+        self.config.image_size = self.ui.sbImageSize.value()
+        self.config.max_page = self.ui.sbMaxPage.value()
         self.config.monitor = self.ui.cbMonitorNum.currentIndex()
-        self.config.same_count = self.ui.sbSameCount.value()
-        self.config.use_ocr = self.ui.cbUseOcr.isChecked()
         self.config.pdf_path = self.ui.lePdfPath.text()
+        self.config.same_count = self.ui.sbSameCount.value()
 
         # 다이얼로그 닫기
         self.accept()
@@ -141,9 +119,3 @@ class SettingDialog(QDialog):
 
         print(f"Selected monitor changed: Index = {selected_monitor_index}, Text = {selected_monitor_text}")
 
-    def on_change_use_ocr(self, state):
-        if state == 2:
-            if not self.app_core.is_windows:
-                self.ui.cbUseOcr.setChecked(True)
-        else:
-            self.ui.cbUseOcr.setChecked(False)

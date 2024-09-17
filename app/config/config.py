@@ -1,13 +1,12 @@
 import os
 import platform
+import json
 from typing import Any, Dict, List
 
-import yaml
-from PySide6.QtCore import QObject
+from PySide6.QtCore import QObject, QSettings
 from PySide6.QtWidgets import QApplication
 
 from app.utils.singleton_meta import SingletonMeta
-
 
 class Macro:
     def __init__(self, action: str, value: str):
@@ -36,10 +35,12 @@ class Config(QObject, metaclass=SingletonMeta):
         self.pre_macro: List[Macro] = []
         self.same_count = 0
         self.screen_rect = ""
-        self.use_ocr = False
         self.window_name = ""
+        self.image_size = 2000
+        self.max_page = 1500
 
-        self.load_from_file(self.get_config_path())
+        self.settings = QSettings("CaptureMacro", "Settings")
+        self.load_from_settings()
 
     def get_default_pdf_folder(self):
         system = platform.system()
@@ -69,56 +70,36 @@ class Config(QObject, metaclass=SingletonMeta):
 
         return app_data_folder
 
-    def make_default_config(self, config_path: str):
-        config = {
-            "capture_path": self.get_default_data_folder("CaptureMacro"),
-            "pdf_path": self.get_default_pdf_folder(),
-            "use_ocr": False,
-            "image_quality": 88,
-            "max_page": 1500,
-            "monitor": 0,
-            "same_count": 3,
-            "pre_macro": [],
-            "macro": [],
-        }
-        with open(config_path, "w", encoding="utf-8") as file:
-            yaml.dump(config, file, default_flow_style=False)
-
-    def get_config_path(self):
-        app_name = "CaptureMacro"
-        config_dir = os.path.expanduser(f"~/.{app_name}")
-        config_path = os.path.join(config_dir, "config.yml")
-        if not os.path.exists(config_dir):
-            os.makedirs(config_dir)
-            self.make_default_config(config_path)
-        return config_path
-
-    def load_from_file(self, filepath: str) -> None:
-        if not os.path.exists(filepath):
-            self.make_default_config(filepath)
-        
-        with open(filepath, "r", encoding="utf-8") as file:
-            data = yaml.safe_load(file)
-
-        self.capture_path = (
-            data["capture_path"] if "capture_path" in data else self.get_default_data_folder("CaptureMacro")
-        )
-        self.pdf_path = data["pdf_path"] if "pdf_path" in data else self.get_default_pdf_folder()
-        self.use_ocr = data["use_ocr"] if "use_ocr" in data else False
-        if platform.system() == "Windows":
-            self.use_ocr = False
-        self.monitor = data["monitor"]
-        # 모니터 수 확인
+    def load_from_settings(self) -> None:
+        self.capture_path = self.settings.value("capture_path", self.get_default_data_folder("CaptureMacro"))
+        self.pdf_path = self.settings.value("pdf_path", self.get_default_pdf_folder())
+        self.monitor = self.settings.value("monitor", 0, type=int)
         num_monitors = len(QApplication.screens())
-        # self.monitor 값이 모니터 수보다 크면 0으로 설정
         if self.monitor >= num_monitors:
             self.monitor = 0
+        self.same_count = self.settings.value("same_count", 3, type=int)
+        self.image_quality = self.settings.value("image_quality", 88, type=int)
+        self.max_page = self.settings.value("max_page", 1500, type=int)
 
-        self.same_count = data["same_count"]
-        self.image_quality = data["image_quality"]
-        self.max_page = data["max_page"]
-        self.pre_macro = [Macro.from_dict(macro) for macro in data["pre_macro"]]
-        self.macro = [Macro.from_dict(macro) for macro in data["macro"]]
+        pre_macro_json = self.settings.value("pre_macro", "[]")
+        self.pre_macro = [Macro.from_dict(macro) for macro in json.loads(pre_macro_json)]
+
+        macro_json = self.settings.value("macro", "[]")
+        self.macro = [Macro.from_dict(macro) for macro in json.loads(macro_json)]
+
+    def save_to_settings(self) -> None:
+        self.settings.setValue("capture_path", self.capture_path)
+        self.settings.setValue("pdf_path", self.pdf_path)
+        self.settings.setValue("monitor", self.monitor)
+        self.settings.setValue("same_count", self.same_count)
+        self.settings.setValue("image_quality", self.image_quality)
+        self.settings.setValue("max_page", self.max_page)
+
+        pre_macro_json = json.dumps([macro.to_dict() for macro in self.pre_macro])
+        self.settings.setValue("pre_macro", pre_macro_json)
+
+        macro_json = json.dumps([macro.to_dict() for macro in self.macro])
+        self.settings.setValue("macro", macro_json)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -131,10 +112,6 @@ class Config(QObject, metaclass=SingletonMeta):
             "macro": [macro.to_dict() for macro in self.macro],
         }
 
-    def save_to_file(self) -> None:
-        with open(self.get_config_path(), "w", encoding="utf-8") as file:
-            yaml.dump(self.to_dict(), file, default_flow_style=False)
-
     def __str__(self) -> str:
         pre_macro_str = "\n    ".join(str(macro) for macro in self.pre_macro)
         macro_str = "\n    ".join(str(macro) for macro in self.macro)
@@ -144,7 +121,6 @@ class Config(QObject, metaclass=SingletonMeta):
             f"  image_quality={self.image_quality},\n"
             f"  macro=[\n    {macro_str}\n  ],\n"
             f"  pdf_path=[\n    {self.pdf_path}\n  ],\n"
-            f"  use_ocr={self.use_ocr},\n"
             f"  max_page={self.max_page},\n"
             f"  monitor={self.monitor},\n"
             f"  pre_macro=[\n    {pre_macro_str}\n  ],\n"

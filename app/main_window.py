@@ -136,7 +136,7 @@ class MainWindow(QMainWindow):
         self.raise_()
 
     def handle_save(self):
-        self.config.save_to_file()
+        self.config.save_to_settings()
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
     def handle_setting_dialog(self):
@@ -145,7 +145,7 @@ class MainWindow(QMainWindow):
         result = dialog.exec_()  # 다이얼로그 실행
 
         if result == QDialog.Accepted:
-            self.config.save_to_file()
+            self.config.save_to_settings()
             print("Settings applied:", self.config)
         else:
             print("Settings dialog canceled")
