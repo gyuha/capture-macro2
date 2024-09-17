@@ -40,6 +40,7 @@ class Config(QObject, metaclass=SingletonMeta):
         self.max_page = 1500
 
         self.settings = QSettings("CaptureMacro", "Settings")
+        print(self.settings.fileName())
         self.load_from_settings()
 
     def get_default_pdf_folder(self):

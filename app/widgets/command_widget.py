@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QSpinBox,
 )
 
-from app.config.config import Macro
+from app.config.config import Config, Macro
 from app.utils.rect.rect_check_overlay import RectCheckOverlay
 from app.utils.rect.rect_overlay import RectOverlay
 from app.utils.rect_value_utils import is_valid_rect_string_value, string_to_rect_value
@@ -53,7 +53,6 @@ KEY_ACTIONS = [
 
 
 class CommandWidget(QWidget):
-    signal_update_config = Signal(str, object)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -62,31 +61,38 @@ class CommandWidget(QWidget):
         self.connect_signals_slots()
         self.macro_type = ""
         self.main = None
-        self.macro: List[Macro] = []
+        self.config = Config()
 
         self.ui.macroTable.setColumnWidth(0, 80)
         self.ui.macroTable.setColumnWidth(1, 110)
         self.ui.macroTable.setColumnWidth(2, 60)
         self.ui.macroTable.setColumnWidth(3, 60)
 
+        # 마우스 선택 상자 오버레이
         self.overlay = None
 
-        # 액션을 실행 한 행
-        self.action_row = -1
-        self.ui.macroTable.selectRow(1)
-
-    def set_macro(self, main, macro_type: str = "macro", macro: List[Macro] = None):
-        self.macro = macro
+    def set_macro(self, main, macro_type: str = "macro"):
         self.main = main
         self.macro_type = macro_type
-        self.ui.macroTable.setRowCount(len(macro))
+
+        self.ui.macroTable.setRowCount(len(self.macros()))
         self.ui.macroTable.setAlternatingRowColors(True)
-        for row, macro in enumerate(self.macro):
+
+        for row, macro in enumerate(self.macros()):
             self.set_macro_table_row(row, macro.action, macro.value)
         self.update_macro_actions()
-        self.button_enable()
+
+        self.button_enable_setting()
 
         self.ui.macroTable.itemChanged.connect(self.update_macro_actions)
+
+    def macros(self) -> List[Macro]:
+        if self.macro_type == "macro":
+            return self.config.macro
+        elif self.macro_type == "pre_macro":
+            return self.config.pre_macro
+        else:
+            return []
 
     def connect_signals_slots(self):
         # Macro buttons
@@ -94,9 +100,13 @@ class CommandWidget(QWidget):
         self.ui.btnCommandAdd.clicked.connect(self.on_macro_add)
         self.ui.btnCommandRemove.clicked.connect(self.on_macro_remove)
 
-    def add_row(self, row, action="capture", value=""):
+    def add_row(self, row, action="capture", value=None):
+        new_macro = Macro(action, value)
+        self.macros().insert(row, new_macro)
+
         self.ui.macroTable.insertRow(row)
         self.set_macro_table_row(row, action, value)
+
         self.update_macro_actions()
 
     def on_macro_insert(self):
@@ -107,9 +117,10 @@ class CommandWidget(QWidget):
 
     def on_macro_remove(self):
         row = self.ui.macroTable.currentRow()
+        self.macros.pop(row)
         self.ui.macroTable.removeRow(row)
         self.update_macro_actions()
-        self.button_enable()
+        self.button_enable_setting()
 
     def set_macro_table_row(self, row, action, value):
         actionCombo = QComboBox()
@@ -123,20 +134,27 @@ class CommandWidget(QWidget):
         item = QTableWidgetItem(value)
         # item.currentTextChanged.connect(self.updateMacroActions)
         self.ui.macroTable.setItem(row, 1, item)
-        self.button_enable()
+        self.button_enable_setting()
 
-    def button_enable(self):
+    def button_enable_setting(self):
         flag = self.ui.macroTable.rowCount() > 0
         self.ui.btnCommandRemove.setEnabled(flag)
         self.ui.btnCommandInsert.setEnabled(flag)
 
     def update_macro_actions(self):
         self.ui.macroTable.blockSignals(True)
-        macro: List[Macro] = []
         try:
             for row in range(self.ui.macroTable.rowCount()):
+                value = self.macros()[row].value
                 cell_widget = self.ui.macroTable.cellWidget(row, 0)
-                action = cell_widget.currentText() if cell_widget and hasattr(cell_widget, 'currentText') and callable(cell_widget.currentText) else ""
+                action = (
+                    cell_widget.currentText()
+                    if cell_widget
+                    and hasattr(cell_widget, "currentText")
+                    and callable(cell_widget.currentText)
+                    else ""
+                )
+                self.ui.macroTable.removeCellWidget(row, 1)
                 self.ui.macroTable.removeCellWidget(row, 2)
                 self.ui.macroTable.removeCellWidget(row, 3)
                 if (
@@ -154,11 +172,18 @@ class CommandWidget(QWidget):
                     button2.released.connect(self.handle_rect_check_hide)
                     self.ui.macroTable.setCellWidget(row, 2, button)
                     self.ui.macroTable.setCellWidget(row, 3, button2)
+
+                    # 1번째 cell을 입력 상자로 설정
+                    input_item = QTableWidgetItem("")
+                    input_item.setText(value)
+                    self.ui.macroTable.setItem(row, 1, input_item)  # 입력 상자로 설정
                 elif action == "key":
                     keyCombo = QComboBox()
                     keyCombo.addItems(KEY_ACTIONS)
                     current_value = value if value is not None else "right"
-                    keyCombo.currentTextChanged.connect(lambda text, r=row: self.update_macro_value(r, text))
+                    keyCombo.currentTextChanged.connect(
+                        lambda text, r=row: self.update_macro_value(r, text)
+                    )
                     index = keyCombo.findText(current_value)  # 수정된 부분
                     if index > -1:
                         keyCombo.setCurrentIndex(index)
@@ -167,25 +192,24 @@ class CommandWidget(QWidget):
                     delaySpin = QSpinBox()
                     delaySpin.setRange(1, 20000)
                     delaySpin.setSuffix("ms")
-                    delaySpin.setValue(value if value else 500)  # 기본 값을 500으로 설정
-                    delaySpin.valueChanged.connect(lambda val, r=row: self.update_macro_delay(r, val))  # 수정된 부분
+                    delaySpin.setValue(
+                        int(value) if value.isdigit() else 500
+                    )  # 기본 값을 500으로 설정
+                    delaySpin.valueChanged.connect(
+                        lambda val, r=row: self.update_macro_delay(r, val)
+                    )  # 수정된 부분
                     self.ui.macroTable.setCellWidget(row, 1, delaySpin)
-                
+
                 if action == "key" or action == "delay":
                     item2 = QTableWidgetItem("")
                     item3 = QTableWidgetItem("")
                     self.ui.macroTable.setItem(row, 2, item2)
                     self.ui.macroTable.setItem(row, 3, item3)
 
-                value = self.ui.macroTable.item(row, 1).text() if self.ui.macroTable.item(row, 1) else ""
-                macro.append(
-                    Macro(action=action, value=value)
-                )
-
         except (AttributeError, KeyError, TypeError) as e:
             print(f"An error occurred: {e}")
         finally:
-            self.signal_update_config.emit(self.macro_type, macro)
+            self.config.save_to_settings()
             self.ui.macroTable.blockSignals(False)
 
     def handle_screen_rect(self, row):
@@ -230,11 +254,11 @@ class CommandWidget(QWidget):
                 item.setForeground(text_color)
 
     def update_macro_value(self, row, action):
-        if row < len(self.macro):
-            self.macro[row].value = action  # macro의 값을 업데이트
-            self.update_macro_actions()  # 매크로 액션 업데이트 호출
+        if row < len(self.macros()):
+            self.macros()[row].value = action  # macro의 값을 업데이트
+            # self.update_macro_actions()  # 매크로 액션 업데이트 호출
 
     def update_macro_delay(self, row, value):
-        if row < len(self.macro):
-            self.macro[row].value = str(value)  # macro의 값을 업데이트
-            self.update_macro_actions()  # 매크로 액션 업데이트 호출
+        if row < len(self.macros()):
+            self.macros()[row].value = str(value)  # macro의 값을 업데이트
+            # self.update_macro_actions()  # 매크로 액션 업데이트 호출

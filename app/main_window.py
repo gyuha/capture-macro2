@@ -56,23 +56,24 @@ class MainWindow(QMainWindow):
         self.app_core.signal_image_preview.connect(self.on_image_preview)
         self.app_core.signal_image_clear.connect(self.on_image_clear)
 
-        self.ui.pre_command_widget.signal_update_config.connect(self.on_update_config)
-        self.ui.command_widget.signal_update_config.connect(self.on_update_config)
-
     def set_macro(self):
         # 매크로 설정
         self.ui.pre_command_widget.ui.groupBox.setTitle("사전 수행")
-        self.ui.command_widget.ui.groupBox.setTitle("수행")
+        self.ui.command_widget.ui.groupBox.setTitle("반복 수행")
 
-        self.ui.pre_command_widget.set_macro(self, "pre_macro", self.config.pre_macro)
-        self.ui.command_widget.set_macro(self, "macro", self.config.macro)
+        self.ui.pre_command_widget.set_macro(self, "pre_macro")
+        self.ui.command_widget.set_macro(self, "macro")
 
     def handle_capture(self):
         self.app_core.set_monitor()
         table = self.ui.command_widget.ui.macroTable
         for row in range(table.rowCount()):
             cell_widget = table.cellWidget(row, 0)
-            if cell_widget and hasattr(cell_widget, 'currentText') and callable(cell_widget.currentText):
+            if (
+                cell_widget
+                and hasattr(cell_widget, "currentText")
+                and callable(cell_widget.currentText)
+            ):
                 if cell_widget.currentText() == "capture":
                     item = table.item(row, 1)
                     if item:
@@ -121,13 +122,6 @@ class MainWindow(QMainWindow):
             self.action_controller.start()
         else:
             self.handle_stop()
-
-    # @Slot(str, object)
-    def on_update_config(self, config_type, config):
-        if config_type == "pre_macro":
-            self.config.pre_macro = config
-        else:
-            self.config.macro = config
 
     def on_hotkey_activated(self, key):
         self.hotkeys.hot_keys[key]()
