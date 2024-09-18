@@ -1,3 +1,6 @@
 {
-    "qtForPython.qmlls.enabled": false
+    "qtForPython.qmlls.enabled": false,
+    "code-runner.executorMap": {
+        "python": "$pythonPath -u $fullFileName"
+    }
 }

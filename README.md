@@ -36,8 +36,8 @@ Capture macro 2
   - [x] for MacOS
   - [x] for Windows
 - [x] macro list selected cursor when action doing
-- [ ] settings save to QSettings
-  - [ ] image compress level widget change to spinnerbox
+- [x] settings save to QSettings
+  - [x] image compress level widget change to spinnerbox
   - [ ] start, end global hot-key change
 
 ## 개발 환경 설정

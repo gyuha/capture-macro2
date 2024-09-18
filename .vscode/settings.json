@@ -1,5 +1,8 @@
 {
     "qtForPython.qmlls.enabled": false,
+    "code-runner.executorMap": {
+        "python": "$pythonPath -u $fullFileName"
+    },
     "qtForPython.designer.path": "${workspaceFolder}/venv/bin/pyside6-designer",
     "qtForPython.uic.path": "${workspaceFolder}/venv/bin/pyside6-uic",
     "qtForPython.qmlformat.path": "${workspaceFolder}/bin/pyside6-qmlformat",
