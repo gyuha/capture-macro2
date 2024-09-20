@@ -121,6 +121,10 @@ class ActionController(QObject):
         x, y = self.mouse_move(value)
         self.app_core.signal_mouse_event.emit("click", x, y)
 
+    def move(self, value):
+        x, y = self.mouse_move(value)
+        self.app_core.signal_mouse_event.emit("move", x, y)
+
     def execute_macro(self, macro_list: List[Macro]):
         for macro in macro_list:
             if not self.app_core.is_running:
@@ -129,7 +133,6 @@ class ActionController(QObject):
             # print(index)
             action_method = getattr(self, macro.action, None)
             if action_method:
-                print(f"Executing {macro.action} with value: {macro.value}")
                 action_method(macro.value)
             else:
                 print(f"Unknown action: {macro.action}")
