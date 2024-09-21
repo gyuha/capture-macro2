@@ -128,6 +128,7 @@ class CommandWidget(QWidget):
 
         self.ui.macroTable.insertRow(row)
         self.set_macro_table_row(row, action, value)
+        self.config.save_to_settings()
 
     def on_macro_insert(self):
         self.add_row(self.ui.macroTable.currentRow())
@@ -139,6 +140,7 @@ class CommandWidget(QWidget):
         row = self.ui.macroTable.currentRow()
         self.macros().pop(row)
         self.ui.macroTable.removeRow(row)
+        self.config.save_to_settings()
         self.button_enable_setting()
 
     def button_enable_setting(self):
@@ -246,6 +248,7 @@ class CommandWidget(QWidget):
                 MacroActions.MOVE.value,
             }:
                 self.ui.macroTable.item(row, 1).setText(value)
+            self.config.save_to_settings()
         except (AttributeError, KeyError, TypeError) as e:
             print(f"An error occurred: {e}")
 
@@ -264,6 +267,7 @@ class CommandWidget(QWidget):
     def handle_rect_selected(self, x, y, width, height):
         self.ui.macroTable.item(self.action_row, 1).setText(f"{x},{y},{width},{height}")
         self.macros()[self.action_row].value = f"{x},{y},{width},{height}"
+        self.config.save_to_settings()
         self.overlay.close()
 
     def handle_rect_check_show(self, row):
