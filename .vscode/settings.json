@@ -3,14 +3,8 @@
     "code-runner.executorMap": {
         "python": "$pythonPath -u $fullFileName"
     },
-    "qtForPython.designer.path": "${workspaceFolder}/venv/bin/pyside6-designer",
-    "qtForPython.uic.path": "${workspaceFolder}/venv/bin/pyside6-uic",
-    "qtForPython.qmlformat.path": "${workspaceFolder}/bin/pyside6-qmlformat",
-    "qtForPython.qmlls.path": "${workspaceFolder}/venv/bin/pyside6-qmlls",
-    "python.autoComplete.extraPaths": [
-        "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
-    ],
-    "python.analysis.extraPaths": [
-        "${workspaceFolder}/venv/lib/python3.10/site-packages/PySide6"
-    ]
+    "qtForPython.designer.path": "${workspaceFolder}/venv/Scripts/pyside6-designer.exe",
+    "qtForPython.uic.path": "${workspaceFolder}/venv/Scripts/pyside6-uic.exe",
+    "qtForPython.qmlformat.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlformat.exe",
+    "qtForPython.qmlls.path": "${workspaceFolder}/venv/Scripts/pyside6-qmlls.exe"
 }
