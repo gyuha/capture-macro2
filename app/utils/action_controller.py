@@ -49,11 +49,11 @@ class ActionController(QObject):
 
         with mss.mss() as sct:
             screen_num = int(self.config.monitor)
-            mon = sct.monitors[screen_num]
+            mon = sct.monitors[screen_num + 1]
 
             monitor = {
-                "top": mon["top"] + y,
                 "left": mon["left"] + x,
+                "top": mon["top"] + y,
                 "width": width,
                 "height": height,
                 "mon": screen_num,
