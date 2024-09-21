@@ -41,6 +41,7 @@ class Config(QObject, metaclass=SingletonMeta):
         self.max_page = 1500
         self.wheel = -1
         self.swipe_direction = "Left"
+        self.swipe_secs = 800
 
         self.settings = QSettings("CaptureMacro", "Settings")
         print(self.settings.fileName())
@@ -94,6 +95,8 @@ class Config(QObject, metaclass=SingletonMeta):
             Macro.from_dict(macro) for macro in json.loads(pre_macro_json)
         ]
 
+        self.swipe_secs = self.settings.value("swipe_secs", 800, type=int)
+
         macro_json = self.settings.value("macro", "[]")
         self.macro = [Macro.from_dict(macro) for macro in json.loads(macro_json)]
 
@@ -106,6 +109,7 @@ class Config(QObject, metaclass=SingletonMeta):
         self.settings.setValue("max_page", self.max_page)
         self.settings.setValue("wheel", self.wheel)
         self.settings.setValue("swipe_direction", self.swipe_direction)
+        self.settings.setValue("swipe_secs", self.swipe_secs)
 
         pre_macro_json = json.dumps([macro.to_dict() for macro in self.pre_macro])
         self.settings.setValue("pre_macro", pre_macro_json)
@@ -138,5 +142,6 @@ class Config(QObject, metaclass=SingletonMeta):
             f"  pre_macro=[\n    {pre_macro_str}\n  ],\n"
             f"  same_count={self.same_count}\n"
             f"  swipe_direction={self.swipe_direction}\n"
+            f"  swipe_secs={self.swipe_secs}\n"
             f")"
         )

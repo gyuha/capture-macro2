@@ -128,6 +128,13 @@ class ActionController(QObject):
         x, y = self.mouse_move(value)
         self.app_core.signal_mouse_event.emit("move", x, y)
 
+    def swipe(self, value):
+        x, y, width, height = map(int, value.split(","))
+        y = y + (height / 2)
+        start = self.config.swipe_direction == "Left" and (x + width, y) or (x, y)
+        end = self.config.swipe_direction == "Left" and (x, y) or (x + width, y)
+        self.app_core.signal_mouse_swipe.emit(start, end, self.config.swipe_secs / 1000)
+
     def execute_macro(self, macro_list: List[Macro]):
         for macro in macro_list:
             if not self.app_core.is_running:

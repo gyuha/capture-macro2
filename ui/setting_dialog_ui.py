@@ -25,7 +25,7 @@ class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(431, 345)
+        SettingDialog.resize(456, 345)
         SettingDialog.setMaximumSize(QSize(500, 400))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
@@ -205,6 +205,18 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setLayout(8, QFormLayout.FieldRole, self.horizontalLayout_4)
 
+        self.label_10 = QLabel(self.frame)
+        self.label_10.setObjectName(u"label_10")
+
+        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.label_10)
+
+        self.sbSwipeSecs = QSpinBox(self.frame)
+        self.sbSwipeSecs.setObjectName(u"sbSwipeSecs")
+        self.sbSwipeSecs.setMaximum(10000)
+        self.sbSwipeSecs.setValue(800)
+
+        self.formLayout.setWidget(9, QFormLayout.FieldRole, self.sbSwipeSecs)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
@@ -260,6 +272,8 @@ class Ui_SettingDialog(object):
         self.label_9.setText(QCoreApplication.translate("SettingDialog", u"\uc2a4\uc640\uc774\ud504 \ubc29\ud5a5", None))
         self.rbLeft.setText(QCoreApplication.translate("SettingDialog", u"Left", None))
         self.rbRight.setText(QCoreApplication.translate("SettingDialog", u"Right", None))
+        self.label_10.setText(QCoreApplication.translate("SettingDialog", u"\uc2a4\uc640\uc774\ud504 \uc2dc\uac04", None))
+        self.sbSwipeSecs.setSuffix(QCoreApplication.translate("SettingDialog", u"ms", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi

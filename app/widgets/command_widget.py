@@ -25,7 +25,7 @@ class MacroActions(Enum):
     CLICK = "click"
     KEY = "key"
     SCROLL = "scroll"
-    SWIPE = "Swipe"
+    SWIPE = "swipe"
     MOVE = "move"
 
 
@@ -68,6 +68,7 @@ DEFAULT_ACTION_VALUES = {
     "click": "0,0,0,0",
     "scroll": "0,0,0,0",
     "move": "0,0,0,0",
+    "swipe": "0,0,0,0",
     "delay": 500,
     "key": "right",
 }
@@ -174,6 +175,7 @@ class CommandWidget(QWidget):
             MacroActions.CLICK.value,
             MacroActions.SCROLL.value,
             MacroActions.MOVE.value,
+            MacroActions.SWIPE.value,
         }:
 
             button = QPushButton()

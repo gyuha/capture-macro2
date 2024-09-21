@@ -1,3 +1,5 @@
+import time
+
 from pynput import keyboard, mouse
 from pynput.mouse import Button
 
@@ -32,9 +34,33 @@ class InputController:
     def get_mouse_position(self):
         return self.mouse.position
 
-        # Usage example:
+    def swipe_mouse(self, start, end, duration=1.0):
+        """
+        Swipe the mouse from start to end in the given direction over the specified duration.
+        :param start: Tuple (x, y) representing the start position
+        :param end: Tuple (x, y) representing the end position
+        :param duration: Duration of the swipe in seconds
+        """
+        self.mouse.position = start
+        self.mouse.press(Button.left)
+
+        steps = 100
+        sleep_time = duration / steps
+        x_step = (end[0] - start[0]) / steps
+        y_step = (end[1] - start[1]) / steps
+
+        for _ in range(steps):
+            new_x = self.mouse.position[0] + x_step
+            new_y = self.mouse.position[1] + y_step
+            self.mouse.position = (new_x, new_y)
+            time.sleep(sleep_time)
+
+        self.mouse.release(Button.left)
+
+
 # controller = InputController()
 # controller.move_mouse(100, 100)
 # controller.click_mouse()
 # controller.press_key('a')
+# controller.scroll_mouse(-1)  # Scroll down
 # controller.scroll_mouse(-1)  # Scroll down

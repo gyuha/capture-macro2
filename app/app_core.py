@@ -19,6 +19,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
     signal_image_clear = Signal()
 
     signal_mouse_event = Signal(str, int, int)
+    signal_mouse_swipe = Signal(tuple, tuple, float)
     signal_key_event = Signal(str)
 
     def __init__(self):
@@ -61,6 +62,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
     def connect_signals_slots(self):
         if not self.signals_connected:
             self.signal_mouse_event.connect(self.on_mouse_event)
+            self.signal_mouse_swipe.connect(self.on_mouse_swipe)
             self.signal_key_event.connect(self.on_key_event)
             self.signals_connected = True
 
@@ -75,6 +77,12 @@ class AppCore(QObject, metaclass=SingletonMeta):
                 self.input_controller.click_mouse()
         except AttributeError:
             print(f"Unknown event: {event}")
+
+    def on_mouse_swipe(self, start, end, duration):
+        try:
+            self.input_controller.swipe_mouse(start, end, duration)
+        except AttributeError:
+            print(f"Unknown swipe: {direction}")
 
     # @Slot(str)
     def on_key_event(self, key):
