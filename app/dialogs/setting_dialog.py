@@ -31,8 +31,8 @@ class SettingDialog(QDialog):
         self.ui.lePdfPath.setText(self.config.pdf_path)
         self.ui.sbImageSize.setValue(self.config.image_size)
 
-        for button in self.ui.bgSwapDirection.buttons():
-            if button.text() == self.config.swap_direction:
+        for button in self.ui.bgSwipeDirection.buttons():
+            if button.text() == self.config.swipe_direction:
                 button.setChecked(True)
 
     def connect_signals_slots(self):
@@ -59,7 +59,7 @@ class SettingDialog(QDialog):
         self.config.monitor = self.ui.cbMonitorNum.currentIndex()
         self.config.pdf_path = self.ui.lePdfPath.text()
         self.config.same_count = self.ui.sbSameCount.value()
-        self.config.swap_direction = self.ui.bgSwapDirection.checkedButton().text()
+        self.config.swipe_direction = self.ui.bgSwipeDirection.checkedButton().text()
 
         # 다이얼로그 닫기
         self.accept()

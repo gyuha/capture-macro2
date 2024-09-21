@@ -25,6 +25,7 @@ class MacroActions(Enum):
     CLICK = "click"
     KEY = "key"
     SCROLL = "scroll"
+    SWIPE = "Swipe"
     MOVE = "move"
 
 
@@ -121,7 +122,7 @@ class CommandWidget(QWidget):
         self.ui.btnCommandAdd.clicked.connect(self.on_macro_add)
         self.ui.btnCommandRemove.clicked.connect(self.on_macro_remove)
 
-    def add_row(self, row, action="capture", value=None):
+    def add_row(self, row, action=MacroActions.CAPTURE.value, value=None):
         value = DEFAULT_ACTION_VALUES.get(action, value)
         new_macro = Macro(action, value)
         self.macros().insert(row, new_macro)
@@ -253,6 +254,7 @@ class CommandWidget(QWidget):
                 MacroActions.CLICK.value,
                 MacroActions.SCROLL.value,
                 MacroActions.MOVE.value,
+                MacroActions.SWIPE.value,
             }:
                 self.ui.macroTable.item(row, 1).setText(value)
             self.macros()[row].value = value

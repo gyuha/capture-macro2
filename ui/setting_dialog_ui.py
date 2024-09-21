@@ -25,7 +25,7 @@ class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(425, 332)
+        SettingDialog.resize(431, 345)
         SettingDialog.setMaximumSize(QSize(500, 400))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
@@ -184,16 +184,16 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.rbLeft = QRadioButton(self.frame)
-        self.bgSwapDirection = QButtonGroup(SettingDialog)
-        self.bgSwapDirection.setObjectName(u"bgSwapDirection")
-        self.bgSwapDirection.addButton(self.rbLeft)
+        self.bgSwipeDirection = QButtonGroup(SettingDialog)
+        self.bgSwipeDirection.setObjectName(u"bgSwipeDirection")
+        self.bgSwipeDirection.addButton(self.rbLeft)
         self.rbLeft.setObjectName(u"rbLeft")
         self.rbLeft.setChecked(True)
 
         self.horizontalLayout_4.addWidget(self.rbLeft)
 
         self.rbRight = QRadioButton(self.frame)
-        self.bgSwapDirection.addButton(self.rbRight)
+        self.bgSwipeDirection.addButton(self.rbRight)
         self.rbRight.setObjectName(u"rbRight")
 
         self.horizontalLayout_4.addWidget(self.rbRight)
