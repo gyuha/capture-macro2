@@ -15,16 +15,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFormLayout,
-    QFrame, QHBoxLayout, QLabel, QLayout,
-    QLineEdit, QPushButton, QSizePolicy, QSlider,
-    QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QDialog,
+    QFormLayout, QFrame, QHBoxLayout, QLabel,
+    QLayout, QLineEdit, QPushButton, QRadioButton,
+    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
+    QVBoxLayout, QWidget)
 
 class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(425, 329)
+        SettingDialog.resize(425, 332)
         SettingDialog.setMaximumSize(QSize(500, 400))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
@@ -175,11 +176,44 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sbWheel)
 
+        self.label_9 = QLabel(self.frame)
+        self.label_9.setObjectName(u"label_9")
+
+        self.formLayout.setWidget(8, QFormLayout.LabelRole, self.label_9)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.rbLeft = QRadioButton(self.frame)
+        self.bgSwapDirection = QButtonGroup(SettingDialog)
+        self.bgSwapDirection.setObjectName(u"bgSwapDirection")
+        self.bgSwapDirection.addButton(self.rbLeft)
+        self.rbLeft.setObjectName(u"rbLeft")
+        self.rbLeft.setChecked(True)
+
+        self.horizontalLayout_4.addWidget(self.rbLeft)
+
+        self.rbRight = QRadioButton(self.frame)
+        self.bgSwapDirection.addButton(self.rbRight)
+        self.rbRight.setObjectName(u"rbRight")
+
+        self.horizontalLayout_4.addWidget(self.rbRight)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer)
+
+
+        self.formLayout.setLayout(8, QFormLayout.FieldRole, self.horizontalLayout_4)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
 
         self.verticalLayout_2.addWidget(self.frame)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -223,6 +257,9 @@ class Ui_SettingDialog(object):
         self.label_7.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \ucd5c\ub300 \uc0ac\uc774\uc988", None))
         self.sbImageSize.setSuffix(QCoreApplication.translate("SettingDialog", u"px", None))
         self.label_8.setText(QCoreApplication.translate("SettingDialog", u"\ub9c8\uc6b0\uc2a4 \ud720 \uac12", None))
+        self.label_9.setText(QCoreApplication.translate("SettingDialog", u"\uc2a4\uc640\uc774\ud504 \ubc29\ud5a5", None))
+        self.rbLeft.setText(QCoreApplication.translate("SettingDialog", u"Left", None))
+        self.rbRight.setText(QCoreApplication.translate("SettingDialog", u"Right", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi

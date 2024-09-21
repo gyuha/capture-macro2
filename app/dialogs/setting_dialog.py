@@ -1,6 +1,3 @@
-import sys
-
-from PySide6.QtGui import QIntValidator, QScreen
 from PySide6.QtWidgets import QApplication, QDialog, QFileDialog
 
 from app.app_core import AppCore
@@ -23,7 +20,6 @@ class SettingDialog(QDialog):
         self.connect_signals_slots()
         self.populate_monitor_combo()
 
-
     def load_settings(self):
         # Config 객체의 값을 UI에 설정
         self.ui.cbMonitorNum.setCurrentIndex(self.config.monitor)
@@ -35,15 +31,20 @@ class SettingDialog(QDialog):
         self.ui.lePdfPath.setText(self.config.pdf_path)
         self.ui.sbImageSize.setValue(self.config.image_size)
 
+        for button in self.ui.bgSwapDirection.buttons():
+            if button.text() == self.config.swap_direction:
+                button.setChecked(True)
+
     def connect_signals_slots(self):
         self.ui.btnCancel.clicked.connect(self.cancel)
         self.ui.btnOk.clicked.connect(self.ok)
         self.ui.cbMonitorNum.currentIndexChanged.connect(self.on_monitor_changed)
-        self.ui.sbSameCount.valueChanged.connect(lambda value: self.ui.lbSameCount.setText(str(value)))
+        self.ui.sbSameCount.valueChanged.connect(
+            lambda value: self.ui.lbSameCount.setText(str(value))
+        )
 
         self.ui.btnImagePath.clicked.connect(self.select_path)
         self.ui.btnPdfPath.clicked.connect(self.select_pdf_path)
-
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기
@@ -58,6 +59,7 @@ class SettingDialog(QDialog):
         self.config.monitor = self.ui.cbMonitorNum.currentIndex()
         self.config.pdf_path = self.ui.lePdfPath.text()
         self.config.same_count = self.ui.sbSameCount.value()
+        self.config.swap_direction = self.ui.bgSwapDirection.checkedButton().text()
 
         # 다이얼로그 닫기
         self.accept()
@@ -105,7 +107,9 @@ class SettingDialog(QDialog):
             model = screen.model()
             serial_number = screen.serialNumber()
 
-            print(f"Screen info - Name: {name}, Manufacturer: {manufacturer}, Model: {model}, Serial: {serial_number}")
+            print(
+                f"Screen info - Name: {name}, Manufacturer: {manufacturer}, Model: {model}, Serial: {serial_number}"
+            )
 
             return f"{manufacturer} {model}" if manufacturer and model else name
         except Exception as e:
@@ -117,5 +121,6 @@ class SettingDialog(QDialog):
         selected_monitor_index = self.ui.cbMonitorNum.itemData(index)
         selected_monitor_text = self.ui.cbMonitorNum.itemText(index)
 
-        print(f"Selected monitor changed: Index = {selected_monitor_index}, Text = {selected_monitor_text}")
-
+        print(
+            f"Selected monitor changed: Index = {selected_monitor_index}, Text = {selected_monitor_text}"
+        )
