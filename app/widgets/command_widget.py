@@ -239,11 +239,11 @@ class CommandWidget(QWidget):
             item.setFlags(item.flags() & ~Qt.ItemIsEditable)
             self.ui.macroTable.setItem(row, int, item)
 
-    def set_macro_table_row_value(self, row: int, action: MacroActions, value: str):
+    def set_macro_table_row_value(self, row: int, action: MacroActions, value):
         value_widget = self.ui.macroTable.cellWidget(row, 1)
         try:
             if action == MacroActions.DELAY.value:
-                value_widget.setValue(value)
+                self.macros()[row].value = value
             elif action == MacroActions.KEY.value:
                 index = value_widget.findText(value)  # 수정된 부분
                 if index > -1:
@@ -255,6 +255,7 @@ class CommandWidget(QWidget):
                 MacroActions.MOVE.value,
             }:
                 self.ui.macroTable.item(row, 1).setText(value)
+            self.macros()[row].value = value
             self.config.save_to_settings()
         except (AttributeError, KeyError, TypeError) as e:
             print(f"An error occurred: {e}")
