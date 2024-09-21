@@ -67,7 +67,7 @@ DEFAULT_ACTION_VALUES = {
     "click": "0,0,0,0",
     "scroll": "0,0,0,0",
     "move": "0,0,0,0",
-    "delay": "500",
+    "delay": 500,
     "key": "right",
 }
 
@@ -152,9 +152,7 @@ class CommandWidget(QWidget):
         actionCombo = QComboBox()
         actionCombo.addItems(MACRO_ACTIONS)
         actionCombo.currentTextChanged.connect(
-            lambda action, r=row: self.set_macro_row(
-                r, action, DEFAULT_ACTION_VALUES.get(action)
-            )
+            lambda action, r=row: self.on_action_combo_changed(r, action)
         )
         index = actionCombo.findText(action)
         if index > -1:
@@ -167,6 +165,8 @@ class CommandWidget(QWidget):
         self.ui.macroTable.removeCellWidget(row, 1)
         self.ui.macroTable.removeCellWidget(row, 2)
         self.ui.macroTable.removeCellWidget(row, 3)
+
+        self.macros()[row].action = action
 
         if action in {
             MacroActions.CAPTURE.value,
@@ -226,11 +226,18 @@ class CommandWidget(QWidget):
 
         self.set_macro_table_row_value(row, action, value)
 
+    def on_action_combo_changed(self, row, action):
+        value = DEFAULT_ACTION_VALUES.get(action)
+        self.macros()[row].action = action
+        self.macros()[row].value = value
+        self.set_macro_row(row, action, value)
+        self.config.save_to_settings()
+
     def set_disabled_cell(self, row: int, column: int):
         item = self.ui.macroTable.item(row, column)
         if item is not None:
             item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-            self.ui.macroTable.setItem(row, 2, item)
+            self.ui.macroTable.setItem(row, int, item)
 
     def set_macro_table_row_value(self, row: int, action: MacroActions, value: str):
         value_widget = self.ui.macroTable.cellWidget(row, 1)

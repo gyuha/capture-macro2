@@ -47,44 +47,47 @@ class ActionController(QObject):
         x, y, width, height = map(int, value.split(","))
         file_path = f"{self.config.capture_path}/{self.app_core.image_number:04}.jpg"
 
-        with mss.mss() as sct:
-            screen_num = int(self.config.monitor)
-            mon = sct.monitors[screen_num + 1]
+        try:
+            with mss.mss() as sct:
+                screen_num = int(self.config.monitor)
+                mon = sct.monitors[screen_num + 1]
 
-            monitor = {
-                "left": mon["left"] + x,
-                "top": mon["top"] + y,
-                "width": width,
-                "height": height,
-                "mon": screen_num,
-            }
+                monitor = {
+                    "left": mon["left"] + x,
+                    "top": mon["top"] + y,
+                    "width": width,
+                    "height": height,
+                    "mon": screen_num,
+                }
 
-            if self.app_core.is_mac:
-                device_pixel_ratio = self.app_core.device_pixel_ratio
-                monitor["top"] = int(monitor["top"] / device_pixel_ratio)
-                monitor["left"] = int(monitor["left"] / device_pixel_ratio)
-                monitor["width"] = int(monitor["width"] / device_pixel_ratio)
-                monitor["height"] = int(monitor["height"] / device_pixel_ratio)
+                if self.app_core.is_mac:
+                    device_pixel_ratio = self.app_core.device_pixel_ratio
+                    monitor["top"] = int(monitor["top"] / device_pixel_ratio)
+                    monitor["left"] = int(monitor["left"] / device_pixel_ratio)
+                    monitor["width"] = int(monitor["width"] / device_pixel_ratio)
+                    monitor["height"] = int(monitor["height"] / device_pixel_ratio)
 
-            x, y = self.input_controller.get_mouse_position()
-            if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit(
-                    "move", mon["left"] + mon["width"], mon["top"] + mon["height"]
-                )
+                x, y = self.input_controller.get_mouse_position()
+                if self.app_core.is_mac:
+                    self.app_core.signal_mouse_event.emit(
+                        "move", mon["left"] + mon["width"], mon["top"] + mon["height"]
+                    )
 
-            sct_img = sct.grab(monitor)
-            img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
+                sct_img = sct.grab(monitor)
+                img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
 
-            path = os.path.join(file_path)
+                path = os.path.join(file_path)
 
-            # 이미지 저장 하기
-            jpg_image_optimize(img, path, quality=int(self.config.image_quality))
+                # 이미지 저장 하기
+                jpg_image_optimize(img, path, quality=int(self.config.image_quality))
 
-            if self.app_core.is_mac:
-                self.app_core.signal_mouse_event.emit("move", x, y)
+                if self.app_core.is_mac:
+                    self.app_core.signal_mouse_event.emit("move", x, y)
 
-        self.app_core.image_number += 1
-        self.app_core.signal_add_image.emit(file_path)
+            self.app_core.image_number += 1
+            self.app_core.signal_add_image.emit(file_path)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def key(self, value):
         self.app_core.signal_key_event.emit(value)
