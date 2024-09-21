@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>350</height>
+    <width>425</width>
+    <height>329</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>500</width>
-    <height>350</height>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Shape::NoFrame</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -72,7 +72,7 @@
              <number>3</number>
             </property>
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -117,20 +117,20 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="3" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
            <string>이미지 저장 경로</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="3" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
            <number>0</number>
           </property>
           <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
+           <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
           </property>
           <item>
            <widget class="QLineEdit" name="leImagePath">
@@ -154,14 +154,14 @@
           </item>
          </layout>
         </item>
-        <item row="5" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="label_6">
           <property name="text">
            <string>PDF 저장경로</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="4" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <property name="spacing">
            <number>0</number>
@@ -185,46 +185,14 @@
           </item>
          </layout>
         </item>
-        <item row="6" column="0">
+        <item row="5" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>이미지 압축율</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>이미지 최대 사이즈</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QSpinBox" name="sbImageSize">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="suffix">
-           <string>px</string>
-          </property>
-          <property name="minimum">
-           <number>500</number>
-          </property>
-          <property name="maximum">
-           <number>6000</number>
-          </property>
-          <property name="value">
-           <number>2000</number>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
+        <item row="5" column="1">
          <widget class="QSpinBox" name="sbImageCompress">
           <property name="minimumSize">
            <size>
@@ -243,6 +211,61 @@
           </property>
           <property name="value">
            <number>85</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>이미지 최대 사이즈</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QSpinBox" name="sbImageSize">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="suffix">
+           <string>px</string>
+          </property>
+          <property name="minimum">
+           <number>500</number>
+          </property>
+          <property name="maximum">
+           <number>6000</number>
+          </property>
+          <property name="value">
+           <number>2000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>마우스 휠 값</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QSpinBox" name="sbWheel">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
           </property>
          </widget>
         </item>

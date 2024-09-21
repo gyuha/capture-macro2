@@ -24,15 +24,15 @@ class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(420, 350)
-        SettingDialog.setMaximumSize(QSize(500, 350))
+        SettingDialog.resize(425, 329)
+        SettingDialog.setMaximumSize(QSize(500, 400))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
         self.verticalLayout_2 = QVBoxLayout(SettingDialog)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.frame = QFrame(SettingDialog)
         self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.NoFrame)
+        self.frame.setFrameShape(QFrame.Shape.NoFrame)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -59,7 +59,7 @@ class Ui_SettingDialog(object):
         self.sbSameCount.setObjectName(u"sbSameCount")
         self.sbSameCount.setMinimumSize(QSize(200, 0))
         self.sbSameCount.setValue(3)
-        self.sbSameCount.setOrientation(Qt.Horizontal)
+        self.sbSameCount.setOrientation(Qt.Orientation.Horizontal)
 
         self.horizontalLayout_5.addWidget(self.sbSameCount)
 
@@ -89,12 +89,12 @@ class Ui_SettingDialog(object):
         self.label_5 = QLabel(self.frame)
         self.label_5.setObjectName(u"label_5")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_5)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_5)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.leImagePath = QLineEdit(self.frame)
         self.leImagePath.setObjectName(u"leImagePath")
         self.leImagePath.setMinimumSize(QSize(200, 22))
@@ -108,12 +108,12 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_2.addWidget(self.btnImagePath)
 
 
-        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_2)
 
         self.label_6 = QLabel(self.frame)
         self.label_6.setObjectName(u"label_6")
 
-        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_6)
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_6)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setSpacing(0)
@@ -130,27 +130,12 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_3.addWidget(self.btnPdfPath)
 
 
-        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_3)
+        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_3)
 
         self.label_3 = QLabel(self.frame)
         self.label_3.setObjectName(u"label_3")
 
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_3)
-
-        self.label_7 = QLabel(self.frame)
-        self.label_7.setObjectName(u"label_7")
-
-        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_7)
-
-        self.sbImageSize = QSpinBox(self.frame)
-        self.sbImageSize.setObjectName(u"sbImageSize")
-        self.sbImageSize.setMinimumSize(QSize(100, 0))
-        self.sbImageSize.setLayoutDirection(Qt.LeftToRight)
-        self.sbImageSize.setMinimum(500)
-        self.sbImageSize.setMaximum(6000)
-        self.sbImageSize.setValue(2000)
-
-        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sbImageSize)
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_3)
 
         self.sbImageCompress = QSpinBox(self.frame)
         self.sbImageCompress.setObjectName(u"sbImageCompress")
@@ -159,7 +144,36 @@ class Ui_SettingDialog(object):
         self.sbImageCompress.setMaximum(100)
         self.sbImageCompress.setValue(85)
 
-        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.sbImageCompress)
+        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.sbImageCompress)
+
+        self.label_7 = QLabel(self.frame)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_7)
+
+        self.sbImageSize = QSpinBox(self.frame)
+        self.sbImageSize.setObjectName(u"sbImageSize")
+        self.sbImageSize.setMinimumSize(QSize(100, 0))
+        self.sbImageSize.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.sbImageSize.setMinimum(500)
+        self.sbImageSize.setMaximum(6000)
+        self.sbImageSize.setValue(2000)
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.sbImageSize)
+
+        self.label_8 = QLabel(self.frame)
+        self.label_8.setObjectName(u"label_8")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_8)
+
+        self.sbWheel = QSpinBox(self.frame)
+        self.sbWheel.setObjectName(u"sbWheel")
+        self.sbWheel.setMinimum(-100)
+        self.sbWheel.setMaximum(100)
+        self.sbWheel.setSingleStep(10)
+        self.sbWheel.setValue(-1)
+
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sbWheel)
 
 
         self.verticalLayout.addLayout(self.formLayout)
@@ -205,9 +219,10 @@ class Ui_SettingDialog(object):
         self.label_6.setText(QCoreApplication.translate("SettingDialog", u"PDF \uc800\uc7a5\uacbd\ub85c", None))
         self.btnPdfPath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))
         self.label_3.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc555\ucd95\uc728", None))
+        self.sbImageCompress.setSuffix(QCoreApplication.translate("SettingDialog", u"%", None))
         self.label_7.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \ucd5c\ub300 \uc0ac\uc774\uc988", None))
         self.sbImageSize.setSuffix(QCoreApplication.translate("SettingDialog", u"px", None))
-        self.sbImageCompress.setSuffix(QCoreApplication.translate("SettingDialog", u"%", None))
+        self.label_8.setText(QCoreApplication.translate("SettingDialog", u"\ub9c8\uc6b0\uc2a4 \ud720 \uac12", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi

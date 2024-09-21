@@ -1,12 +1,13 @@
+import json
 import os
 import platform
-import json
 from typing import Any, Dict, List
 
 from PySide6.QtCore import QObject, QSettings
 from PySide6.QtWidgets import QApplication
 
 from app.utils.singleton_meta import SingletonMeta
+
 
 class Macro:
     def __init__(self, action: str, value: str):
@@ -38,6 +39,7 @@ class Config(QObject, metaclass=SingletonMeta):
         self.window_name = ""
         self.image_size = 2000
         self.max_page = 1500
+        self.wheel = -1
 
         self.settings = QSettings("CaptureMacro", "Settings")
         print(self.settings.fileName())
@@ -72,7 +74,9 @@ class Config(QObject, metaclass=SingletonMeta):
         return app_data_folder
 
     def load_from_settings(self) -> None:
-        self.capture_path = self.settings.value("capture_path", self.get_default_data_folder("CaptureMacro"))
+        self.capture_path = self.settings.value(
+            "capture_path", self.get_default_data_folder("CaptureMacro")
+        )
         self.pdf_path = self.settings.value("pdf_path", self.get_default_pdf_folder())
         self.monitor = self.settings.value("monitor", 0, type=int)
         num_monitors = len(QApplication.screens())
@@ -81,9 +85,12 @@ class Config(QObject, metaclass=SingletonMeta):
         self.same_count = self.settings.value("same_count", 3, type=int)
         self.image_quality = self.settings.value("image_quality", 88, type=int)
         self.max_page = self.settings.value("max_page", 1500, type=int)
+        self.wheel = self.settings.value("wheel", -1, type=int)
 
         pre_macro_json = self.settings.value("pre_macro", "[]")
-        self.pre_macro = [Macro.from_dict(macro) for macro in json.loads(pre_macro_json)]
+        self.pre_macro = [
+            Macro.from_dict(macro) for macro in json.loads(pre_macro_json)
+        ]
 
         macro_json = self.settings.value("macro", "[]")
         self.macro = [Macro.from_dict(macro) for macro in json.loads(macro_json)]
@@ -95,6 +102,7 @@ class Config(QObject, metaclass=SingletonMeta):
         self.settings.setValue("same_count", self.same_count)
         self.settings.setValue("image_quality", self.image_quality)
         self.settings.setValue("max_page", self.max_page)
+        self.settings.setValue("wheel", self.wheel)
 
         pre_macro_json = json.dumps([macro.to_dict() for macro in self.pre_macro])
         self.settings.setValue("pre_macro", pre_macro_json)

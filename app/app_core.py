@@ -1,15 +1,16 @@
+import os
 import platform
 import time
-import os
 
-from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config
 from app.utils.input_controller import InputController
 from app.utils.singleton_meta import SingletonMeta
 
-os.environ['PYNPUT_BACKEND'] = 'darwin'
+os.environ["PYNPUT_BACKEND"] = "darwin"
+
 
 class AppCore(QObject, metaclass=SingletonMeta):
     signal_add_image = Signal(str)
@@ -69,7 +70,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
             self.input_controller.move_mouse(x, y)
             time.sleep(0.01)
             if event == "scroll":
-                self.input_controller.scroll_mouse(-1)
+                self.input_controller.scroll_mouse(self.config.wheel)
             elif event == "click":
                 self.input_controller.click_mouse()
         except AttributeError:
