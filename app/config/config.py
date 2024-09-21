@@ -129,19 +129,19 @@ class Config(QObject, metaclass=SingletonMeta):
         }
 
     def __str__(self) -> str:
-        pre_macro_str = "\n    ".join(str(macro) for macro in self.pre_macro)
-        macro_str = "\n    ".join(str(macro) for macro in self.macro)
+        pre_macro_str = json.dumps([macro.to_dict() for macro in self.pre_macro])
+        macro_str = json.dumps([macro.to_dict() for macro in self.macro])
         return (
             f"Config(\n"
             f"  capture_path={self.capture_path},\n"
             f"  image_quality={self.image_quality},\n"
-            f"  macro=[\n    {macro_str}\n  ],\n"
             f"  pdf_path=[\n    {self.pdf_path}\n  ],\n"
             f"  max_page={self.max_page},\n"
             f"  monitor={self.monitor},\n"
-            f"  pre_macro=[\n    {pre_macro_str}\n  ],\n"
             f"  same_count={self.same_count}\n"
             f"  swipe_direction={self.swipe_direction}\n"
-            f"  swipe_secs={self.swipe_secs}\n"
+            f"  swipe_secs={self.swipe_secs}\n,"
+            f"  macro={macro_str},\n"
+            f"  pre_macro={pre_macro_str},\n"
             f")"
         )

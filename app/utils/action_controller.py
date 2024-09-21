@@ -96,6 +96,7 @@ class ActionController(QObject):
         total_delay = int(value)
         interval = 100  # 100ms 간격으로 체크
         for _ in range(0, total_delay, interval):
+            print('📢[action_controller.py:99]: ', interval)
             if not self.app_core.is_running:
                 return
             time.sleep(interval / 1000)
@@ -131,6 +132,10 @@ class ActionController(QObject):
     def swipe(self, value):
         x, y, width, height = map(int, value.split(","))
         y = y + (height / 2)
+        if self.app_core.is_mac:
+            x = int(x / self.app_core.device_pixel_ratio)
+            y = int(y / self.app_core.device_pixel_ratio)
+            width = int(width / self.app_core.device_pixel_ratio)
         start = self.config.swipe_direction == "Left" and (x + width, y) or (x, y)
         end = self.config.swipe_direction == "Left" and (x, y) or (x + width, y)
         self.app_core.signal_mouse_swipe.emit(start, end, self.config.swipe_secs / 1000)

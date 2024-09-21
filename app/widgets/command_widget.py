@@ -161,9 +161,10 @@ class CommandWidget(QWidget):
             actionCombo.setCurrentIndex(index)
         self.ui.macroTable.setCellWidget(row, 0, actionCombo)
 
+        print('📢[command_widget.py:165]: ', action, value)
         self.set_macro_row(row, action, value)
 
-    def set_macro_row(self, row: int, action: str = None, value: str = None):
+    def set_macro_row(self, row: int, action, value):
         self.ui.macroTable.removeCellWidget(row, 1)
         self.ui.macroTable.removeCellWidget(row, 2)
         self.ui.macroTable.removeCellWidget(row, 3)
@@ -208,13 +209,14 @@ class CommandWidget(QWidget):
             if index > -1:
                 keyCombo.setCurrentIndex(index)
             self.ui.macroTable.setCellWidget(row, 1, keyCombo)
+
         elif action == MacroActions.DELAY.value:
             delaySpin = QSpinBox()
             delaySpin.setRange(1, 20000)
             delaySpin.setSuffix("ms")
             delaySpin.setValue(
-                int(value) if isinstance(value, str) and value.isdigit() else 500
-            )  # 기본 값을 500으로 설정
+                value
+            )
             delaySpin.valueChanged.connect(
                 lambda val, r=row: self.set_macro_table_row_value(
                     r, MacroActions.DELAY.value, val

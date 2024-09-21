@@ -130,6 +130,7 @@ class MainWindow(QMainWindow):
 
     def handle_save(self):
         self.config.save_to_settings()
+        print("Settings saved:", self.config)
         self.ui.statusbar.showMessage("설정이 저장 되었습니다.", 2000)
 
     def handle_setting_dialog(self):

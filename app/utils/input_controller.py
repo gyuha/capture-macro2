@@ -1,3 +1,4 @@
+from hmac import new
 import time
 
 from pynput import keyboard, mouse
@@ -47,12 +48,11 @@ class InputController:
         steps = 100
         sleep_time = duration / steps
         x_step = (end[0] - start[0]) / steps
-        y_step = (end[1] - start[1]) / steps
+        new_x = start[0]
 
         for _ in range(steps):
-            new_x = self.mouse.position[0] + x_step
-            new_y = self.mouse.position[1] + y_step
-            self.mouse.position = (new_x, new_y)
+            new_x = new_x + x_step
+            self.mouse.position = (new_x, start[1])
             time.sleep(sleep_time)
 
         self.mouse.release(Button.left)
