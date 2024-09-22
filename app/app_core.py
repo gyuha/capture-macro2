@@ -82,7 +82,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
         try:
             self.input_controller.swipe_mouse(start, end, duration)
         except AttributeError:
-            print(f"Unknown swipe: {direction}")
+            print("Unknown swipe")
 
     # @Slot(str)
     def on_key_event(self, key):

@@ -133,15 +133,21 @@ class CommandWidget(QWidget):
         self.config.save_to_settings()
 
     def on_macro_insert(self):
+        row = self.ui.macroTable.currentRow()
         self.add_row(self.ui.macroTable.currentRow())
+        self.update_macro_action_value(row)
 
     def on_macro_add(self):
-        self.add_row(self.ui.macroTable.currentRow() + 1)
+        row = self.ui.macroTable.currentRow()
+        self.add_row(row + 1)
+        self.update_macro_action_value(row + 1)
 
     def on_macro_remove(self):
         row = self.ui.macroTable.currentRow()
         self.macros().pop(row)
         self.ui.macroTable.removeRow(row)
+
+        self.update_macro_action_value(row)
         self.config.save_to_settings()
         self.button_enable_setting()
 
@@ -150,7 +156,19 @@ class CommandWidget(QWidget):
         self.ui.btnCommandRemove.setEnabled(flag)
         self.ui.btnCommandInsert.setEnabled(flag)
 
-    def set_macro_table_row(self, row: int, action, value):
+    def update_macro_action_value(self, start_row: int):
+        """
+        Update macro action value from start_row to end
+        """
+        for i in range(start_row, self.ui.macroTable.rowCount()):
+            self.set_macro_table_row(i)
+
+    def set_macro_table_row(self, row: int, action=None, value=None):
+        if action is None:
+            action = self.macros()[row].action
+            value = self.macros()[row].value
+
+        self.ui.macroTable.removeCellWidget(row, 0)
         actionCombo = QComboBox()
         actionCombo.addItems(MACRO_ACTIONS)
         actionCombo.currentTextChanged.connect(
@@ -161,10 +179,13 @@ class CommandWidget(QWidget):
             actionCombo.setCurrentIndex(index)
         self.ui.macroTable.setCellWidget(row, 0, actionCombo)
 
-        print('📢[command_widget.py:165]: ', action, value)
         self.set_macro_row(row, action, value)
 
-    def set_macro_row(self, row: int, action, value):
+    def set_macro_row(self, row: int, action=None, value=None):
+        if action is None:
+            action = self.macros()[row].action
+            value = self.macros()[row].value
+
         self.ui.macroTable.removeCellWidget(row, 1)
         self.ui.macroTable.removeCellWidget(row, 2)
         self.ui.macroTable.removeCellWidget(row, 3)
@@ -214,9 +235,7 @@ class CommandWidget(QWidget):
             delaySpin = QSpinBox()
             delaySpin.setRange(1, 20000)
             delaySpin.setSuffix("ms")
-            delaySpin.setValue(
-                value
-            )
+            delaySpin.setValue(value)
             delaySpin.valueChanged.connect(
                 lambda val, r=row: self.set_macro_table_row_value(
                     r, MacroActions.DELAY.value, val
