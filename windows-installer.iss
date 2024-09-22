@@ -7,7 +7,7 @@
 
 #define VersionFile SourceRoot + "\.version" 
 
-#define MyAppName "Capture Macro 2"
+#define MyAppName "Capture Macro"
 
 #define MyAppVersion "0.1.4"
 
@@ -40,7 +40,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir={#DistDir}
-OutputBaseFilename=CaptureMacro2-{#MyAppVersion}
+OutputBaseFilename=CaptureMacro-{#MyAppVersion}
 SetupIconFile={#SourceRoot}\resources\icon.ico
 Compression=lzma
 SolidCompression=yes
