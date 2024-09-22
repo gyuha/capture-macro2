@@ -9,7 +9,7 @@
 
 #define MyAppName "Capture Macro 2"
 
-#define MyAppVersion "0.0.0"
+#define MyAppVersion "0.1.4"
 
 #define MyAppPublisher "Home"
 #define MyAppExeName "CaptureMacro.exe"
@@ -23,8 +23,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A812E1C4-2631-4B03-A2BF-4F7F7BF79FE7}
 AppName={#MyAppName}
-AppVersion={#MyVersion}
-AppVerName={#MyAppName} {#MyVersion}
+AppVersion={#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
@@ -39,15 +39,15 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
-OutputDir={#DistDir}\win
-OutputBaseFilename=CaptureMacro2-{#MyVersion}
+OutputDir={#DistDir}
+OutputBaseFilename=CaptureMacro2-{#MyAppVersion}
 SetupIconFile={#SourceRoot}\resources\icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+; Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 
 [Files]
