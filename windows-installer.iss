@@ -5,33 +5,11 @@
 #define DistDir SourceRoot + "\dist"  
 #define ResourcesDir SourceRoot + "\resources"  
 
-
-
-[Code]  
-function GetFileVersion(FileName: string): string;  
-var  
-  VersionFile: TStrings;  
-begin  
-  Result := '0.0.0';  // 기본 버전  
-  if FileExists(FileName) then  
-  begin  
-    VersionFile := TStringList.Create;  
-    try  
-      VersionFile.LoadFromFile(FileName);  
-      if VersionFile.Count > 0 then  
-        Result := Trim(VersionFile[0]);  
-    finally  
-      VersionFile.Free;  
-    end;  
-  end;  
-end;  
-
 #define VersionFile SourceRoot + "\.version" 
 
 #define MyAppName "Capture Macro 2"
 
-#define MyAppVersion GetFileVersion(VersionFile)  
-#define MyVersionStr (MyAppVersion != "" ? MyAppVersion : "0.0.0")  
+#define MyAppVersion "0.0.0"
 
 #define MyAppPublisher "Home"
 #define MyAppExeName "CaptureMacro.exe"
@@ -45,8 +23,8 @@ end;
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A812E1C4-2631-4B03-A2BF-4F7F7BF79FE7}
 AppName={#MyAppName}
-AppVersion={#MyVersionStr}
-AppVerName={#MyAppName} {#MyVersionStr}
+AppVersion={#MyVersion}
+AppVerName={#MyAppName} {#MyVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
@@ -62,7 +40,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir={#DistDir}\win
-OutputBaseFilename=CaptureMacro2-{#MyVersionStr}
+OutputBaseFilename=CaptureMacro2-{#MyVersion}
 SetupIconFile={#SourceRoot}\resources\icon.ico
 Compression=lzma
 SolidCompression=yes
