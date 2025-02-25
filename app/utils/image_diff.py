@@ -22,9 +22,8 @@ class ImageDiff:
             currentImage = self.readFile(imagePath)
 
             (score, diff) = compare_ssim(self.preImage, currentImage, full=True)
-            diff = (diff * 255).astype("uint8")
             self.preImage = currentImage
-            return True if score >= 1.0 else False
+            threshold = 0.95 # 1이면 완전히 같은 이미지, 0이면 완전히 다른 이미지
+            return True if score >= threshold else False
         except Exception as e:
-            print(e)
             return False

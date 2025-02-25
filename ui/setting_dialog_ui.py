@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QDialog,
     QFormLayout, QFrame, QHBoxLayout, QLabel,
     QLayout, QLineEdit, QPushButton, QRadioButton,
-    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
-    QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QSpinBox, QVBoxLayout,
+    QWidget)
 
 class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
@@ -53,24 +53,6 @@ class Ui_SettingDialog(object):
         self.label_2.setObjectName(u"label_2")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.sbSameCount = QSlider(self.frame)
-        self.sbSameCount.setObjectName(u"sbSameCount")
-        self.sbSameCount.setMinimumSize(QSize(200, 0))
-        self.sbSameCount.setValue(3)
-
-        self.horizontalLayout_5.addWidget(self.sbSameCount)
-
-        self.lbSameCount = QLabel(self.frame)
-        self.lbSameCount.setObjectName(u"lbSameCount")
-        self.lbSameCount.setMinimumSize(QSize(30, 0))
-
-        self.horizontalLayout_5.addWidget(self.lbSameCount)
-
-
-        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_5)
 
         self.label_4 = QLabel(self.frame)
         self.label_4.setObjectName(u"label_4")
@@ -197,7 +179,7 @@ class Ui_SettingDialog(object):
 
         self.horizontalLayout_4.addWidget(self.rbRight)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer)
 
@@ -216,13 +198,19 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setWidget(9, QFormLayout.FieldRole, self.sbSwipeSecs)
 
+        self.sbSameCount = QSpinBox(self.frame)
+        self.sbSameCount.setObjectName(u"sbSameCount")
+        self.sbSameCount.setMinimumSize(QSize(100, 0))
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.sbSameCount)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
 
         self.verticalLayout_2.addWidget(self.frame)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
@@ -257,7 +245,6 @@ class Ui_SettingDialog(object):
         SettingDialog.setWindowTitle(QCoreApplication.translate("SettingDialog", u"\uc124\uc815", None))
         self.label.setText(QCoreApplication.translate("SettingDialog", u"\ubaa8\ub2c8\ud130 \ubc88\ud638", None))
         self.label_2.setText(QCoreApplication.translate("SettingDialog", u"\uc911\ubcf5 \uc774\ubbf8\uc9c0 \uc911\ub2e8", None))
-        self.lbSameCount.setText(QCoreApplication.translate("SettingDialog", u"10", None))
         self.label_4.setText(QCoreApplication.translate("SettingDialog", u"\ucd5c\ub300 \ud398\uc774\uc9c0", None))
         self.label_5.setText(QCoreApplication.translate("SettingDialog", u"\uc774\ubbf8\uc9c0 \uc800\uc7a5 \uacbd\ub85c", None))
         self.btnImagePath.setText(QCoreApplication.translate("SettingDialog", u"\uc120\ud0dd", None))

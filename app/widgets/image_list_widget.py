@@ -1,6 +1,7 @@
 import glob
 import io
 import os
+import pprint
 import re
 from pathlib import Path
 
@@ -126,6 +127,7 @@ class ImageListWidget(QWidget):
 
     # @Slot(str)
     def on_add_image(self, image_path: str):
+        print('📢[image_list_widget.py:130]: ', image_path)
         self.add_image_item(image_path)
         self.last_file_select()
         if self.image_diff.diff(image_path):

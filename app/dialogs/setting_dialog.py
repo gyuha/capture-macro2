@@ -26,7 +26,6 @@ class SettingDialog(QDialog):
         self.ui.sbMaxPage.setValue(self.config.max_page)
         self.ui.sbImageCompress.setValue(self.config.image_quality)
         self.ui.sbSameCount.setValue(self.config.same_count)
-        self.ui.lbSameCount.setText(f"{self.config.same_count}")
         self.ui.leImagePath.setText(self.config.capture_path)
         self.ui.lePdfPath.setText(self.config.pdf_path)
         self.ui.sbImageSize.setValue(self.config.image_size)
@@ -39,20 +38,44 @@ class SettingDialog(QDialog):
         self.ui.btnCancel.clicked.connect(self.cancel)
         self.ui.btnOk.clicked.connect(self.ok)
         self.ui.cbMonitorNum.currentIndexChanged.connect(self.on_monitor_changed)
-        self.ui.sbSameCount.valueChanged.connect(
-            lambda value: self.ui.lbSameCount.setText(str(value))
+        self.ui.sbSameCount.lineEdit().textChanged.connect(
+            self.on_same_count_text_changed
         )
 
         self.ui.btnImagePath.clicked.connect(self.select_path)
         self.ui.btnPdfPath.clicked.connect(self.select_pdf_path)
-        # SpinBox의 lineEdit에 직접 접근하여 이벤트 연결
+
         self.ui.sbMaxPage.lineEdit().textChanged.connect(self.on_max_page_text_changed)
+        self.ui.sbImageCompress.lineEdit().textChanged.connect(
+            self.on_image_compress_text_changed
+        )
+        self.ui.sbImageSize.lineEdit().textChanged.connect(
+            self.on_image_size_text_changed
+        )
+    
+    def on_same_count_text_changed(self, text):
+        if text and text.isdigit():
+            value = int(text)
+            self.ui.sbSameCount.setValue(value)
+            self.config.same_count = value
 
     def on_max_page_text_changed(self, text):
         if text and text.isdigit():
             value = int(text)
             self.ui.sbMaxPage.setValue(value)
             self.config.max_page = value
+
+    def on_image_compress_text_changed(self, text):
+        if text and text.isdigit():
+            value = int(text)
+            self.ui.sbImageCompress.setValue(value)
+            self.config.image_quality = value
+
+    def on_image_size_text_changed(self, text):
+        if text and text.isdigit():
+            value = int(text)
+            self.ui.sbImageSize.setValue(value)
+            self.config.image_size = value
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기
@@ -88,7 +111,7 @@ class SettingDialog(QDialog):
             screen_geometry = screen.geometry()
             model_name = self.get_monitor_model(screen, i)
 
-            display_text = f"Monitor {i+1}: {model_name} ({screen_geometry.width()}x{screen_geometry.height()})"
+            display_text = f"Monitor {i + 1}: {model_name} ({screen_geometry.width()}x{screen_geometry.height()})"
             self.ui.cbMonitorNum.addItem(display_text, i)
 
     def get_monitor_model(self, screen, index):
