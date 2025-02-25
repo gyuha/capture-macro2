@@ -24,7 +24,7 @@ class Ui_ImageListWidget(object):
     def setupUi(self, ImageListWidget):
         if not ImageListWidget.objectName():
             ImageListWidget.setObjectName(u"ImageListWidget")
-        ImageListWidget.resize(349, 266)
+        ImageListWidget.resize(422, 266)
         self.verticalLayout = QVBoxLayout(ImageListWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.groupBox_2 = QGroupBox(ImageListWidget)
@@ -42,25 +42,6 @@ class Ui_ImageListWidget(object):
         self.imageFiles.setViewMode(QListView.ViewMode.ListMode)
 
         self.verticalLayout_2.addWidget(self.imageFiles)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
-
-        self.label = QLabel(self.groupBox_2)
-        self.label.setObjectName(u"label")
-
-        self.horizontalLayout.addWidget(self.label)
-
-        self.lbImageNumber = QLabel(self.groupBox_2)
-        self.lbImageNumber.setObjectName(u"lbImageNumber")
-
-        self.horizontalLayout.addWidget(self.lbImageNumber)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
@@ -84,13 +65,37 @@ class Ui_ImageListWidget(object):
 
         self.horizontalLayout_5.addWidget(self.btnOpenFolder)
 
-        self.btnToPdf = QPushButton(self.groupBox_2)
-        self.btnToPdf.setObjectName(u"btnToPdf")
+        self.btnReload = QPushButton(self.groupBox_2)
+        self.btnReload.setObjectName(u"btnReload")
 
-        self.horizontalLayout_5.addWidget(self.btnToPdf)
+        self.horizontalLayout_5.addWidget(self.btnReload)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.label = QLabel(self.groupBox_2)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout.addWidget(self.label)
+
+        self.lbImageNumber = QLabel(self.groupBox_2)
+        self.lbImageNumber.setObjectName(u"lbImageNumber")
+
+        self.horizontalLayout.addWidget(self.lbImageNumber)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.btnToPdf = QPushButton(self.groupBox_2)
+        self.btnToPdf.setObjectName(u"btnToPdf")
+
+        self.horizontalLayout.addWidget(self.btnToPdf)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
 
         self.verticalLayout.addWidget(self.groupBox_2)
@@ -104,11 +109,12 @@ class Ui_ImageListWidget(object):
     def retranslateUi(self, ImageListWidget):
         ImageListWidget.setWindowTitle(QCoreApplication.translate("ImageListWidget", u"Form", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("ImageListWidget", u"\uc774\ubbf8\uc9c0 \ubaa9\ub85d", None))
-        self.label.setText(QCoreApplication.translate("ImageListWidget", u"\uc774\ubbf8\uc9c0 \ubc88\ud638 : ", None))
-        self.lbImageNumber.setText(QCoreApplication.translate("ImageListWidget", u"0", None))
         self.btnDeleteFile.setText(QCoreApplication.translate("ImageListWidget", u"\uc0ad\uc81c", None))
         self.btnDeleteAllFiles.setText(QCoreApplication.translate("ImageListWidget", u"\uc804\uccb4 \uc0ad\uc81c", None))
         self.btnOpenFolder.setText(QCoreApplication.translate("ImageListWidget", u"\ud3f4\ub354 \uc5f4\uae30", None))
+        self.btnReload.setText(QCoreApplication.translate("ImageListWidget", u"\ubaa9\ub85d\uac31\uc2e0", None))
+        self.label.setText(QCoreApplication.translate("ImageListWidget", u"\uc774\ubbf8\uc9c0 \ubc88\ud638 : ", None))
+        self.lbImageNumber.setText(QCoreApplication.translate("ImageListWidget", u"0", None))
         self.btnToPdf.setText(QCoreApplication.translate("ImageListWidget", u"PDF\ub85c \uc800\uc7a5", None))
     # retranslateUi
 

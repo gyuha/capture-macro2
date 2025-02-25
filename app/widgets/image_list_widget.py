@@ -49,6 +49,7 @@ class ImageListWidget(QWidget):
         self.ui.imageFiles.itemSelectionChanged.connect(self.handle_item_selection_changed)
         self.ui.btnDeleteAllFiles.clicked.connect(self.handle_delete_all_files)
         self.ui.btnDeleteFile.clicked.connect(self.handle_delete_file)
+        self.ui.btnReload.clicked.connect(self.handle_reload)
         self.ui.btnOpenFolder.clicked.connect(self.handle_open_folder)
         self.ui.btnToPdf.clicked.connect(self.handle_to_pdf)
 
@@ -85,6 +86,12 @@ class ImageListWidget(QWidget):
                 self.app_core.signal_image_clear.emit()
             except Exception as e:
                 print(f"파일 삭제 중 오류 발생: {e}")
+
+    def handle_reload(self):
+        """
+        파일 리로드
+        """
+        self.load_capture_files()
 
     def handle_open_folder(self):
         """
