@@ -25,7 +25,7 @@ class Ui_SettingDialog(object):
     def setupUi(self, SettingDialog):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
-        SettingDialog.resize(456, 345)
+        SettingDialog.resize(456, 400)
         SettingDialog.setMaximumSize(QSize(500, 400))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
@@ -33,7 +33,7 @@ class Ui_SettingDialog(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.frame = QFrame(SettingDialog)
         self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.frame.setFrameShape(QFrame.NoFrame)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -60,7 +60,6 @@ class Ui_SettingDialog(object):
         self.sbSameCount.setObjectName(u"sbSameCount")
         self.sbSameCount.setMinimumSize(QSize(200, 0))
         self.sbSameCount.setValue(3)
-        self.sbSameCount.setOrientation(Qt.Orientation.Horizontal)
 
         self.horizontalLayout_5.addWidget(self.sbSameCount)
 
@@ -81,9 +80,9 @@ class Ui_SettingDialog(object):
         self.sbMaxPage = QSpinBox(self.frame)
         self.sbMaxPage.setObjectName(u"sbMaxPage")
         self.sbMaxPage.setMinimumSize(QSize(100, 0))
-        self.sbMaxPage.setMinimum(100)
+        self.sbMaxPage.setMinimum(1)
         self.sbMaxPage.setMaximum(5000)
-        self.sbMaxPage.setValue(1500)
+        self.sbMaxPage.setValue(1000)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.sbMaxPage)
 
@@ -95,7 +94,7 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.horizontalLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.leImagePath = QLineEdit(self.frame)
         self.leImagePath.setObjectName(u"leImagePath")
         self.leImagePath.setMinimumSize(QSize(200, 22))
@@ -155,7 +154,7 @@ class Ui_SettingDialog(object):
         self.sbImageSize = QSpinBox(self.frame)
         self.sbImageSize.setObjectName(u"sbImageSize")
         self.sbImageSize.setMinimumSize(QSize(100, 0))
-        self.sbImageSize.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.sbImageSize.setLayoutDirection(Qt.LeftToRight)
         self.sbImageSize.setMinimum(500)
         self.sbImageSize.setMaximum(6000)
         self.sbImageSize.setValue(2000)
@@ -223,7 +222,7 @@ class Ui_SettingDialog(object):
 
         self.verticalLayout_2.addWidget(self.frame)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 

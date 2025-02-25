@@ -45,6 +45,14 @@ class SettingDialog(QDialog):
 
         self.ui.btnImagePath.clicked.connect(self.select_path)
         self.ui.btnPdfPath.clicked.connect(self.select_pdf_path)
+        # SpinBox의 lineEdit에 직접 접근하여 이벤트 연결
+        self.ui.sbMaxPage.lineEdit().textChanged.connect(self.on_max_page_text_changed)
+
+    def on_max_page_text_changed(self, text):
+        if text and text.isdigit():
+            value = int(text)
+            self.ui.sbMaxPage.setValue(value)
+            self.config.max_page = value
 
     def cancel(self):
         # 다이얼로그를 변경 없이 닫기

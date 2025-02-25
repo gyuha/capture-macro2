@@ -35,6 +35,7 @@ class ActionController(QObject):
         self.screens = QApplication.screens()
         self.monitor = self.screens[0].geometry()
 
+
     @property
     def action_macro(self):
         return self._action_macro
@@ -44,6 +45,10 @@ class ActionController(QObject):
         self._action_macro = value
 
     def capture(self, value):
+        if self.config.max_page  < self.app_core.image_number:
+            self.done()
+            return
+
         x, y, width, height = map(int, value.split(","))
         file_path = f"{self.config.capture_path}/{self.app_core.image_number:04}.jpg"
 
@@ -86,6 +91,7 @@ class ActionController(QObject):
 
             self.app_core.image_number += 1
             self.app_core.signal_add_image.emit(file_path)
+
         except Exception as e:
             print(f"An error occurred: {e}")
 
