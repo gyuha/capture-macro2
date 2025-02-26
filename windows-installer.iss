@@ -9,7 +9,7 @@
 
 #define MyAppName "Capture Macro"
 
-#define MyAppVersion "0.1.4"
+#define MyAppVersion "0.1.5"
 
 #define MyAppPublisher "Home"
 #define MyAppExeName "CaptureMacro.exe"

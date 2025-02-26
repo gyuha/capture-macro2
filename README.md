@@ -48,6 +48,12 @@ Capture macro 2
   - python 3.12.12
 - vscode
 
+### Virtual Environment
+```bash
+python -m venv venv
+```
+
+
 ### Etc
 #### mac용 아이콘 업데이트 하기
 ```bash
