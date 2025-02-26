@@ -86,7 +86,7 @@ class AppCore(QObject, metaclass=SingletonMeta):
 
     # @Slot(str)
     def on_key_event(self, key):
-        print("========> ", key)
+        print("[KEY EVENT]: ", key)
         try:
             self.input_controller.press_key(key)
         except AttributeError:

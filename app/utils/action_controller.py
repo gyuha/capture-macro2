@@ -102,7 +102,6 @@ class ActionController(QObject):
         total_delay = int(value)
         interval = 100  # 100ms 간격으로 체크
         for _ in range(0, total_delay, interval):
-            print('📢[action_controller.py:99]: ', interval)
             if not self.app_core.is_running:
                 return
             time.sleep(interval / 1000)
