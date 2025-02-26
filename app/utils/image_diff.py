@@ -23,7 +23,7 @@ class ImageDiff:
 
             (score, diff) = compare_ssim(self.preImage, currentImage, full=True)
             self.preImage = currentImage
-            threshold = 0.95 # 1이면 완전히 같은 이미지, 0이면 완전히 다른 이미지
+            threshold = 0.995 # 1이면 완전히 같은 이미지, 0이면 완전히 다른 이미지
             return True if score >= threshold else False
         except Exception as e:
             return False

@@ -1,7 +1,6 @@
 import glob
 import io
 import os
-import pprint
 import re
 from pathlib import Path
 
@@ -49,7 +48,7 @@ class ImageListWidget(QWidget):
         self.ui.imageFiles.itemSelectionChanged.connect(self.handle_item_selection_changed)
         self.ui.btnDeleteAllFiles.clicked.connect(self.handle_delete_all_files)
         self.ui.btnDeleteFile.clicked.connect(self.handle_delete_file)
-        self.ui.btnReload.clicked.connect(self.handle_reload)
+        self.ui.btnReload.clicked.connect(self.load_capture_files)
         self.ui.btnOpenFolder.clicked.connect(self.handle_open_folder)
         self.ui.btnToPdf.clicked.connect(self.handle_to_pdf)
 
@@ -87,11 +86,6 @@ class ImageListWidget(QWidget):
             except Exception as e:
                 print(f"파일 삭제 중 오류 발생: {e}")
 
-    def handle_reload(self):
-        """
-        파일 리로드
-        """
-        self.load_capture_files()
 
     def handle_open_folder(self):
         """
@@ -132,20 +126,27 @@ class ImageListWidget(QWidget):
         except Exception as e:
             print(e)
 
-    # @Slot(str)
+    @Slot(str)
     def on_add_image(self, image_path: str):
-        print('📢[image_list_widget.py:130]: ', image_path)
         self.add_image_item(image_path)
         self.last_file_select()
         if self.image_diff.diff(image_path):
             self.app_core.same_count += 1
             if self.app_core.same_count >= self.config.same_count:
                 self.app_core.signal_macro_done.emit()
-                # for i in range(self.config.same_count):
-                #     self.clickDeleteSelectFile()
-                #     self.lastLsFileSelect()
+                self.remove_last_same_image()
         else:
             self.app_core.same_count = 0
+    
+    def remove_last_same_image(self):
+        if self.ui.imageFiles.count() == 0 or self.app_core.same_count == 0:
+            return
+
+        self.app_core.same_count -= 1
+        self.last_file_select()
+        self.handle_delete_file()
+        self.remove_last_same_image()
+
 
     def pil2pixmap(self, image):
         bytesImg = io.BytesIO()
