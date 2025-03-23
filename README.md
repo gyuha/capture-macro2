@@ -7,6 +7,7 @@ Capture macro 2
 2. 캡쳐 컨트롤
      - `시스템설정 > 개인정보 보호 및 보안 > 화면 및 시스템 오디오 녹음`에 CaptureMacro 앱을 추가 하고 권한을 켜 줍니다.
 
+
 ## Todo
 - [x] init ui design
     -  [x] in widget
@@ -70,4 +71,12 @@ pyinstaller --icon=resources/icon.png \
             app.py
 ```
 
+## 버전 관리
+애플리케이션 버전은 `app/config/version.py` 파일에서 관리됩니다. 버전 업데이트 시 다음 스크립트를 실행하세요:
+
+```bash
+python tools/update_version.py 1.0.1
+```
+
+버전 이력은 `app/config/version_history.txt` 파일에 자동으로 기록됩니다.
 

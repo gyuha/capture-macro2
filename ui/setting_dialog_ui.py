@@ -33,7 +33,7 @@ class Ui_SettingDialog(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.frame = QFrame(SettingDialog)
         self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.NoFrame)
+        self.frame.setFrameShape(QFrame.Shape.NoFrame)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -76,7 +76,7 @@ class Ui_SettingDialog(object):
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.leImagePath = QLineEdit(self.frame)
         self.leImagePath.setObjectName(u"leImagePath")
         self.leImagePath.setMinimumSize(QSize(200, 22))
@@ -136,7 +136,7 @@ class Ui_SettingDialog(object):
         self.sbImageSize = QSpinBox(self.frame)
         self.sbImageSize.setObjectName(u"sbImageSize")
         self.sbImageSize.setMinimumSize(QSize(100, 0))
-        self.sbImageSize.setLayoutDirection(Qt.LeftToRight)
+        self.sbImageSize.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.sbImageSize.setMinimum(500)
         self.sbImageSize.setMaximum(6000)
         self.sbImageSize.setValue(2000)
@@ -214,6 +214,20 @@ class Ui_SettingDialog(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_6.addItem(self.horizontalSpacer_2)
+
+        self.lbVersion = QLabel(SettingDialog)
+        self.lbVersion.setObjectName(u"lbVersion")
+
+        self.horizontalLayout_6.addWidget(self.lbVersion)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.btnCancel = QPushButton(SettingDialog)
@@ -260,6 +274,7 @@ class Ui_SettingDialog(object):
         self.rbRight.setText(QCoreApplication.translate("SettingDialog", u"Right", None))
         self.label_10.setText(QCoreApplication.translate("SettingDialog", u"\uc2a4\uc640\uc774\ud504 \uc2dc\uac04", None))
         self.sbSwipeSecs.setSuffix(QCoreApplication.translate("SettingDialog", u"ms", None))
+        self.lbVersion.setText(QCoreApplication.translate("SettingDialog", u"VERSION", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
     # retranslateUi

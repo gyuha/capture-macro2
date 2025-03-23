@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QFileDialog
 
 from app.app_core import AppCore
 from app.config.config import Config
+from app.config.version import get_version
 from ui.setting_dialog_ui import Ui_SettingDialog
 
 
@@ -29,6 +30,10 @@ class SettingDialog(QDialog):
         self.ui.leImagePath.setText(self.config.capture_path)
         self.ui.lePdfPath.setText(self.config.pdf_path)
         self.ui.sbImageSize.setValue(self.config.image_size)
+        
+        # 버전 정보 표시
+        version = get_version()
+        self.ui.lbVersion.setText(f"버전: {version}")
 
         for button in self.ui.bgSwipeDirection.buttons():
             if button.text() == self.config.swipe_direction:

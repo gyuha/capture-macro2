@@ -1,11 +1,11 @@
 from pynput import keyboard
-from PySide6 import QtCore
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QResizeEvent
 from PySide6.QtWidgets import QDialog, QMainWindow
 
 from app.app_core import AppCore
 from app.config.config import Config
+from app.config.version import get_version
 from app.dialogs.setting_dialog import SettingDialog
 from app.utils.action_controller import ActionController
 from app.utils.file_util import create_directory_path
@@ -21,6 +21,9 @@ class MainWindow(QMainWindow):
         self.pre_command_widget = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        # 윈도우 타이틀에 버전 표시
+        self.update_window_title()
 
         self.action_controller = ActionController()
 
@@ -38,6 +41,14 @@ class MainWindow(QMainWindow):
         self.hotkeys.start()
 
         self.lb_preview_width = 100
+
+    def update_window_title(self):
+        """윈도우 타이틀에 버전 정보를 추가합니다."""
+        version = get_version()
+        base_title = self.windowTitle()
+        if not base_title:
+            base_title = "Capture Macro"
+        self.setWindowTitle(f"{base_title} - 버전 {version}")
 
     def connect_signals_slots(self):
         self.ui.btnCapture.clicked.connect(self.handle_capture)
@@ -141,6 +152,8 @@ class MainWindow(QMainWindow):
         if result == QDialog.Accepted:
             self.config.save_to_settings()
             print("Settings applied:", self.config)
+            # 설정이 변경되면 윈도우 타이틀도 업데이트
+            self.update_window_title()
         else:
             print("Settings dialog canceled")
 
