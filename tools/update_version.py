@@ -47,10 +47,66 @@ def update_version(new_version):
 
     print(f"버전이 {new_version}(으)로 업데이트되었습니다.")
 
+    # Windows 인스톨러 스크립트 업데이트
+    update_windows_installer(new_version)
+
+    # .version 파일 업데이트
+    update_dot_version_file(new_version)
+
     # 버전 이력 로그 업데이트
     update_version_history(new_version)
 
     return True
+
+
+def update_windows_installer(new_version):
+    """
+    Windows 인스톨러 스크립트의 버전 정보를 업데이트합니다.
+
+    Args:
+        new_version (str): 새 버전 문자열
+    """
+    installer_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "windows-installer.iss",
+    )
+
+    if not os.path.exists(installer_file):
+        print(f"경고: Windows 인스톨러 스크립트 파일을 찾을 수 없습니다: {installer_file}")
+        return
+
+    with open(installer_file, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    new_content = re.sub(
+        r'#define MyAppVersion "[^"]+"', f'#define MyAppVersion "{new_version}"', content
+    )
+
+    with open(installer_file, "w", encoding="utf-8") as f:
+        f.write(new_content)
+
+    print(f"Windows 인스톨러 스크립트가 {new_version}(으)로 업데이트되었습니다: {installer_file}")
+
+
+def update_dot_version_file(new_version):
+    """
+    .version 파일의 버전 정보를 업데이트합니다.
+
+    Args:
+        new_version (str): 새 버전 문자열
+    """
+    version_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".version"
+    )
+
+    if not os.path.exists(version_file):
+        print(f"경고: .version 파일을 찾을 수 없습니다: {version_file}")
+        return
+
+    with open(version_file, "w", encoding="utf-8") as f:
+        f.write(f"{new_version}\n")
+
+    print(f".version 파일이 {new_version}(으)로 업데이트되었습니다: {version_file}")
 
 
 def update_version_history(version):
@@ -62,6 +118,8 @@ def update_version_history(version):
     """
     history_file = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "app",
+        "config",
         "version_history.txt",
     )
 
