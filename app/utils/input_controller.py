@@ -1,4 +1,5 @@
 from hmac import new
+import random
 import time
 
 from pynput import keyboard, mouse
@@ -19,10 +20,9 @@ class InputController:
         self.mouse.position = (x, y)
 
     def click_mouse(self):
-        """
-        click_mouse() clicks the left mouse button once.
-        """
-        self.mouse.click(Button.left, 1)
+        self.mouse.press(Button.left)
+        time.sleep(random.randint(10, 150) / 1000)
+        self.mouse.release(Button.left)
 
     def press_key(self, key):
         send_key = get_key_from_string(key)
@@ -30,6 +30,7 @@ class InputController:
             print(f"Unknown key: {key}")
             return
         self.keyboard.press(send_key)
+        time.sleep(random.randint(10, 150) / 1000)
         self.keyboard.release(send_key)
 
     def scroll_mouse(self, clicks):
