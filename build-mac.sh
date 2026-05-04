@@ -22,7 +22,7 @@ rm -rf build dist
 
 # PyInstaller를 사용하여 앱 빌드
 echo "Building the app with PyInstaller..."
-pyinstaller "$SPEC_FILE" || { echo "PyInstaller failed"; exit 1; }
+uv run pyinstaller "$SPEC_FILE" || { echo "PyInstaller failed"; exit 1; }
 
 ## 앱 번들 경로
 APP_BUNDLE="dist/$APP_NAME.app"

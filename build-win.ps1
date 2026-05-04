@@ -1,7 +1,6 @@
 # 1. PyInstaller로 실행 파일 빌드
-$pyinstallerPath = ".\venv\Scripts\pyinstaller.exe"
 Write-Host "Building executable with PyInstaller..." -ForegroundColor Cyan
-.\venv\Scripts\pyinstaller.exe -y CaptureMacro-win.spec
+uv run pyinstaller -y CaptureMacro-win.spec
 
 # 2. 빌드가 성공했는지 확인
 if ($LASTEXITCODE -ne 0) {
