@@ -2,14 +2,15 @@ import os
 import platform
 import time
 
+if platform.system() == "Darwin":
+    os.environ["PYNPUT_BACKEND"] = "darwin"
+
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
 from app.config.config import Config
 from app.utils.input_controller import InputController
 from app.utils.singleton_meta import SingletonMeta
-
-os.environ["PYNPUT_BACKEND"] = "darwin"
 
 
 class AppCore(QObject, metaclass=SingletonMeta):
@@ -75,8 +76,8 @@ class AppCore(QObject, metaclass=SingletonMeta):
                 self.input_controller.scroll_mouse(self.config.wheel)
             elif event == "click":
                 self.input_controller.click_mouse()
-        except AttributeError:
-            print(f"Unknown event: {event}")
+        except Exception as e:
+            print(f"Mouse event error ({event}): {e}")
 
     def on_mouse_swipe(self, start, end, duration):
         try:
@@ -89,5 +90,5 @@ class AppCore(QObject, metaclass=SingletonMeta):
         print("[KEY EVENT]: ", key)
         try:
             self.input_controller.press_key(key)
-        except AttributeError:
-            print(f"Unknown key: {key}")
+        except Exception as e:
+            print(f"Key event error ({key}): {e}")

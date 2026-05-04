@@ -26,6 +26,9 @@ class InputController:
 
     def press_key(self, key):
         send_key = get_key_from_string(key)
+        if send_key is None:
+            print(f"Unknown key: {key}")
+            return
         self.keyboard.press(send_key)
         self.keyboard.release(send_key)
 
