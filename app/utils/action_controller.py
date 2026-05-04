@@ -109,6 +109,18 @@ class ActionController(QObject):
         if remaining > 0 and self.app_core.is_running:
             time.sleep(remaining / 1000)
 
+    def random_delay(self, value):
+        min_ms, max_ms = map(int, value.split(","))
+        total_delay = random.randint(min_ms, max_ms)
+        interval = 100
+        for _ in range(0, total_delay, interval):
+            if not self.app_core.is_running:
+                return
+            time.sleep(interval / 1000)
+        remaining = total_delay % interval
+        if remaining > 0 and self.app_core.is_running:
+            time.sleep(remaining / 1000)
+
     def mouse_move(self, value):
         x, y, width, height = map(int, value.split(","))
         move_x = random.randint(x, x + width)
