@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # 변수 설정
 APP_NAME="CaptureMacro"
 SPEC_FILE="CaptureMacro.spec"
@@ -40,6 +42,32 @@ echo "Creating DMG..."
 DMG_NAME="${APP_NAME}-${VERSION}.dmg"
 DMG_PATH="dist/${DMG_NAME}"
 TMP_DMG_PATH="dist/${APP_NAME}-tmp.dmg"
+MOUNT_DIR=""
+
+cleanup() {
+    # convert 단계 이전 실패 시 마운트가 남아 있으면 정리
+    if [ -n "$MOUNT_DIR" ] && hdiutil info | grep -Fq "$MOUNT_DIR"; then
+        hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || hdiutil detach -force "$MOUNT_DIR" >/dev/null 2>&1 || true
+    fi
+    rm -f "$TMP_DMG_PATH"
+}
+
+wait_for_detach() {
+    local retries=20
+    while [ -n "$MOUNT_DIR" ] && hdiutil info | grep -Fq "$MOUNT_DIR"; do
+        if [ "$retries" -le 0 ]; then
+            echo "Error: Timed out waiting for DMG to detach: $MOUNT_DIR"
+            return 1
+        fi
+        sleep 1
+        retries=$((retries - 1))
+    done
+}
+
+trap cleanup EXIT
+
+# 이전 빌드 산출물로 인한 잠금/충돌 방지
+rm -f "$DMG_PATH" "$TMP_DMG_PATH"
 
 # 임시 DMG 생성
 hdiutil create -srcfolder "$APP_BUNDLE" -volname "$APP_NAME $VERSION" -fs HFS+ \
@@ -56,8 +84,11 @@ echo "DMG mounted: $MOUNT_DIR"
 ln -s /Applications "$MOUNT_DIR/Applications" || { echo "Symlink creation failed"; exit 1; }
 
 # DMG 최종화
-hdiutil detach "$MOUNT_DIR" || { echo "DMG detach failed"; exit 1; }
+hdiutil detach "$MOUNT_DIR" || hdiutil detach -force "$MOUNT_DIR" || { echo "DMG detach failed"; exit 1; }
+wait_for_detach || exit 1
 hdiutil convert "$TMP_DMG_PATH" -format UDZO -o "$DMG_PATH" || { echo "DMG conversion failed"; exit 1; }
+
+trap - EXIT
 rm -f "$TMP_DMG_PATH"
 
 echo "DMG creation complete: $DMG_PATH"
