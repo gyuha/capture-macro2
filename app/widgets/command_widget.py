@@ -6,6 +6,8 @@ from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
+    QHBoxLayout,
+    QLabel,
     QPushButton,
     QSpinBox,
     QTableWidgetItem,
@@ -27,6 +29,7 @@ class MacroActions(Enum):
     SCROLL = "scroll"
     SWIPE = "swipe"
     MOVE = "move"
+    RANDOM_DELAY = "random_delay"
 
 
 MACRO_ACTIONS = [action.value for action in MacroActions]
@@ -71,6 +74,7 @@ DEFAULT_ACTION_VALUES = {
     "swipe": "0,0,0,0",
     "delay": 500,
     "key": "right",
+    "random_delay": "100,1000",
 }
 
 
@@ -243,7 +247,42 @@ class CommandWidget(QWidget):
             )  # 수정된 부분
             self.ui.macroTable.setCellWidget(row, 1, delaySpin)
 
-        if action in {MacroActions.DELAY.value, MacroActions.KEY.value}:
+        elif action == MacroActions.RANDOM_DELAY.value:
+            try:
+                min_val, max_val = map(int, str(value).split(","))
+            except (ValueError, AttributeError):
+                min_val, max_val = 100, 1000
+
+            container = QWidget()
+            layout = QHBoxLayout(container)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(2)
+
+            minSpin = QSpinBox()
+            minSpin.setRange(1, 60000)
+            minSpin.setSuffix("ms")
+            minSpin.setValue(min_val)
+
+            maxSpin = QSpinBox()
+            maxSpin.setRange(1, 60000)
+            maxSpin.setSuffix("ms")
+            maxSpin.setValue(max_val)
+
+            layout.addWidget(minSpin)
+            layout.addWidget(QLabel("~"))
+            layout.addWidget(maxSpin)
+
+            def on_spin_changed(_, r=row, mn=minSpin, mx=maxSpin):
+                self.set_macro_table_row_value(
+                    r, MacroActions.RANDOM_DELAY.value, f"{mn.value()},{mx.value()}"
+                )
+
+            minSpin.valueChanged.connect(on_spin_changed)
+            maxSpin.valueChanged.connect(on_spin_changed)
+
+            self.ui.macroTable.setCellWidget(row, 1, container)
+
+        if action in {MacroActions.DELAY.value, MacroActions.KEY.value, MacroActions.RANDOM_DELAY.value}:
             # 2,3셀은 쓰지 않음
             self.set_disabled_cell(row, 2)
             self.set_disabled_cell(row, 3)
@@ -267,6 +306,8 @@ class CommandWidget(QWidget):
         value_widget = self.ui.macroTable.cellWidget(row, 1)
         try:
             if action == MacroActions.DELAY.value:
+                self.macros()[row].value = value
+            elif action == MacroActions.RANDOM_DELAY.value:
                 self.macros()[row].value = value
             elif action == MacroActions.KEY.value:
                 index = value_widget.findText(value)  # 수정된 부분
