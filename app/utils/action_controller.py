@@ -110,7 +110,12 @@ class ActionController(QObject):
             time.sleep(remaining / 1000)
 
     def random_delay(self, value):
-        min_ms, max_ms = map(int, value.split(","))
+        try:
+            min_ms, max_ms = map(int, str(value).split(","))
+        except (ValueError, AttributeError, TypeError):
+            return
+        if min_ms > max_ms:
+            min_ms, max_ms = max_ms, min_ms
         total_delay = random.randint(min_ms, max_ms)
         interval = 100
         for _ in range(0, total_delay, interval):

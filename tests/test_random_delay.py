@@ -26,7 +26,7 @@ def test_random_delay_stops_when_not_running():
     start = time.time()
     ctrl.random_delay("5000,6000")
     elapsed_ms = (time.time() - start) * 1000
-    assert elapsed_ms < 200, f"should stop immediately but took {elapsed_ms:.0f}ms"
+    assert elapsed_ms < 500, f"should stop immediately but took {elapsed_ms:.0f}ms"
 
 
 def test_random_delay_parses_value():

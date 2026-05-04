@@ -300,7 +300,7 @@ class CommandWidget(QWidget):
         item = self.ui.macroTable.item(row, column)
         if item is not None:
             item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-            self.ui.macroTable.setItem(row, int, item)
+            self.ui.macroTable.setItem(row, column, item)
 
     def set_macro_table_row_value(self, row: int, action: MacroActions, value):
         value_widget = self.ui.macroTable.cellWidget(row, 1)
