@@ -42,6 +42,10 @@ class Config(QObject, metaclass=SingletonMeta):
         self.wheel = -1
         self.swipe_direction = "Left"
         self.swipe_secs = 800
+        self.click_press_min = 10
+        self.click_press_max = 150
+        self.key_press_min = 10
+        self.key_press_max = 150
 
         self.settings = QSettings("CaptureMacro", "Settings")
         print(self.settings.fileName())
@@ -96,6 +100,10 @@ class Config(QObject, metaclass=SingletonMeta):
         ]
 
         self.swipe_secs = self.settings.value("swipe_secs", 800, type=int)
+        self.click_press_min = self.settings.value("click_press_min", 10, type=int)
+        self.click_press_max = self.settings.value("click_press_max", 150, type=int)
+        self.key_press_min = self.settings.value("key_press_min", 10, type=int)
+        self.key_press_max = self.settings.value("key_press_max", 150, type=int)
 
         macro_json = self.settings.value("macro", "[]")
         self.macro = [Macro.from_dict(macro) for macro in json.loads(macro_json)]
@@ -110,6 +118,10 @@ class Config(QObject, metaclass=SingletonMeta):
         self.settings.setValue("wheel", self.wheel)
         self.settings.setValue("swipe_direction", self.swipe_direction)
         self.settings.setValue("swipe_secs", self.swipe_secs)
+        self.settings.setValue("click_press_min", self.click_press_min)
+        self.settings.setValue("click_press_max", self.click_press_max)
+        self.settings.setValue("key_press_min", self.key_press_min)
+        self.settings.setValue("key_press_max", self.key_press_max)
 
         pre_macro_json = json.dumps([macro.to_dict() for macro in self.pre_macro])
         self.settings.setValue("pre_macro", pre_macro_json)
