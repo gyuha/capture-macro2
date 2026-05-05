@@ -306,7 +306,11 @@ class Ui_SettingDialog(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         QWidget.setTabOrder(self.leImagePath, self.btnImagePath)
-        QWidget.setTabOrder(self.btnImagePath, self.btnCancel)
+        QWidget.setTabOrder(self.btnImagePath, self.sbClickPressMin)
+        QWidget.setTabOrder(self.sbClickPressMin, self.sbClickPressMax)
+        QWidget.setTabOrder(self.sbClickPressMax, self.sbKeyPressMin)
+        QWidget.setTabOrder(self.sbKeyPressMin, self.sbKeyPressMax)
+        QWidget.setTabOrder(self.sbKeyPressMax, self.btnCancel)
         QWidget.setTabOrder(self.btnCancel, self.btnOk)
 
         self.retranslateUi(SettingDialog)
