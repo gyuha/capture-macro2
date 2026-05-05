@@ -136,6 +136,10 @@ class Config(QObject, metaclass=SingletonMeta):
             "same_count": self.same_count,
             "image_quality": self.image_quality,
             "max_page": self.max_page,
+            "click_press_min": self.click_press_min,
+            "click_press_max": self.click_press_max,
+            "key_press_min": self.key_press_min,
+            "key_press_max": self.key_press_max,
             "pre_macro": [macro.to_dict() for macro in self.pre_macro],
             "macro": [macro.to_dict() for macro in self.macro],
         }
