@@ -26,7 +26,7 @@ class Ui_SettingDialog(object):
         if not SettingDialog.objectName():
             SettingDialog.setObjectName(u"SettingDialog")
         SettingDialog.resize(456, 400)
-        SettingDialog.setMaximumSize(QSize(500, 400))
+        SettingDialog.setMaximumSize(QSize(500, 480))
         SettingDialog.setSizeGripEnabled(False)
         SettingDialog.setModal(True)
         self.verticalLayout_2 = QVBoxLayout(SettingDialog)
@@ -198,6 +198,68 @@ class Ui_SettingDialog(object):
 
         self.formLayout.setWidget(9, QFormLayout.FieldRole, self.sbSwipeSecs)
 
+        # row 10 — 클릭 딜레이
+        self.label_click_delay = QLabel(self.frame)
+        self.label_click_delay.setObjectName(u"label_click_delay")
+        self.formLayout.setWidget(10, QFormLayout.LabelRole, self.label_click_delay)
+
+        self.horizontalLayout_click = QHBoxLayout()
+        self.horizontalLayout_click.setObjectName(u"horizontalLayout_click")
+
+        self.sbClickPressMin = QSpinBox(self.frame)
+        self.sbClickPressMin.setObjectName(u"sbClickPressMin")
+        self.sbClickPressMin.setMinimum(1)
+        self.sbClickPressMin.setMaximum(2000)
+        self.sbClickPressMin.setSuffix(u"ms")
+        self.sbClickPressMin.setValue(10)
+        self.horizontalLayout_click.addWidget(self.sbClickPressMin)
+
+        self.label_click_tilde = QLabel(self.frame)
+        self.label_click_tilde.setObjectName(u"label_click_tilde")
+        self.label_click_tilde.setText(u"~")
+        self.horizontalLayout_click.addWidget(self.label_click_tilde)
+
+        self.sbClickPressMax = QSpinBox(self.frame)
+        self.sbClickPressMax.setObjectName(u"sbClickPressMax")
+        self.sbClickPressMax.setMinimum(1)
+        self.sbClickPressMax.setMaximum(2000)
+        self.sbClickPressMax.setSuffix(u"ms")
+        self.sbClickPressMax.setValue(150)
+        self.horizontalLayout_click.addWidget(self.sbClickPressMax)
+
+        self.formLayout.setLayout(10, QFormLayout.FieldRole, self.horizontalLayout_click)
+
+        # row 11 — 키 딜레이
+        self.label_key_delay = QLabel(self.frame)
+        self.label_key_delay.setObjectName(u"label_key_delay")
+        self.formLayout.setWidget(11, QFormLayout.LabelRole, self.label_key_delay)
+
+        self.horizontalLayout_key = QHBoxLayout()
+        self.horizontalLayout_key.setObjectName(u"horizontalLayout_key")
+
+        self.sbKeyPressMin = QSpinBox(self.frame)
+        self.sbKeyPressMin.setObjectName(u"sbKeyPressMin")
+        self.sbKeyPressMin.setMinimum(1)
+        self.sbKeyPressMin.setMaximum(2000)
+        self.sbKeyPressMin.setSuffix(u"ms")
+        self.sbKeyPressMin.setValue(10)
+        self.horizontalLayout_key.addWidget(self.sbKeyPressMin)
+
+        self.label_key_tilde = QLabel(self.frame)
+        self.label_key_tilde.setObjectName(u"label_key_tilde")
+        self.label_key_tilde.setText(u"~")
+        self.horizontalLayout_key.addWidget(self.label_key_tilde)
+
+        self.sbKeyPressMax = QSpinBox(self.frame)
+        self.sbKeyPressMax.setObjectName(u"sbKeyPressMax")
+        self.sbKeyPressMax.setMinimum(1)
+        self.sbKeyPressMax.setMaximum(2000)
+        self.sbKeyPressMax.setSuffix(u"ms")
+        self.sbKeyPressMax.setValue(150)
+        self.horizontalLayout_key.addWidget(self.sbKeyPressMax)
+
+        self.formLayout.setLayout(11, QFormLayout.FieldRole, self.horizontalLayout_key)
+
         self.sbSameCount = QSpinBox(self.frame)
         self.sbSameCount.setObjectName(u"sbSameCount")
         self.sbSameCount.setMinimumSize(QSize(100, 0))
@@ -274,6 +336,8 @@ class Ui_SettingDialog(object):
         self.rbRight.setText(QCoreApplication.translate("SettingDialog", u"Right", None))
         self.label_10.setText(QCoreApplication.translate("SettingDialog", u"\uc2a4\uc640\uc774\ud504 \uc2dc\uac04", None))
         self.sbSwipeSecs.setSuffix(QCoreApplication.translate("SettingDialog", u"ms", None))
+        self.label_click_delay.setText(QCoreApplication.translate("SettingDialog", u"클릭 딜레이", None))
+        self.label_key_delay.setText(QCoreApplication.translate("SettingDialog", u"키 딜레이", None))
         self.lbVersion.setText(QCoreApplication.translate("SettingDialog", u"VERSION", None))
         self.btnCancel.setText(QCoreApplication.translate("SettingDialog", u"\ucde8\uc18c", None))
         self.btnOk.setText(QCoreApplication.translate("SettingDialog", u"\ud655\uc778", None))
