@@ -30,7 +30,12 @@ class SettingDialog(QDialog):
         self.ui.leImagePath.setText(self.config.capture_path)
         self.ui.lePdfPath.setText(self.config.pdf_path)
         self.ui.sbImageSize.setValue(self.config.image_size)
-        
+
+        self.ui.sbClickPressMin.setValue(self.config.click_press_min)
+        self.ui.sbClickPressMax.setValue(self.config.click_press_max)
+        self.ui.sbKeyPressMin.setValue(self.config.key_press_min)
+        self.ui.sbKeyPressMax.setValue(self.config.key_press_max)
+
         # 버전 정보 표시
         version = get_version()
         self.ui.lbVersion.setText(f"버전: {version}")
@@ -96,6 +101,10 @@ class SettingDialog(QDialog):
         self.config.pdf_path = self.ui.lePdfPath.text()
         self.config.same_count = self.ui.sbSameCount.value()
         self.config.swipe_direction = self.ui.bgSwipeDirection.checkedButton().text()
+        self.config.click_press_min = self.ui.sbClickPressMin.value()
+        self.config.click_press_max = self.ui.sbClickPressMax.value()
+        self.config.key_press_min = self.ui.sbKeyPressMin.value()
+        self.config.key_press_max = self.ui.sbKeyPressMax.value()
 
         # 다이얼로그 닫기
         self.accept()
