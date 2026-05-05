@@ -6,6 +6,7 @@ from pynput import keyboard, mouse
 from pynput.mouse import Button
 
 from app.utils.pynput_keymap import get_key_from_string
+from app.config.config import Config
 
 
 class InputController:
@@ -20,17 +21,21 @@ class InputController:
         self.mouse.position = (x, y)
 
     def click_mouse(self):
+        cfg = Config()
         self.mouse.press(Button.left)
-        time.sleep(random.randint(10, 150) / 1000)
+        time.sleep(random.randint(min(cfg.click_press_min, cfg.click_press_max),
+                                  max(cfg.click_press_min, cfg.click_press_max)) / 1000)
         self.mouse.release(Button.left)
 
     def press_key(self, key):
+        cfg = Config()
         send_key = get_key_from_string(key)
         if send_key is None:
             print(f"Unknown key: {key}")
             return
         self.keyboard.press(send_key)
-        time.sleep(random.randint(10, 150) / 1000)
+        time.sleep(random.randint(min(cfg.key_press_min, cfg.key_press_max),
+                                  max(cfg.key_press_min, cfg.key_press_max)) / 1000)
         self.keyboard.release(send_key)
 
     def scroll_mouse(self, clicks):
