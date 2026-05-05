@@ -115,7 +115,7 @@ class SettingDialog(QDialog):
         self.ui.leImagePath.setText(path)
 
     def select_pdf_path(self):
-        initial_path = self.ui.leImagePath.text() or "/"
+        initial_path = self.ui.lePdfPath.text() or "/"
         path = QFileDialog.getExistingDirectory(self, "Select Directory", initial_path)
         self.ui.lePdfPath.setText(path)
 
