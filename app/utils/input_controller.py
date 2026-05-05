@@ -1,4 +1,3 @@
-from hmac import new
 import random
 import time
 
