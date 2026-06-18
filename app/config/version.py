@@ -2,7 +2,7 @@
 버전 정보를 관리하는 모듈
 """
 
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 
 def get_version():
     """

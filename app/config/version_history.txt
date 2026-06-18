@@ -2,3 +2,12 @@
 
 ## 버전 0.2.1 - 2025-03-23 10:18:55
 
+## 버전 0.2.4 - 2026-06-18 22:24:58
+
+- fix: macOS에서 캡쳐 해상도가 실제 화면보다 낮게 저장되던 문제 수정
+  - 원인: mss는 macOS에서 논리 해상도(포인트)로만 캡쳐해 Retina 물리 픽셀을 버림
+    (예: 물리 5120x2880 패널이 2560x1440으로 캡쳐되어 픽셀 1/4 손실)
+  - 해결: macOS 캡쳐 백엔드를 Quartz(CGDisplayCreateImageForRect)로 교체해
+    디스플레이의 전체 물리(Retina) 해상도로 캡쳐. Windows/Linux는 기존 mss 유지
+  - CaptureMacro.spec hiddenimports에 'Quartz' 추가
+
